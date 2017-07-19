@@ -6,9 +6,9 @@ import news from '@/router/map/new'
 
 const Home = resolve => require(['@/pages/Home'], resolve);
 const Login = resolve => require(['@/pages/Login'], resolve);
+const userList = resolve => require(['@/pages/userlist'], resolve);
 
 Vue.use(Router)
-
 
 export default new Router({
   // mode: 'history',   default hash
@@ -22,6 +22,11 @@ export default new Router({
           path: '/login',
           name: '登录',
           component: Login
+      },
+      {
+          path: '/userlist',
+          name: '用户列表',
+          component: userList
       }
   ]
 })
