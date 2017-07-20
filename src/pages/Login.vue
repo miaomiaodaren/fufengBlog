@@ -52,16 +52,24 @@
         methods: {
             onLogin() {
                 this.getAjax('/users/reginer', this.form, 'POST').then(res => {
-                    console.log(res)
+                    if(res.data.code === 1) {
+                        this.$message(res.data.message);
+                    } else {
+                        this.$message(res.data.message);
+                    }
                 }).catch(err => {
-                    console.log(err)
+                    this.$message(err.data.message);
                 })
             },
             onregistr() {
                 this.getAjax('/users/Getlogin', this.form2, 'POST').then(res => {
-                    console.log(res)
+                    if(res.data.code === 1) {
+                        this.$message(res.data.message);
+                    } else {
+                        this.$message(res.data.message);
+                    }
                 }).catch(err => {
-                    console.log(err)
+                    this.$message(err.data.message);
                 })
             },
             onresize(formName) {
