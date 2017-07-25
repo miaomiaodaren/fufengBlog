@@ -1,0 +1,14 @@
+/reginer        注册
+/login          登录
+/Getlogin       注册页口
+/GetAllUser     获取用户信息
+/RemoveUser     删除指定用户
+/UpdateUser     更新用户信息
+
+
+//分类
+
+/addTypes       添加分类
+/GetTypes       获取所有分类
+
+

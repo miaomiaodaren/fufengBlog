@@ -20,21 +20,32 @@ instance.interceptors.request.use(config => {
 
 const HOST = process.env.NODE_ENV === 'development' ? '/api' : ''
 
-const GetAjax = function(url, params, type) {
-    //
-    console.log(qs.stringify(params))
-    return new Promise((resolve, reject) => {
-        instance({
+
+//尝试使用async await 替换promise，使js更加语意化，并简洁
+const GetAjax = async function(url, params, type) {
+    try {
+        return await instance({
             url: HOST + url,
             method: type,
             // params: params,       使用params的时候如果跨域的时候会造成后台req.body无法获取值，只能用req.query获取值，造成混淆，所以这边改成data，使用qs转换
             data: qs.stringify(params)
-        }).then(res => {
-            resolve(res)
-        }).catch(err => {
-            reject(err)
         })
-    })
+    }
+    catch(err) {
+        console.log(err)
+    }
+    // return new Promise((resolve, reject) => {
+    //     instance({
+    //         url: HOST + url,
+    //         method: type,
+    //         // params: params,       使用params的时候如果跨域的时候会造成后台req.body无法获取值，只能用req.query获取值，造成混淆，所以这边改成data，使用qs转换
+    //         data: qs.stringify(params)
+    //     }).then(res => {
+    //         resolve(res)
+    //     }).catch(err => {
+    //         reject(err)
+    //     })
+    // })
 }
 
 export default GetAjax

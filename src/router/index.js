@@ -8,6 +8,7 @@ const Home = resolve => require(['@/pages/Home'], resolve);
 const Login = resolve => require(['@/pages/Login'], resolve);
 const userList = resolve => require(['@/pages/userlist'], resolve);
 const typeinfo = resolve => require(['@/pages/types'], resolve);
+const addnews = resolve => require(['@/pages/addnews'], resolve);
 
 Vue.use(Router)
 
@@ -33,6 +34,11 @@ export default new Router({
           path: '/typeinfo',
           name: '类表列表',
           component: typeinfo
+      },
+      {
+          path: '/addnews',
+          name: '增加文章',
+          component: addnews
       }
   ]
 })
