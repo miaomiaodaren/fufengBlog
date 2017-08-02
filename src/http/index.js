@@ -7,7 +7,7 @@ import { Loading, Message, Notification } from 'element-ui'
 const instance = axios.create({
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     //baseURL: 'http://testh5.huaqiaobao.cn',
-    timeout: 5000
+    timeout: 300000
 });
 
 instance.interceptors.request.use(config => {

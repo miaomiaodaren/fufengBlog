@@ -6,7 +6,7 @@
             </el-form-item>
             <el-form-item label="文章类别">
                 <el-select v-model="form.type" placeholder="请选择活动区域">
-                    <el-option v-for="(t, index) in types" :label="t.name" :value="t.name"></el-option>
+                    <el-option v-for="(t, index) in types" :label="t.name" :value="t.name" :key="index"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="文章内容">
@@ -35,7 +35,12 @@
             async onSubmit() {
                 try{
                     let res = await this.getAjax('/news/addNews', this.form, 'POST');
-                    console.log(res);
+                    if(res.data.code == 1) {
+                        this.$message(res.data.message);
+                        Object.keys(this.form).forEach(v => {
+                            this.form[v] = ''
+                        })
+                    }
                 }
                 catch (err) {
                     console.log(err);
