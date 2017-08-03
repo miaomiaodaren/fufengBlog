@@ -14,6 +14,7 @@ const newslist = resolve => require(['@/pages/news'], resolve);
 const books = resolve => require(['@/pages/books'], resolve);
 const bookzlist = resolve => require(['@/pages/bookzlist'], resolve);
 const bookcontent = resolve => require(['@/pages/bookcontent'], resolve);
+const chating = resolve => require(['@/pages/chating'], resolve);
 
 Vue.use(Router)
 
@@ -76,6 +77,19 @@ export default new Router({
                     page: bookcontent
                 }
             }]
-        }
+        },
+        {
+            path: '/music',
+            name: '聊天室',
+            component: Home2,
+            redirect: '/music/index',
+            children: [{
+                path: 'index',
+                name: '聊天室',
+                components: {
+                    page: chating
+                }
+            }]
+        },
     ]
 })
