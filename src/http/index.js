@@ -34,18 +34,6 @@ const GetAjax = async function(url, params, type) {
     catch(err) {
         console.log(err)
     }
-    // return new Promise((resolve, reject) => {
-    //     instance({
-    //         url: HOST + url,
-    //         method: type,
-    //         // params: params,       使用params的时候如果跨域的时候会造成后台req.body无法获取值，只能用req.query获取值，造成混淆，所以这边改成data，使用qs转换
-    //         data: qs.stringify(params)
-    //     }).then(res => {
-    //         resolve(res)
-    //     }).catch(err => {
-    //         reject(err)
-    //     })
-    // })
 }
 
 export default GetAjax

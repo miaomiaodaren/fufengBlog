@@ -7,6 +7,9 @@
                 <router-link to="/books/index">书城</router-link>
                 <router-link to="/music/index">音乐室</router-link>
                 <router-link to="/im/index">聊天室</router-link>
+                <div class="header_right">
+                    我要提问
+                </div>
             </nav>
         </header>
     </div>
@@ -43,4 +46,8 @@
                 a
                     color: #000
                     padding-right: 15px
+                .header_right
+                    text-align: right
+                    display: inline-block
+                    float: right
 </style>

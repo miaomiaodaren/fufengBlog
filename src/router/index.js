@@ -15,11 +15,12 @@ const books = resolve => require(['@/pages/books'], resolve);
 const bookzlist = resolve => require(['@/pages/bookzlist'], resolve);
 const bookcontent = resolve => require(['@/pages/bookcontent'], resolve);
 const chating = resolve => require(['@/pages/chating'], resolve);
+const question = resolve => require(['@/pages/question'], resolve);
 
 Vue.use(Router)
 
 export default new Router({
-  // mode: 'history',   default hash
+    // mode: 'history',   //default hash
     routes: [
         {
             path: '/',
@@ -50,6 +51,11 @@ export default new Router({
             path: '/news',
             name: '文章列表',
             component: newslist
+        },
+        {
+            path: '/question/:id',
+            name: '文章详情',
+            component: question
         },
         {
             path: '/books',
