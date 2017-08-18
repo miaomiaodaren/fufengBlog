@@ -18,7 +18,38 @@ exports.cssLoaders = function (options) {
       minimize: process.env.NODE_ENV === 'production',
       sourceMap: options.sourceMap
     }
-  }
+  };
+
+    var sassLoader = {
+        loader: 'sass-loader',
+        options: {
+            indentedSyntax: true,
+            sourceMap: options.sourceMap
+        }
+    }
+    function resolveResouce(name) {0
+        return path.resolve(__dirname, '../src/assets/sass/' + name);
+    }
+    function generateSassResourceLoader() {
+        var loaders = [
+            cssLoader, 
+            sassLoader,
+            {
+                loader: 'sass-resources-loader',
+                options: {
+                   resources: [resolveResouce('index.sass')],
+                }
+            }
+        ];
+        if (options.extract) {
+            return ExtractTextPlugin.extract({
+                use: loaders,
+                fallback: 'vue-style-loader'
+            })
+        } else {
+            return ['vue-style-loader'].concat(loaders)
+        }
+    }
 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
@@ -49,7 +80,8 @@ exports.cssLoaders = function (options) {
     css: generateLoaders(),
     postcss: generateLoaders(),
     less: generateLoaders('less'),
-    sass: generateLoaders('sass', { indentedSyntax: true }),
+    // sass: generateLoaders('sass', { indentedSyntax: true }),
+    sass: generateSassResourceLoader(),
     scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')

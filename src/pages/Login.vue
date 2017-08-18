@@ -101,6 +101,7 @@
 <style lang="sass" scoped type="text/sass">
     .login
         height: 100%
+        background-color: $mainColor
         .login_main
             width: 300px
             margin: 0 auto

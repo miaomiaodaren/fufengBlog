@@ -6,7 +6,6 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import GetAjax from '@/http/index'
-import '@/assets/util.js'
 import * as filters from '@/filter/index'
 
 import '@/assets/base.css'

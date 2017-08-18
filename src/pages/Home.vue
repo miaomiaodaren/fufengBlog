@@ -1,6 +1,5 @@
 <template>
     <div id="Home">
-        <headers></headers>
         <div class="main">
             <div class="content">
                 <div class="content_left">
@@ -18,9 +17,12 @@
                     </ul>
                     <page :total="50" @pagechange="pchange" :gopage="false"></page>
                 </div>
-                <div class="content_right">22</div>
+                <div class="content_right">
+                    <div class="">fdsafsafsda</div>
+                </div>
             </div>
         </div>
+        <headers></headers>
     </div>
 </template>
 <script>
@@ -36,6 +38,7 @@
     // })
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
+    import {clears} from '@/assets/util.js'
     export default {
         data() {
             return {
@@ -80,111 +83,95 @@
             page
         },
         mounted() {
+            const obj = [1,2,3,4,5];
+            clears(obj);
             this.GetNews();
             this.aa();
         }
     }
 </script>
-<style lang="scss" scoped type="text/scss">
-    #Home{
-        width: 100%;
-        height: 100%;
-        .banner{
-            width: 100%;
-            height: 53px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-bottom: 1px solid rgba(30,35,42,.06);
-            box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);
-            background-clip: content-box;
-            z-index: 100;
-            background: #fff;
-        }
-        nav{
-            width: 1200px;
-            margin: 0 auto;
-            line-height: 53px;
-            padding-left: 30px;
-            font-size: 16px;
-            text-align: left;
-            a {
-                color: #000;
-                padding-right: 15px;
-            }
-        }
-        .main{
-            background-color: #f7f8fa;
-            display: block;
-            padding-top: 65px;
-            .content {
-                width: 1200px;
-                margin: 0 auto;
-                text-align: left;
-                .content_left{
-                    width: 900px;
-                    float: left;
-                    ul{
-                        li{
-                            padding: 16px 20px;
-                            position: relative;
-                            margin-bottom: 10px;
-                            background-color: #fff;
-                            border: 1px solid #e7eaf1;
-                            border-radius: 2px;
-                            box-shadow: 0 1px 3px rgba(0,37,55,.05);
-                            box-sizing: border-box;
-                            span{
-                                color: #8590a6;
-                                line-height: 1;
-                            } 
-                            h2{
-                                font-size: 18px;
-                                font-weight: 700;
-                                line-height: 1.6;
-                            }
-                            .times{
-                                display: block;
-                                text-align: right;
-                            }
-                            .con_text{
-                                text-indent: each-line;
-                                font-size: 16px;
-                                line-height: 2;
-                                span{
-                                    &:first-child{
-                                        height: auto;
-                                        animation: appear 1s;
-                                    }  
-                                }
-                                .hascheck{
-                                    cursor: pointer;
-                                }
-                            }
-                        }
-                    }
-                }
-                .content_right{
-                    width: 250px;
-                    float: right;
-                }
-            }
-        }
-    }
-    @mixin keyframes($a) { 
-        @-webkit-keyframes #{$a} {
-            @content }
-        @-moz-keyframes #{$a} {
-            @content }
-        @keyframes #{$a} {
-            @content }
-    }
-    @include keyframes(appear) {
-        0% {
-            opacity: 0;
-        }
-        100% { 
-            opacity: 1;
-        } 
-    }
+<style lang="sass" scoped type="text/sass">
+    #Home
+        width: 100%
+        height: 100%
+        .banner
+            width: 100%
+            height: 53px
+            position: fixed
+            top: 0
+            left: 0
+            border-bottom: 1px solid rgba(30,35,42,.06)
+            box-shadow: 0 1px 3px 0 rgba(0,34,77,.05)
+            background-clip: content-box
+            z-index: 100
+            background: #fff
+        nav
+            width: 1200px
+            margin: 0 auto
+            line-height: 53px
+            padding-left: 30px
+            font-size: 16px
+            text-align: left
+            a 
+                color: #000
+                padding-right: 15px
+        .main
+            background-color: #f7f8fa
+            display: block
+            padding-top: 65px
+            .content 
+                width: 1200px
+                margin: 0 auto
+                text-align: left
+                .content_left
+                    width: 900px
+                    float: left
+                    ul
+                        li
+                            padding: 16px 20px
+                            position: relative
+                            margin-bottom: 10px
+                            background-color: #fff
+                            border: 1px solid #e7eaf1
+                            border-radius: 2px
+                            box-shadow: 0 1px 3px rgba(0,37,55,.05)
+                            box-sizing: border-box
+                            span
+                                color: #8590a6
+                                line-height: 1
+                            h2
+                                font-size: 18px
+                                font-weight: 700
+                                line-height: 1.6
+                            .times
+                                display: block
+                                text-align: right
+                            .con_text
+                                text-indent: each-line
+                                font-size: 16px
+                                line-height: 2
+                                span
+                                    &:first-child
+                                        height: auto
+                                        animation: appear 1s
+                                .hascheck
+                                    cursor: pointer
+                            .feet
+                                @include px2rem(font-size: 18px)
+                .content_right
+                    width: 250px
+                    float: right
+    @mixin keyframes($a) 
+        @-webkit-keyframes #{$a} 
+            @content 
+        @-moz-keyframes #{$a} 
+            @content 
+        @keyframes #{$a} 
+            @content 
+    @include keyframes(appear) 
+        0% 
+            opacity: 0
+        
+        100% 
+            opacity: 1
 </style>

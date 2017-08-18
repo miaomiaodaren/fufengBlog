@@ -18,4 +18,4 @@ export const timeFormat = (val, type) => {
         str = YY+"-"+(MM<10?'0'+MM:MM)+"-"+(DD<10?'0'+DD:DD)+" "+(hh<10?'0'+hh:hh)+": "+(mm<10?'0'+mm:mm)+": "+(ss<10?'0'+ss:ss);
     }
     return str;
-}
+};

@@ -29,9 +29,9 @@
             width: 100%
             height: 53px
             position: fixed
-            top: 0
+            bottom: 0
             left: 0
-            border-bottom: 1px solid rgba(30,35,42,.06)
+            border-top: 1px solid rgba(30,35,42,.06)
             box-shadow: 0 1px 3px 0 rgba(0,34,77,.05)
             background-clip: content-box
             z-index: 100
