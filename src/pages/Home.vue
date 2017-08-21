@@ -12,13 +12,11 @@
                                 <span v-if="n.content.length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck">阅读全文</em></span>
                                 <span v-if="n.content.length > 300 && showall" @click="showall = false" class="hascheck">收起</span>
                             </p>
-                            <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span>
+                            <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
+                            <span class="times">{{n.addtime}}</span>
                         </li>
                     </ul>
                     <page :total="50" @pagechange="pchange" :gopage="false"></page>
-                </div>
-                <div class="content_right">
-                    <div class="">fdsafsafsda</div>
                 </div>
             </div>
         </div>
@@ -39,6 +37,7 @@
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
     import {clears} from '@/assets/util.js'
+    import moment from '@/assets/monent.js'
     export default {
         data() {
             return {
@@ -52,7 +51,11 @@
             async GetNews() {
                 try {
                     let res = await this.getAjax('/news/newslist', {}, 'GET');
-                    this.newList = res.data;
+                    let s = res.data.map((v, n) => {
+                        v.addtime = moment.formart('yyyy:MM:dd', v.addtime)
+                    })
+                    console.log(s);
+                    this.newList = s;
                 }
                 catch(err) {
                     console.log(err)
@@ -87,6 +90,7 @@
             clears(obj);
             this.GetNews();
             this.aa();
+            console.info(moment.formart('yyyy:MM:dd', 'Mon Aug 23 2015 12:53:29 GMT+0800 (中国标准时间)'));
         }
     }
 </script>
@@ -96,7 +100,7 @@
         height: 100%
         .banner
             width: 100%
-            height: 53px
+            height: px2rem(106)
             position: fixed
             top: 0
             left: 0
@@ -108,7 +112,7 @@
         nav
             width: 1200px
             margin: 0 auto
-            line-height: 53px
+            line-height: px2rem(106)
             padding-left: 30px
             font-size: 16px
             text-align: left
@@ -118,17 +122,19 @@
         .main
             background-color: #f7f8fa
             display: block
-            padding-top: 65px
+            margin-bottom: px2rem(106)
             .content 
-                width: 1200px
+                width: 100%
                 margin: 0 auto
                 text-align: left
+                display: flex
                 .content_left
-                    width: 900px
-                    float: left
+                    width: 100%
+                    // float: left
+                    flex-grow: 1
                     ul
                         li
-                            padding: 16px 20px
+                            padding: px2rem(32) px2rem(40)
                             position: relative
                             margin-bottom: 10px
                             background-color: #fff
@@ -140,16 +146,18 @@
                                 color: #8590a6
                                 line-height: 1
                             h2
-                                font-size: 18px
+                                @include font-dpr(16px)
                                 font-weight: 700
                                 line-height: 1.6
                             .times
                                 display: block
                                 text-align: right
+                                @include font-dpr(14px)
                             .con_text
                                 text-indent: each-line
-                                font-size: 16px
+                                @include font-dpr(14px)
                                 line-height: 2
+                                overflow: hiddle
                                 span
                                     &:first-child
                                         height: auto
@@ -157,10 +165,8 @@
                                 .hascheck
                                     cursor: pointer
                             .feet
-                                @include px2rem(font-size: 18px)
-                .content_right
-                    width: 250px
-                    float: right
+                                // font-size: px2rem(60)
+                                @include font-dpr(16px)
     @mixin keyframes($a) 
         @-webkit-keyframes #{$a} 
             @content 

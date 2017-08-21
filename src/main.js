@@ -8,10 +8,13 @@ import 'element-ui/lib/theme-default/index.css'
 import GetAjax from '@/http/index'
 import * as filters from '@/filter/index'
 
+
+
+import moment from '@/assets/monent.js'
+
 import '@/assets/base.css'
 
 Vue.prototype.getAjax = GetAjax
-
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false

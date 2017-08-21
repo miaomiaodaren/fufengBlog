@@ -7,9 +7,9 @@
                 <router-link to="/books/index">书城</router-link>
                 <router-link to="/music/index">音乐室</router-link>
                 <router-link to="/im/index">聊天室</router-link>
-                <div class="header_right">
+                <!-- <div class="header_right">
                     我要提问
-                </div>
+                </div> -->
             </nav>
         </header>
     </div>
@@ -27,7 +27,7 @@
     #header
         .banner
             width: 100%
-            height: 53px
+            height: px2rem(72)
             position: fixed
             bottom: 0
             left: 0
@@ -37,15 +37,20 @@
             z-index: 100
             background: #fff
             nav
-                width: 1200px
+                width: 100%
                 margin: 0 auto
-                line-height: 53px
-                padding-left: 30px
-                font-size: 16px
+                line-height: px2rem(75)
+                @include font-dpr(14px)
                 text-align: left
+                display: flex
+                text-align: center
                 a
                     color: #000
                     padding-right: 15px
+                    flex: 1
+                    flex-direction: row
+                    flex-wrap: wrap
+                    align-content: flex-start
                 .header_right
                     text-align: right
                     display: inline-block
