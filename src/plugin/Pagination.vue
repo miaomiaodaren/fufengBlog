@@ -17,7 +17,7 @@
 <script>
     export default {
         name: 'page',
-        props: ["total", "gopage"],
+        // props: ["total", "gopage"],
         props: {
             total: {
                 type: Number

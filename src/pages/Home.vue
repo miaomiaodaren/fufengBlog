@@ -5,7 +5,7 @@
                 <div class="content_left">
                     <ul>
                         <li v-for="(n, index) in newList" :key="index">
-                            <span class="feet">来自模块 {{n.type}}</span>
+                            <span class="feet" @click="dd">来自模块 {{n.type}}</span>
                             <h2 @click="question(n._id)">{{n.title}}</h2>
                             <p class="con_text">
                                 <span ref="conter">{{showall ? n.content : n.content.substring(0, 300)}}</span>
@@ -16,7 +16,8 @@
                             <span class="times">{{n.addtime}}</span>
                         </li>
                     </ul>
-                    <page :total="50" @pagechange="pchange" :gopage="false"></page>
+                    <!-- 分页组件 -->
+                    <!-- <page :total="50" @pagechange="pchange" :gopage="false"></page> -->
                 </div>
             </div>
         </div>
@@ -51,11 +52,10 @@
             async GetNews() {
                 try {
                     let res = await this.getAjax('/news/newslist', {}, 'GET');
-                    let s = res.data.map((v, n) => {
-                        v.addtime = moment.formart('yyyy:MM:dd', v.addtime)
+                    res.data.map((v, n) => {
+                        v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime)
                     })
-                    console.log(s);
-                    this.newList = s;
+                    this.newList = res.data;
                 }
                 catch(err) {
                     console.log(err)
@@ -79,6 +79,9 @@
             },
             question(id) {
                 this.$router.push({path: '/question/' + id})
+            },
+            dd() {
+                navigator.vibrate(1000);  //实现手机振动 传入[],可振动多次
             }
         },
         components: {
@@ -90,7 +93,10 @@
             clears(obj);
             this.GetNews();
             this.aa();
-            console.info(moment.formart('yyyy:MM:dd', 'Mon Aug 23 2015 12:53:29 GMT+0800 (中国标准时间)'));
+            // console.info(moment(1503559089).formart('yyyy-MM-dd HH:mm:ss EE')); 
+            // console.info(moment().tiemrdeff('1992.07.14').defftime);
+            // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));
+            // console.info(moment('2017/8/24 14:48:13').subtract(2, 'H').formart('yyyy-MM-dd HH:mm:ss')); console.log('222');
         }
     }
 </script>
@@ -157,7 +163,7 @@
                                 text-indent: each-line
                                 @include font-dpr(14px)
                                 line-height: 2
-                                overflow: hiddle
+                                overflow: hidden
                                 span
                                     &:first-child
                                         height: auto

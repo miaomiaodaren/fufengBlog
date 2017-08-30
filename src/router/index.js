@@ -17,6 +17,9 @@ const bookcontent = resolve => require(['@/pages/bookcontent'], resolve);
 const chating = resolve => require(['@/pages/chating'], resolve);
 const question = resolve => require(['@/pages/question'], resolve);
 
+// css
+const cssing = resolve => require(['@/pages/cssing'], resolve);
+
 Vue.use(Router)
 
 export default new Router({
@@ -97,5 +100,18 @@ export default new Router({
                 }
             }]
         },
+        {
+            path: '/css',
+            name: 'css样式收集',
+            component: Home2,
+            redirect: '/css/index',
+            children: [{
+                path: 'index',
+                name: 'css汇总',
+                components: {
+                    page: cssing
+                }
+            }]
+        }
     ]
 })
