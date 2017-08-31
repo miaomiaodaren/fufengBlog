@@ -1,7 +1,7 @@
 <template>
     <div class="login">
         <div class="login_main">
-           <!--  <el-tabs v-model="activeName">
+<!--             <el-tabs v-model="activeName">
                 <el-tab-pane label="登录" name="login">
                     <el-form ref="form" :model="form">
                         <el-form-item label="" prop="name">
@@ -34,9 +34,12 @@
                         </el-form-item>
                     </el-form>
                 </el-tab-pane> 
-            </el-tabs>-->
+            </el-tabs> -->
             <tabs v-model="activeName">
-                <tabitem label="登录" name="login">213123123</tabitem>
+                <tabitem label="登录" name="login">
+                    <input type="text" name="name">
+                    <input type="password" name="psw">
+                </tabitem>
                 <tabitem label="注册" name="registr">333333333</tabitem>
             </tabs>
         </div>

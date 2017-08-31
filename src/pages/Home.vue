@@ -105,7 +105,7 @@
         width: 100%
         height: 100%
         .banner
-            width: 100%
+            width: 100% 
             height: px2rem(106)
             position: fixed
             top: 0
