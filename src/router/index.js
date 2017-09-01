@@ -19,6 +19,7 @@ const question = resolve => require(['@/pages/question'], resolve);
 
 // css
 const cssing = resolve => require(['@/pages/cssing'], resolve);
+const choujiang1 = resolve => require(['@/pages/choujiang1'], resolve);
 
 Vue.use(Router)
 
@@ -110,6 +111,12 @@ export default new Router({
                 name: 'css汇总',
                 components: {
                     page: cssing
+                }
+            }, {
+                path: 'cj1',
+                name: '抽奖转盘',
+                components: {
+                    page: choujiang1
                 }
             }]
         }

@@ -9,7 +9,7 @@
                 <router-link :to="{ path: '/css/funpage'}" class="lists">文字延时</router-link>
             </li>
             <li>
-                <router-link :to="{ path: '/css/funpage'}" class="lists">抽奖转盘</router-link>
+                <router-link :to="{ path: '/css/cj1'}" class="lists">抽奖转盘</router-link>
             </li>
             <li>
                 <router-link :to="{ path: '/css/funpage'}" class="lists">抽奖老虎机</router-link>

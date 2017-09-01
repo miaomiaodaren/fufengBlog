@@ -37,7 +37,7 @@
     // })
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears} from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape} from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     export default {
         data() {
@@ -53,7 +53,8 @@
                 try {
                     let res = await this.getAjax('/news/newslist', {}, 'GET');
                     res.data.map((v, n) => {
-                        v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime)
+                        v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
+                        v.content = unescape(delHtmlTag(v.content));
                     })
                     this.newList = res.data;
                 }

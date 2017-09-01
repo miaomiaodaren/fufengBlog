@@ -1,41 +1,29 @@
 <template>
     <div id="news">
-        <el-table :data="tableData" border style="width: 100%">
-            <el-table-column label="_id" width="180">
-                <template scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row._id }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="标题">
-                <template scope="scope">
-                    {{ scope.row.title }}
-                </template>
-            </el-table-column>
-            <el-table-column label="内容">
-                <template scope="scope">
-                    {{ scope.row.content }}
-                </template>
-            </el-table-column>
-            <el-table-column label="类别">
-                <template scope="scope">
-                    {{ scope.row.type }}
-                </template>
-            </el-table-column>
-            <el-table-column label="发布时间">
-                <template scope="scope">
-                    {{ scope.row.addtime }}
-                </template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+        <div class="news_header">
+            <div class="news_header_item">id</div>
+            <div class="news_header_item">标题</div>
+            <div class="news_header_item">类别</div>
+            <div class="news_header_item">操作</div>
+        </div>
+        <div class="news_main">
+            <ul>
+                <li class="news_header" v-for="(n, index) in tableData">
+                    <div class="news_header_item">{{index + 1}}</div>
+                    <div class="news_header_item">{{n.title}}</div>
+                    <div class="news_header_item">{{n.type}}</div>
+                    <div class="news_header_item">
+                        <el-button size="mini" @click="handleEdit(index)">编辑</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(index)">删除</el-button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <headers></headers>
     </div>
 </template>
 <script>
+    import headers from '@/include/header.vue'
     export default {
         data() {
             return {
@@ -53,8 +41,26 @@
                 }
             }
         },
+        components: {
+            headers,
+        },
         mounted() {
             this.getData();
         }
     }
 </script>
+
+<style lang="sass" scoped type="text/sass">
+    #news
+        width: 100%
+        overflow: hidden
+        .news_header
+            display: flex
+            margin-bottom: px2rem(30)
+            .news_header_item
+                flex: 1
+                text-align: center
+                height: px2rem(90)
+                line-height: px2rem(90)
+                border-bottom: 1px solid #ddd
+</style>

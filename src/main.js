@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-default/index.css'
 import GetAjax from '@/http/index'
 import * as filters from '@/filter/index'
 
-
+import VueQuillEditor from 'vue-quill-editor'
 
 import moment from '@/assets/monent.js'
 
@@ -17,6 +17,8 @@ import '@/assets/base.css'
 Vue.prototype.getAjax = GetAjax
 
 Vue.use(ElementUI)
+Vue.use(VueQuillEditor)
+
 Vue.config.productionTip = false
 
 Object.keys(filters).forEach(v => {

@@ -5,14 +5,24 @@
 </template>
 <script>
     export default {
+        name: 'tabsitem',
+        componentName: 'tabsitem',
         data() {
             return {
-                pname: this.$parent.value
+                // pname: this.$parent.$parent.activeName
             }
         },
         props: {
             label: [String, Number],
             name: [String, Number],
+            test: [String, Number]
+        },
+        computed: {
+            pname: {
+                get() {
+                    return this.$parent.$parent.activeName
+                }
+            }
         },
         // render(h) {
         //     let {
@@ -35,7 +45,13 @@
     width: 100%
     input
         width: px2rem(594)
-        height: px2rem(60)
-        border-radius: 10px
-        margin-bottom: px2rem(40)
+        box-shadow: 0 0 0 30px #fff inset
+        padding: px2rem(25)
+        @include font-dpr(14px)
+        position: relative
+        z-index: 1
+        display: inline-block
+        width: calc(100% - 2px)
+        vertical-align: top
+        border: 0
 </style>

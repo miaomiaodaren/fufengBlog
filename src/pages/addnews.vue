@@ -10,16 +10,20 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="文章内容">
-                <el-input type="textarea" v-model="form.content"></el-input>
+                <!-- <el-input type="textarea" v-model="form.content"></el-input> -->
+                <quill-editor ref="myTextEditor" v-model="form.content" :config="editorOption">
+                </quill-editor>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">立即创建</el-button>
                 <el-button>取消</el-button>
             </el-form-item>
         </el-form>
+        <headers></headers>
     </div>
 </template>
 <script>
+    import headers from '@/include/header.vue'
     export default {
         data() {
             return {
@@ -28,7 +32,11 @@
                     type: '',
                     content: ''
                 },
-                types: []
+                types: [],
+                content: '<h2>I am Example</h2>',
+                editorOption: {
+                    //编辑器内容
+                }
             }
         },
         methods: {
@@ -55,6 +63,9 @@
                     console.log(err)
                 }
             }
+        },
+        components: {
+            headers
         },
         mounted() {
             this.getType();
