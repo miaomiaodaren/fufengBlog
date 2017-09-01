@@ -1,22 +1,25 @@
 <template>
     <div id="tabs">
         <div class="tabs-header">
-            <div class="tabs-head-item" v-for="(n, index) in labels" :key="index" @click="changItem(index)">
+            <div class="tabs-head-item" :class="{'is-active': (nowtabs || tabcount[0]) === tabcount[index] ? true : false}" v-for="(n, index) in labels" :key="index" @click="changItem(index)">
                 {{n}}
             </div>
         </div>
         <div class="tabs-main">
-            <slot></slot>    
+            <slot test="woshishabi"></slot>    
         </div>
     </div>
 </template>
 <script>
     export default {
         name: 'tabs',
+        componentName: 'tabs',
         data() {
             return {
                 vidv: 12,
-                labels: {},
+                labels: [],
+                tabcount: [],
+                nowtabs: ''
             }
         },
         props: {
@@ -24,18 +27,19 @@
         },
         methods: {
             addLabel(item, name) {
-                if(!this.labels[name]) {
-                    this.labels[name] = item;
+                if(!this.labels.includes(item)) {
+                    this.labels.push(item);
+                    this.tabcount.push(name);
                 }
-                console.info(this.labels);
             },
             changItem(val) {
-                this.$emit('input', val)
+                this.$emit('input', this.tabcount[val]);
+                this.nowtabs = this.tabcount[val];
+                // this.dispatch('tabsitem', 'pname', [this.tabcount[val]]);
             }
         },
         watch: {
             labels() {
-                console.info(this.labels);
             }
         },
         mounted() {
@@ -48,4 +52,8 @@
         .tabs-head-item
             display: inline-block
             padding: px2rem(20) px2rem(20)
-</style>
+            @include font-dpr(16px)
+            color: #555
+            &.is-active
+                color: #00aaff
+</style>3

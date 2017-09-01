@@ -11,6 +11,7 @@
                         <router-link to="/abouts">产品介绍</router-link>
                         <router-link to="/css">CSS3样式收集</router-link>
                         <router-link to="/login">登录</router-link>
+                        <router-link to="/news">问题列表</router-link>
                     </navsitem>
                 </navs>
                 <!-- <div class="header_right">

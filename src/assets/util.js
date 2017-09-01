@@ -1,4 +1,9 @@
 var count = 0;
+
+function classReg( className ) {
+    return new RegExp("(^|\\s+)" + className + "(\\s+|$)");
+}
+
 export function uniqueId(prefix) {
     var id = ++count + '';
     return prefix ? prefix + id : id;
@@ -19,4 +24,20 @@ export const clears = (obj) => {
        obj.length = 0;
     }
     return obj
+}
+
+export const hasClass = (ele, v) => {
+    return classReg( v ).test( ele.className );
+}
+
+export const addClass = (ele, v) => {
+    if( !hasClass( ele, v ) ) {
+        ele.className = ele.className + ' ' + v;
+    }
+}
+
+export const removeClass = (ele, v) => {
+    if(hasClass( ele, v )) {
+        ele.className = ele.className.replace(classReg(v), ' ')
+    }
 }
