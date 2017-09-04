@@ -14,6 +14,12 @@
             <li>
                 <router-link :to="{ path: '/css/funpage'}" class="lists">抽奖老虎机</router-link>
             </li>
+            <li>
+                <router-link :to="{ path: '/css/flextop'}" class="lists">Sticky header</router-link>
+            </li>
+            <li>
+                <router-link :to="{ path: '/css/tabnav'}" class="lists">tabnav</router-link>
+            </li>
         </ul>
         <headers></headers>
     </div>
@@ -40,10 +46,12 @@
         .csslist
             margin: 0 px2rem(40)
             display: flex
+            flex-wrap: wrap
             li
                 min-width: px2rem(160)
                 flex: 1
                 display: inline-block
+                margin-bottom: px2rem(40)
                 .lists
                     cursor: pointer
                     height: px2rem(80)

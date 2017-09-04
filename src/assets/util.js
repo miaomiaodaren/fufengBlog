@@ -45,22 +45,17 @@ var unescapeMap = invert(escapeMap);
 export const escape = createEscaper(escapeMap);
 export const unescape = createEscaper(unescapeMap);
 
-
 //正则去取HTML标签 
 export function delHtmlTag(str) {
     // return str.replace(/<[^>]+>/g,"");
     return str.replace(/<\/?.+?>/g, "").replace(/ /g, "");
 }
 
-
 //生成唯一id
 export function uniqueId(prefix) {
     var id = ++count + '';
     return prefix ? prefix + id : id;
 }
-
-
-
 
 export const clears = (obj) => {
     let objtype = Object.prototype.toString.call(obj);
@@ -89,4 +84,15 @@ export const removeClass = (ele, v) => {
     if(hasClass( ele, v )) {
         ele.className = ele.className.replace(classReg(v), ' ')
     }
+}
+
+//判断文字的长度(字符串为2字符,数字为1个字符)
+export function getByteLen(val) {
+   let len = 0;
+   for (let i = 0; i < val.length; i++) {
+     if (val[i].match(/[^\x00-\xff]/ig) != null) {
+       len += 2;
+     } else { len += 1; }
+   }
+   return Math.floor(len);
 }

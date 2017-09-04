@@ -37,7 +37,7 @@
     // })
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape} from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen} from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     export default {
         data() {

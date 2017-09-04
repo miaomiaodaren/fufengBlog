@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 
 import news from '@/router/map/new'
+import iscss from '@/router/map/css'
 
 const Home = resolve => require(['@/pages/Home'], resolve);
 const Home2 = resolve => require(['@/pages/Home2'], resolve);
@@ -20,6 +21,7 @@ const question = resolve => require(['@/pages/question'], resolve);
 // css
 const cssing = resolve => require(['@/pages/cssing'], resolve);
 const choujiang1 = resolve => require(['@/pages/choujiang1'], resolve);
+const outexcel = resolve => require(['@/components/outexcel'], resolve);
 
 Vue.use(Router)
 
@@ -101,24 +103,11 @@ export default new Router({
                 }
             }]
         },
+        iscss,
         {
-            path: '/css',
-            name: 'css样式收集',
-            component: Home2,
-            redirect: '/css/index',
-            children: [{
-                path: 'index',
-                name: 'css汇总',
-                components: {
-                    page: cssing
-                }
-            }, {
-                path: 'cj1',
-                name: '抽奖转盘',
-                components: {
-                    page: choujiang1
-                }
-            }]
+            path: '/outexcel',
+            name: '导出excel',
+            component: outexcel,
         }
     ]
 })

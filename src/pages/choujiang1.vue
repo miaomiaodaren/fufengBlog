@@ -3,9 +3,18 @@
 		<section class="gb-wheel-container" id="gbWheel">
 		    <div class="gb-wheel-content gb-wheel-run">
 		        <ul class="gb-wheel-line">
-		        	<li class="gb-wheel-litem" v-for="(n, index) in cjcon" ></li>
+		        	<li class="gb-wheel-litem" v-for="(n, index) in cjcon" :style="{transform: 'rotate('+ (index * turnNum + turnNum / 2) +'turn)'}"></li>
 		        </ul>
-		        <div class="gb-wheel-list" v-html="itemListHtml.join('')"></div>
+		        <div class="gb-wheel-list">
+                    <div class="gb-wheel-item">
+                        <div class="gb-wheel-icontent" v-for="(n, index) in cjcon" :style="{transform: 'rotate('+ (index * turnNum) +'turn)'}">
+                            <p class="gb-wheel-iicon">
+                                <i :class="n.name"></i>
+                            </p>
+                            <p class="gb-wheel-itext">{{n.text}}</p>
+                        </div>
+                    </div>      
+                </div>
 		    </div>
 		    <p class="gb-wheel-btn" @click="startCJ" id="gbLottery">抽奖</p>     
 		</section>
@@ -27,28 +36,32 @@
 		        ],
 		        lineListHtml: [],
         		itemListHtml: [],
-        		turnNum: 1 / (this.cjcon.length),
         		cjcount: 0
 			}
 		},
+        computed: {
+            turnNum() {
+                return 1 / (this.cjcon.length)
+            }
+        },
 		methods: {
-			cjaddHtml() {
-				let len = this.cjcon.length,
-					turnNum = 1 / len;
-				this.cjcon.forEach((v, i, a)=> {
-			        // this.lineListHtml.push('<li class="gb-wheel-litem" style="transform: rotate('+ (i * turnNum + turnNum / 2) +'turn)"></li>');
-			        this.itemListHtml.push('<div class="gb-wheel-item">');
-			        this.itemListHtml.push('<div class="gb-wheel-icontent" style="transform: rotate('+ (i * turnNum) +'turn)">');
-			        this.itemListHtml.push('<p class="gb-wheel-iicon">');
-			        this.itemListHtml.push('<i class="'+v.name+'"></i>');
-			        this.itemListHtml.push('</p>');
-			        this.itemListHtml.push('<p class="gb-wheel-itext">');
-			        this.itemListHtml.push(v.text);
-			        this.itemListHtml.push('</p>');
-			        this.itemListHtml.push('</div>');
-			        this.itemListHtml.push('</div>');
-			    });         
-			},
+			// cjaddHtml() {
+			// 	let len = this.cjcon.length,
+			// 		turnNum = 1 / len;
+			// 	this.cjcon.forEach((v, i, a)=> {
+			//         // this.lineListHtml.push('<li class="gb-wheel-litem" style="transform: rotate('+ (i * turnNum + turnNum / 2) +'turn)"></li>');
+			//         // this.itemListHtml.push('<div class="gb-wheel-item">');
+			//         // this.itemListHtml.push('<div class="gb-wheel-icontent" style="transform: rotate('+ (i * turnNum) +'turn)">');
+			//         // this.itemListHtml.push('<p class="gb-wheel-iicon">');
+			//         // this.itemListHtml.push('<i class="'+v.name+'"></i>');
+			//         // this.itemListHtml.push('</p>');
+			//         // this.itemListHtml.push('<p class="gb-wheel-itext">');
+			//         // this.itemListHtml.push(v.text);
+			//         // this.itemListHtml.push('</p>');
+			//         // this.itemListHtml.push('</div>');
+			//         // this.itemListHtml.push('</div>');
+			//     });         
+			// },
 			startCJ() {
 				let len = this.cjcon.length,
 					addtr = 360 - (360 / len) * 2;
@@ -57,7 +70,7 @@
 			}
 		},
 		mounted() {
-			this.cjaddHtml()
+			// this.cjaddHtml()
 		}
 	}
 </script>
