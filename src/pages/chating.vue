@@ -52,11 +52,11 @@
             }
         },
         mounted() {
-            this.getSocket();
-            socket.on('receiveMsg', function(data) {
-                console.log(data); console.log('222');
-                this.msgcon.push(data);
-            })
+            // this.getSocket();
+            // socket.on('receiveMsg', function(data) {
+            //     console.log(data); console.log('222');
+            //     this.msgcon.push(data);
+            // })
         }
     }
 </script>

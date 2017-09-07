@@ -3,6 +3,7 @@ const cssing = resolve => require(['@/pages/cssing'], resolve);
 const choujiang1 = resolve => require(['@/pages/choujiang1'], resolve);
 const flextop = resolve => require(['@/components/css/sticky'], resolve);
 const tabnav = resolve => require(['@/components/css/tabnav'], resolve);
+const upload = resolve => require(['@/components/upload/index'], resolve);
 
 export default {
     path: '/css',
@@ -37,6 +38,12 @@ export default {
         name: '左侧切入',
         components: {
             page: tabnav
+        }
+    }, {
+        path: 'upload',
+        name: '上拉刷新',
+        components: {
+            page: upload
         }
     }]
 }

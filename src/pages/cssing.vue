@@ -20,6 +20,9 @@
             <li>
                 <router-link :to="{ path: '/css/tabnav'}" class="lists">tabnav</router-link>
             </li>
+            <li>
+                <router-link :to="{ path: '/css/upload'}" class="lists">上拉刷新</router-link>
+            </li>
         </ul>
         <headers></headers>
     </div>
