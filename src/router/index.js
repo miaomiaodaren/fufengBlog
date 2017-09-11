@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 
 import news from '@/router/map/new'
 import iscss from '@/router/map/css'
+import admin from '@/router/map/admin'
 
 const Home = resolve => require(['@/pages/Home'], resolve);
 const Home2 = resolve => require(['@/pages/Home2'], resolve);
@@ -108,6 +109,7 @@ export default new Router({
             path: '/outexcel',
             name: '导出excel',
             component: outexcel,
-        }
+        },
+        admin
     ]
 })

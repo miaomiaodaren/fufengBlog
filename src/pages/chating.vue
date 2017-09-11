@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div id="chating">
         <div class="xxlist">
 
@@ -60,3 +60,4 @@
         }
     }
 </script>
+ -->

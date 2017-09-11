@@ -15,7 +15,7 @@
         props: {
             label: [String, Number],
             name: [String, Number],
-            test: [String, Number]
+            test: [String, Number],
         },
         computed: {
             pname: {

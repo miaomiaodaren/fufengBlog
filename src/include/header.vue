@@ -10,7 +10,7 @@
                     <navsitem to="/" label="更多" index="1">
                         <router-link to="/abouts">产品介绍</router-link>
                         <router-link to="/css">CSS3样式收集</router-link>
-                        <router-link to="/login">登录</router-link>
+                        <router-link to="/admin/login">登录</router-link>
                         <router-link to="/news">问题列表</router-link>
                         <router-link to="/addnews">发布问题</router-link>
                         <router-link to="/outexcel">导出excel</router-link>
