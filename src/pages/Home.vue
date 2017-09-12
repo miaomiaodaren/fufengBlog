@@ -98,6 +98,7 @@
             // console.info(moment().tiemrdeff('1992.07.14').defftime);
             // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));
             // console.info(moment('2017/8/24 14:48:13').subtract(2, 'H').formart('yyyy-MM-dd HH:mm:ss')); console.log('222');
+            console.info(this)
         }
     }
 </script>

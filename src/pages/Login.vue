@@ -83,7 +83,7 @@
                     psw: '',
                     imgcode: ''
                 },
-                imgsrc: 'http://127.0.0.1:3000/users/GetImgCode?'
+                imgsrc: api + '/users/GetImgCode?'
             }
         },
         methods: {
@@ -147,6 +147,7 @@
         },
         mounted() {
             // this.changeimg();
+            alert(this.imgsrc);
         }
     }
 </script>

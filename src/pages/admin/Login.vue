@@ -2,7 +2,7 @@
     <div class="login">
         <div class="login_main">
             <tabs v-model="activeName">
-                <tabitem label="登录" name="login">
+                <tabitem label="登录1" name="login">
                     <span class="inputs inputs-madoka">
                         <input type="text" name="name" @focus="hasfocus" @blur="removefocus" class="input__field input__field--madoka" v-model="form.name" id="login_name" placeholder="请输入用户名">
                         <label class="input__label input__label--madoka" for="login_name">
@@ -45,6 +45,7 @@
     import tabitem from '@/plugin/tabs/tab-item.vue'
     import * as uts from '@/assets/util.js'
     import headers from '@/include/header.vue'
+    import jsons from '@/assets/config.json'
     export default {
         data() {
             return {
@@ -58,19 +59,15 @@
                     name: '',
                     psw: '',
                 },
-                imgsrc: 'http://127.0.0.1:3000/users/GetImgCode?'
+                isdev: process.env.NODE_ENV === 'development' ? jsons.src.development : jsons.src.production,
+            }
+        },
+        computed: {
+            imgsrc() {
+                return this.isdev + '/users/GetImgCode?'
             }
         },
         methods: {
-            // aa() {
-            //     return new Promise(resolve => {
-            //         resolve('aaaa')
-            //     })
-            // },
-            // async bb() {
-            //     let cc = await this.aa();
-            //     console.log(cc)
-            // }
             hasfocus(e) {
                 // event.currentTarget  获取元素dom
                 uts.addClass(event.currentTarget.parentNode, 'input--filled')
@@ -83,7 +80,7 @@
                     let res = await this.getAjax('/users/reginer', this.form, 'POST');
                     if(res.data.code === 1) {
                         this.$message('登录成功!');
-                        this.$store.dispatch('LoginSuccess', this.form);
+                        // this.$store.dispatch('LoginSuccess', this.form);
                         this.$router.push({path: '/'});
                     } else {
                         this.$message(res.data.message);
@@ -120,6 +117,7 @@
             headers,
         },
         mounted() {
+            console.info(document.cookie);
             this.changeimg();
         }
     }

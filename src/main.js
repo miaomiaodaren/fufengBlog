@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import GetAjax from '@/http/index'
 import * as filters from '@/filter/index'
+import store from '@/store/index'
 
 import VueQuillEditor from 'vue-quill-editor'
 
@@ -31,6 +32,7 @@ Vue.prototype.onlyid = 1;
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

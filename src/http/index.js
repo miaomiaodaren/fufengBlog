@@ -4,10 +4,13 @@ import qs from 'query-string'
 
 import { Loading, Message, Notification } from 'element-ui'
 
+axios.defaults.withCredentials = true;
+
 const instance = axios.create({
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     //baseURL: 'http://testh5.huaqiaobao.cn',
-    timeout: 300000
+    timeout: 300000,
+    // withCredentials: true,
 });
 
 instance.interceptors.request.use(config => {
