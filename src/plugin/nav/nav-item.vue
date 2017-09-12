@@ -3,7 +3,7 @@
         <div class="nav_title" @click="hasshow = !hasshow">
             {{label}}
         </div>
-        <div class="nav_main" v-show="hasshow">
+        <div class="nav_main" v-show="hasshow" :style="notdirection[direction]">
             <slot></slot>
         </div>   
     </div>
@@ -13,7 +13,11 @@
         name: 'nav-item',
         data() {
             return {
-                hasshow: false
+                hasshow: false,
+                notdirection: {
+                    top: {bottom: '100%'},
+                    bottom: {top: '100%'}
+                }
             }
         },
         props: {
@@ -22,15 +26,31 @@
             },
             label: {
                 type: String
+            },
+            direction: {
+                type: String,
+                defaule: 'top'
             }
         },
         mounted() {
+            console.info(this.direction, '2222');
         }
     }
 </script>
 <style lang="sass" scoped type="text/sass">
     .nav-item
         position: relative
+        .nav_title
+            padding: 3px 12px
+            a
+                color: #000
+                padding-right: 15px
+                flex: 1
+                flex-direction: row
+                flex-wrap: wrap
+                align-content: flex-start
+                white-space: nowrap
+                text-overflow: ellipsis
         .nav_main
             position: absolute
             right: px2rem(-20)

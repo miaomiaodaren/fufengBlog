@@ -80,8 +80,8 @@
                     let res = await this.getAjax('/users/reginer', this.form, 'POST');
                     if(res.data.code === 1) {
                         this.$message('登录成功!');
-                        // this.$store.dispatch('LoginSuccess', this.form);
-                        this.$router.push({path: '/'});
+                        this.$store.dispatch('LoginSuccess', this.form);
+                        this.$router.push({path: '/admin'});
                     } else {
                         this.$message(res.data.message);
                     }

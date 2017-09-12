@@ -117,7 +117,7 @@
     </div>
 </template>
 <script>
-    import Sticky from '@/components/sticky/index.vue'
+    import Sticky from '@/plugin/sticky/index.vue'
     import headers from '@/include/header.vue'
     export default {
         name: 'Stickyheader',

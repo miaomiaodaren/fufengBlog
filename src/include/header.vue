@@ -69,8 +69,4 @@
                     align-content: flex-start
                     white-space: nowrap
                     text-overflow: ellipsis
-                .header_right
-                    text-align: right
-                    display: inline-block
-                    float: right
 </style>

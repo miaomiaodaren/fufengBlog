@@ -10,6 +10,10 @@
             }
         },
         props: {
+            direction: {
+                type: String,
+                default: 'top'
+            }
         },
         methods: {
         },

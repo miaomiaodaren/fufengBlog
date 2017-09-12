@@ -1,5 +1,6 @@
 const Home2 = resolve => require(['@/pages/Home2'], resolve);
 const Login = resolve => require(['@/pages/admin/Login'], resolve);
+const index = resolve => require(['@/pages/admin/index'], resolve);
 
 export default {
     path: '/admin',
@@ -9,7 +10,7 @@ export default {
     children: [{
         path: 'index',
         name: '后台首页',
-        components: {page: Login}, 
+        components: {page: index}, 
     }, {
         path: 'login',
         name: '后台登录',
