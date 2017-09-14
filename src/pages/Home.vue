@@ -2,6 +2,19 @@
     <div id="Home">
         <div class="main">
             <div class="content">
+                <div class="search">
+                    <!-- <minput v-model="searchcon" type="number" icon="search" :on-icon-click="hassearch"></minput> -->
+                    <div class="mm_input">
+                        <input class="searchinput" v-model="searchcon" @focus="isfocus= true" @blur="isfocus = false" :class="{searchfocus: isfocus}">
+                        <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
+                        <div class="searchdata" v-if="searchcon.length >= 1">
+                            <p  v-if="serchdata.length > 0">
+                                <router-link :to="{ path: '/question/' + n._id}" v-for="(n, index) in serchdata" class="lists">{{n.title}}</router-link>
+                            </p>
+                            <p v-else>暂无搜索记录</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="content_left">
                     <ul>
                         <li v-for="(n, index) in newList" :key="index">
@@ -39,6 +52,7 @@
     import page from '@/plugin/Pagination.vue'
     import {clears, delHtmlTag, unescape, getByteLen} from '@/assets/util.js'
     import moment from '@/assets/monent.js'
+    import minput from '@/plugin/input/index'
     export default {
         data() {
             return {
@@ -46,6 +60,17 @@
                 showall: false,
                 name: '2222',
                 total: 0,
+                searchcon: '',
+                isfocus: false,
+                serchdata: ''
+            }
+        },
+        watch: {
+            searchcon(value, oldval) {
+                if(value != oldval && value.length >= 1) {
+                    this.hassearch(value);
+                }
+                return value
             }
         },
         methods:{
@@ -55,8 +80,10 @@
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         v.content = unescape(delHtmlTag(v.content));
+                    });
+                    this.$nextTick(()=> {
+                        this.newList = res.data;
                     })
-                    this.newList = res.data;
                 }
                 catch(err) {
                     console.log(err)
@@ -67,6 +94,19 @@
                     let res = await this.getAjax('/news/aa', {}, 'GET');
                 } catch (err) {
                     console.log(err)
+                }
+            },
+            async hassearch(val) {
+                try{
+                    let res = await this.getAjax('/news/search', {value: val}, 'POST');
+                    res.data.map((v, n) => {
+                        v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
+                        v.content = unescape(delHtmlTag(v.content));
+                    });
+                    console.info(res);
+                    this.serchdata = res.data;
+                } catch (err) {
+                    this.$message(err);
                 }
             },
             getMore(id) {
@@ -87,7 +127,8 @@
         },
         components: {
             headers,
-            page
+            page,
+            minput
         },
         mounted() {
             const obj = [1,2,3,4,5];
@@ -135,11 +176,9 @@
                 width: 100%
                 margin: 0 auto
                 text-align: left
-                display: flex
                 .content_left
                     width: 100%
                     // float: left
-                    flex-grow: 1
                     ul
                         li
                             padding: px2rem(32) px2rem(40)
@@ -157,6 +196,8 @@
                                 @include font-dpr(16px)
                                 font-weight: 700
                                 line-height: 1.6
+                                color: $mainColor
+                                display: table
                             .times
                                 display: block
                                 text-align: right
@@ -175,6 +216,50 @@
                             .feet
                                 // font-size: px2rem(60)
                                 @include font-dpr(16px)
+                .search
+                    height: px2rem(90)
+                    background-color: $mainColor
+                    display: block
+                    width: 100%
+                    flex-grow: 2
+                    position: relative
+                    // padding-top: px2rem(14)
+                    .searchinput
+                        width: px2rem(500)
+                        height: px2rem(66)
+                        border-radius: 3px
+                        margin: px2rem(12) 0 px2rem(12) px2rem(100)
+                        @include font-dpr(16px)
+                        box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2) 0 1px 0 rgba(255, 255, 255, .1)
+                        outline: 0
+                        border: 1px solid $mainColor
+                        padding-left: px2rem(20)
+                        transition: width .5s
+                        padding-right: px2rem(80)
+                    .searchfocus
+                        width: px2rem(630)
+                        transition: width .7s
+                    .searchicon
+                        color: #ddd
+                        margin-left: px2rem(-70)
+                        @include font-dpr(20px)
+                        position: relative
+                        margin-top: px2rem(20)
+                        z-index: 99
+                    .searchdata
+                        width: 100%
+                        height: auto
+                        background-color: #fff
+                        padding: px2rem(20)
+                        position: absolute
+                        z-index: 100
+                        top: px2rem(90)
+                        left: 0
+                        @include font-dpr(16px)
+                        p, a
+                            line-height: px2rem(80)
+                            border-bottom: 1px solid #ddd
+                            display: block
     @mixin keyframes($a) 
         @-webkit-keyframes #{$a} 
             @content 
