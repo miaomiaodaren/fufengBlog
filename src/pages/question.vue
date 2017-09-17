@@ -1,27 +1,17 @@
 <template>
     <div id="question">
-        <div style="display: block">
-            <headers></headers>
-        </div>
+        <headers></headers>
         <div class="QuestionHeader">
             <div class="main">
                 <div class="questiontips">
                     <ul>
-                        <li>前端开发</li>
-                        <li>VUE开发</li>
+                        <li>{{dataview.type}}</li>
                     </ul>
                 </div>
-                <h3>南非世界杯城区城区四方达要</h3>
+                <h3>{{dataview.title}}</h3>
             </div>
         </div>
-        <div class="QuestionContent main">
-            <div class="question_left">
-                <ul>
-                    <li>3123123123</li>
-                </ul>
-            </div>
-            <div class="question_right">
-            </div>
+        <div class="QuestionContent main" v-html="dataview.content">
         </div>
     </div>
 </template>
@@ -31,71 +21,68 @@
         name: 'question',
         data() {
             return {
-                id: this.$route.params.id
+                id: this.$route.params.id,
+                dataview: ''
+            }
+        },
+        methods: {
+            async getDataById(id) {
+                try{
+                    let res = await this.getAjax('/news/newslist', {_id: id}, 'POST');
+                    this.dataview = res.data[0];
+                } catch(err) {
+                    console.info(err)
+                }
             }
         },
         mounted() {
-            
+            this.getDataById(this.id);
         },
         components: {
             headers
         }
     }
 </script>
-<style lang="scss" scoped type="text/scss">
-    #question{
-        background-clip: #f3f3f3;
-        .QuestionHeader{
-            margin-top: 65px;
-            background-color: #fff;
-            padding: 10px;
-            height: 160px;
-            box-shadow: 0 1px 3px 0 rgba(0,37,55,.1);
-            .main{
-                width: 1200px;
-                margin: 0 auto;
-                text-align: left;
-                padding-left: 20px;
-                .questiontips{
-                    ul{
-                        li{
-                            display: inline-block;
-                            height: 30px;
-                            font-size: 14px;
-                            color: #3e7ac2;
-                            background: #eef4fa;
-                            border-radius: 100px;
-                            padding: 5px 22px;
-                        }
-                    }
-                }
-                h3{
-                    margin-top: 12px;
-                    margin-bottom: 4px;
-                    font-size: 22px;
-                    font-weight: 700;
-                    line-height: 32px;
-                    color: #1e1e1e;
-                }
-            }
-        }
-        .QuestionContent{
-            .question_left{
-                width: 900px;
-                float: left;
-                ul{
-                    margin-top: 10px;
-                    li{
-                        min-height: 50px;
-                        background-color: #fff;
-                    }
-                }
-            }
-        }
-        .main{
-            width: 1200px;
-            margin: 0 auto;
-        }
-    }
+<style lang="sass" scoped type="text/sass">
+    #question
+        background-clip: #f3f3f3
+        background-color: #fff
+        .QuestionHeader
+            background-color: #fff
+            padding: px2rem(20)
+            box-shadow: 0 1px 3px 0 rgba(0,37,55,.1)
+            margin-bottom: px2rem(60)
+            .main
+                width: 100%
+                margin: 0 auto
+                text-align: left
+                padding-left: px2rem(40)
+                .questiontips
+                    ul
+                        li
+                            display: inline-block
+                            height: px2rem(60)
+                            @include font-dpr(14px)
+                            color: #3e7ac2
+                            background: #eef4fa
+                            border-radius: 100px
+                            padding: px2rem(13) px2rem(44)
+                h3
+                    margin-top: px2rem(24)
+                    margin-bottom: px2rem(8)
+                    @include font-dpr(22px)
+                    font-weight: 700
+                    line-height: px2rem(64)
+                    color: #1e1e1e
+        .QuestionContent
+            background-color: #fff
+            text-align: left
+            padding: 0 px2rem(50)
+            @include font-dpr(16px)
+            line-height: px2rem(50)
+            .question_left
+                width: 100%
+                float: left
+
 </style>
 

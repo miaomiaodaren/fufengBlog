@@ -51,6 +51,13 @@ export function delHtmlTag(str) {
     return str.replace(/<\/?.+?>/g, "").replace(/ /g, "");
 }
 
+//正则获取二个标签之间的内容
+export function getTabsCon(str) {
+    // return str.replace(/<pre (.|\n)*(?=<\/pre>)/, "").replace(/ /g, "");
+    return str.replace(/<pre(.|\n)*<\/pre>/, "");
+}
+
+
 //生成唯一id
 export function uniqueId(prefix) {
     var id = ++count + '';

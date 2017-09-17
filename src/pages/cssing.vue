@@ -23,6 +23,9 @@
             <li>
                 <router-link :to="{ path: '/css/upload'}" class="lists">上拉刷新</router-link>
             </li>
+            <li>
+                <router-link :to="{ path: '/css/cj2'}" class="lists">正方形投奖</router-link>
+            </li>
         </ul>
         <headers></headers>
     </div>

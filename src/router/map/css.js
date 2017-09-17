@@ -5,6 +5,8 @@ const flextop = resolve => require(['@/components/css/sticky'], resolve);
 const tabnav = resolve => require(['@/components/css/tabnav'], resolve);
 const upload = resolve => require(['@/components/upload/index'], resolve);
 
+const choujiang2 = resolve => require(['@/components/css/choujiang'], resolve);
+
 export default {
     path: '/css',
     name: 'css样式收集',
@@ -44,6 +46,12 @@ export default {
         name: '上拉刷新',
         components: {
             page: upload
+        }
+    }, {
+        path: 'cj2',
+        name: '抽奖2',
+        components: {
+            page: choujiang2
         }
     }]
 }

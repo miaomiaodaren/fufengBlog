@@ -7,8 +7,8 @@
                     <div class="mm_input">
                         <input class="searchinput" v-model="searchcon" @focus="isfocus= true" @blur="isfocus = false" :class="{searchfocus: isfocus}">
                         <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
-                        <div class="searchdata" v-if="searchcon.length >= 1">
-                            <p  v-if="serchdata.length > 0">
+                        <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
+                            <p v-if="serchdata.length > 0">
                                 <router-link :to="{ path: '/question/' + n._id}" v-for="(n, index) in serchdata" class="lists">{{n.title}}</router-link>
                             </p>
                             <p v-else>暂无搜索记录</p>
@@ -21,9 +21,9 @@
                             <span class="feet" @click="dd">来自模块 {{n.type}}</span>
                             <h2 @click="question(n._id)">{{n.title}}</h2>
                             <p class="con_text">
-                                <span ref="conter">{{showall ? n.content : n.content.substring(0, 300)}}</span>
-                                <span v-if="n.content.length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck">阅读全文</em></span>
-                                <span v-if="n.content.length > 300 && showall" @click="showall = false" class="hascheck">收起</span>
+                                <span ref="conter" v-html="showall ? n.content : n.content.substring(0, 300)"></span>
+                                <span v-if="getLenht(n.content).length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck">阅读全文</em></span>
+                                <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck">收起</span>
                             </p>
                             <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
                             <span class="times">{{n.addtime}}</span>
@@ -50,7 +50,7 @@
     // })
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen} from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon} from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     export default {
@@ -79,7 +79,7 @@
                     let res = await this.getAjax('/news/newslist', {}, 'GET');
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
-                        v.content = unescape(delHtmlTag(v.content));
+                        // v.content = unescape(delHtmlTag(v.content));
                     });
                     this.$nextTick(()=> {
                         this.newList = res.data;
@@ -123,6 +123,10 @@
             },
             dd() {
                 navigator.vibrate(1000);  //实现手机振动 传入[],可振动多次
+            },
+            getLenht(c) {
+                const h = getTabsCon(c);
+                return delHtmlTag(h)
             }
         },
         components: {
@@ -139,7 +143,7 @@
             // console.info(moment().tiemrdeff('1992.07.14').defftime);
             // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));
             // console.info(moment('2017/8/24 14:48:13').subtract(2, 'H').formart('yyyy-MM-dd HH:mm:ss')); console.log('222');
-            console.info(this)
+            console.info(this);
         }
     }
 </script>
@@ -191,7 +195,7 @@
                             box-sizing: border-box
                             span
                                 color: #8590a6
-                                line-height: 1
+                                line-height: px2rem(40)
                             h2
                                 @include font-dpr(16px)
                                 font-weight: 700
@@ -234,14 +238,13 @@
                         outline: 0
                         border: 1px solid $mainColor
                         padding-left: px2rem(20)
-                        transition: width .5s
+                        // transition: width .5s
                         padding-right: px2rem(80)
                     .searchfocus
-                        width: px2rem(630)
-                        transition: width .7s
+                        // width: px2rem(630)
+                        // transition: width .7s
                     .searchicon
                         color: #ddd
-                        margin-left: px2rem(-70)
                         @include font-dpr(20px)
                         position: relative
                         margin-top: px2rem(20)
