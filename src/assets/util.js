@@ -64,6 +64,7 @@ export function uniqueId(prefix) {
     return prefix ? prefix + id : id;
 }
 
+//清空object中的所有值.如果是bool类型,则转为false, 如果是array,则把数组的长度清为0
 export const clears = (obj) => {
     let objtype = Object.prototype.toString.call(obj);
     if(objtype === '[object Object]') {
@@ -77,19 +78,42 @@ export const clears = (obj) => {
     return obj
 }
 
+
+//可以使用ele.classList.contains(v); 来判断当前的样式列表中是否存在
 export const hasClass = (ele, v) => {
     return classReg( v ).test( ele.className );
 }
 
 export const addClass = (ele, v) => {
-    if( !hasClass( ele, v ) ) {
-        ele.className = ele.className + ' ' + v;
+    if(!ele) return
+    if (ele.classList) {
+        ele.classList.add(v);
+    } else {
+        if( !hasClass( ele, v ) ) {
+            ele.className = ele.className + ' ' + v;
+        }
     }
+   
 }
 
 export const removeClass = (ele, v) => {
-    if(hasClass( ele, v )) {
-        ele.className = ele.className.replace(classReg(v), ' ')
+    if (el.classList) {
+        el.classList.remove(clsName);
+    } else {
+        if(hasClass( ele, v )) {
+            ele.className = ele.className.replace(classReg(v), ' ')
+        }
+    } 
+}
+
+//去除空格 type = 1, 去掉所有的空格, 2 前后空格 3 前空格  4后格
+//正则\s 匹配任意的空白符
+export const trim = (str, type = 1)=> {
+    switch(type) {
+        case 1: return str.replace(/\s+/g, '');
+        case 2: return str.replace(/(^\s*)|(\s*$)/g, '');
+        case 3: return str.replace(/(^\s*)/g, '');
+        case 4: return str.replace(/(\s*$)/g, '');
     }
 }
 
@@ -97,9 +121,67 @@ export const removeClass = (ele, v) => {
 export function getByteLen(val) {
    let len = 0;
    for (let i = 0; i < val.length; i++) {
-     if (val[i].match(/[^\x00-\xff]/ig) != null) {
-       len += 2;
-     } else { len += 1; }
+        if (val[i].match(/[^\x00-\xff]/ig) != null) {
+            len += 2;
+        } else { len += 1; }
    }
    return Math.floor(len);
 }
+
+
+//数字大小写转换
+export const upDigit = (n) => {
+    var fraction = ['角', '分','厘'];  
+    var digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];  
+    var unit = [ ['元', '万', '亿'], ['', '拾', '佰', '仟']  ];
+    n = Math.abs(n);  
+    var s = '';  
+    for (var i = 0; i < fraction.length; i++)   
+    {
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, ''); 
+    } 
+    s = s || '整';  
+    n = Math.floor(n);  
+    for (var i = 0; i < unit[0].length && n > 0; i++)   
+    {  
+        var p = '';  
+        for (var j = 0; j < unit[1].length && n > 0; j++)   
+        {  
+            p = digit[n % 10] + unit[1][j] + p; 
+            n = Math.floor(n / 10);
+        }
+        s = p+ unit[0][i] + s;
+    }
+    return s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
+}
+
+//获取url参数
+//getUrlPrmt('segmentfault.com/write?draftId=122000011938')
+//Object{draftId: "122000011938"}
+export const getUrlPrmt = (url)=> {
+    url = url ? url : window.location.href;
+    let _pa = url.substring(url.indexOf('?') + 1), _arrS = _pa.split('&'), _rs = {};
+    for (let i = 0, _len = _arrS.length; i < _len; i++) {
+        let pos = _arrS[i].indexOf('=');
+        if (pos == -1) {
+            continue;
+        }
+        let name = _arrS[i].substring(0, pos), value = window.decodeURIComponent(_arrS[i].substring(pos + 1));
+        _rs[name] = value;
+    }
+    return _rs;
+}
+
+//设置url参数
+//setUrlPrmt({'a':1,'b':2})
+//a=1&b=2
+export const setUrlPrmt = (obj)=> {
+    let _rs = [];
+    for (let p in obj) {
+        if (obj[p] != null && obj[p] != '') {
+            _rs.push(p + '=' + obj[p])
+        }
+    }
+    return _rs.join('&');
+}
+

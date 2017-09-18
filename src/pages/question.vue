@@ -47,11 +47,12 @@
     #question
         background-clip: #f3f3f3
         background-color: #fff
+        height: 100%
         .QuestionHeader
             background-color: #fff
             padding: px2rem(20)
             box-shadow: 0 1px 3px 0 rgba(0,37,55,.1)
-            margin-bottom: px2rem(60)
+            margin-bottom: px2rem(10)
             .main
                 width: 100%
                 margin: 0 auto

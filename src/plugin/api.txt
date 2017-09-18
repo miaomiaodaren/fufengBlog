@@ -2,3 +2,4 @@
 2.tabs  tab列表切换
 3.pagination    实现用户分页
 4.sticky        实现组件到顶显示
+5.tabdel    左滑删除

@@ -9,21 +9,23 @@
                         <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
                         <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
                             <p v-if="serchdata.length > 0">
-                                <router-link :to="{ path: '/question/' + n._id}" v-for="(n, index) in serchdata" class="lists">{{n.title}}</router-link>
+                                <router-link :to="{ path: '/question/' + n._id}" v-for="(n, index) in serchdata" :key="index" class="lists">{{n.title}}</router-link>
                             </p>
                             <p v-else>暂无搜索记录</p>
                         </div>
                     </div>
                 </div>
+                <!-- 右侧滑动删除组件 -->
+                <!-- <tabdel></tabdel> -->
                 <div class="content_left">
                     <ul>
                         <li v-for="(n, index) in newList" :key="index">
-                            <span class="feet" @click="dd">来自模块 {{n.type}}</span>
+                            <span class="feet" @click="GetNews(2, n.type)">来自模块 {{n.type}}</span>
                             <h2 @click="question(n._id)">{{n.title}}</h2>
                             <p class="con_text">
                                 <span ref="conter" v-html="showall ? n.content : n.content.substring(0, 300)"></span>
-                                <span v-if="getLenht(n.content).length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck">阅读全文</em></span>
-                                <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck">收起</span>
+                                <span v-if="getLenht(n.content).length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck sdown">阅读全文</em></span>
+                                <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck sup">收起</span>
                             </p>
                             <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
                             <span class="times">{{n.addtime}}</span>
@@ -53,6 +55,8 @@
     import {clears, delHtmlTag, unescape, getByteLen, getTabsCon} from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
+    //右滑删除插件
+    import tabdel from '@/plugin/tabdel/index'
     export default {
         data() {
             return {
@@ -62,25 +66,30 @@
                 total: 0,
                 searchcon: '',
                 isfocus: false,
-                serchdata: ''
+                serchdata: '',
             }
         },
         watch: {
             searchcon(value, oldval) {
                 if(value != oldval && value.length >= 1) {
                     this.hassearch(value);
+                } else {
+                    this.serchdata = '';
                 }
                 return value
             }
         },
         methods:{
-            async GetNews() {
+            //第一个参数传2, 显示type模板的所有内容
+            async GetNews(type, ...con) {
                 try {
-                    let res = await this.getAjax('/news/newslist', {}, 'GET');
+                    const params = type && type === 2 ? {type: con[0]} : {};
+                    let res = await this.getAjax('/news/newslist', params, type ? 'POST': 'GET');
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         // v.content = unescape(delHtmlTag(v.content));
                     });
+
                     this.$nextTick(()=> {
                         this.newList = res.data;
                     })
@@ -121,9 +130,6 @@
             question(id) {
                 this.$router.push({path: '/question/' + id})
             },
-            dd() {
-                navigator.vibrate(1000);  //实现手机振动 传入[],可振动多次
-            },
             getLenht(c) {
                 const h = getTabsCon(c);
                 return delHtmlTag(h)
@@ -132,7 +138,8 @@
         components: {
             headers,
             page,
-            minput
+            minput,
+            tabdel
         },
         mounted() {
             const obj = [1,2,3,4,5];
@@ -217,6 +224,10 @@
                                         animation: appear 1s
                                 .hascheck
                                     cursor: pointer
+                                    color: $mainColor
+                                .sup
+                                    display: block
+                                    text-align: right
                             .feet
                                 // font-size: px2rem(60)
                                 @include font-dpr(16px)
