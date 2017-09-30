@@ -5,11 +5,22 @@
                 <div class="search">
                     <!-- <minput v-model="searchcon" type="number" icon="search" :on-icon-click="hassearch"></minput> -->
                     <div class="mm_input">
-                        <input class="searchinput" v-model="searchcon" @focus="isfocus= true" @blur="isfocus = false" :class="{searchfocus: isfocus}">
+                        <input class="searchinput"
+                            v-model="searchcon"
+                            @focus="isfocus= true"
+                            @blur="isfocus = false"
+                            :class="{searchfocus: isfocus}"
+                        >
                         <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
                         <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
                             <p v-if="serchdata.length > 0">
-                                <router-link :to="{ path: '/question/' + n._id}" v-for="(n, index) in serchdata" :key="index" class="lists">{{n.title}}</router-link>
+                                <router-link :to="{ path: '/question/' + n._id}"
+                                    v-for="(n, index) in serchdata" 
+                                    :key="index" 
+                                    class="lists"
+                                >
+                                    {{n.title}}
+                                </router-link>
                             </p>
                             <p v-else>暂无搜索记录</p>
                         </div>
@@ -23,9 +34,14 @@
                             <span class="feet" @click="GetNews(2, n.type)">来自模块 {{n.type}}</span>
                             <h2 @click="question(n._id)">{{n.title}}</h2>
                             <p class="con_text">
-                                <span ref="conter" v-html="showall ? n.content : n.content.substring(0, 300)"></span>
-                                <span v-if="getLenht(n.content).length > 300 && !showall">...<em @click="getMore(n._id)"  class="hascheck sdown">阅读全文</em></span>
-                                <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck sup">收起</span>
+                                <!-- 会有一个问题就是在300字并且的代码或图片的时候，这边应该把前三百个字代码前面的字显示出来 -->
+                                <span ref="conter" v-html="showall ? n.content : getLenht(n.content).length > 300 ? n.content.substring(0, 300) : n.content"></span>
+                                <span v-if="getLenht(n.content).length > 300 && !showall">
+                                    ...<em @click="getMore(n._id)"  class="hascheck sdown">阅读全文</em>
+                                </span>
+                                <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck sup">
+                                    收起
+                                </span>
                             </p>
                             <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
                             <span class="times">{{n.addtime}}</span>
@@ -40,16 +56,6 @@
     </div>
 </template>
 <script>
-    // import Vue from 'vue'
-    // Vue.component('redendemo', {
-    //     name: 'redendemo',
-    //     render: function(createElement) {
-    //         return createElement(
-    //             'h3',
-    //             this.$slots.default
-    //         )
-    //     }
-    // })
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
     import {clears, delHtmlTag, unescape, getByteLen, getTabsCon} from '@/assets/util.js'
@@ -88,11 +94,12 @@
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         // v.content = unescape(delHtmlTag(v.content));
+                        //实现取第一张图片做为缩略图
+                        
                     });
-
                     this.$nextTick(()=> {
                         this.newList = res.data;
-                    })
+                    });
                 }
                 catch(err) {
                     console.log(err)

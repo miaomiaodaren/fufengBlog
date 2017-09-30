@@ -39,6 +39,9 @@
                 catch (err) {
                     console.log(err);
                 }
+            },
+            handleEdit() {
+                
             }
         },
         components: {

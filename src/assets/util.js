@@ -57,14 +57,13 @@ export function getTabsCon(str) {
     return str.replace(/<pre(.|\n)*<\/pre>/, "");
 }
 
-
 //生成唯一id
 export function uniqueId(prefix) {
     var id = ++count + '';
     return prefix ? prefix + id : id;
 }
 
-//清空object中的所有值.如果是bool类型,则转为false, 如果是array,则把数组的长度清为0
+//清空对象
 export const clears = (obj) => {
     let objtype = Object.prototype.toString.call(obj);
     if(objtype === '[object Object]') {
@@ -78,12 +77,12 @@ export const clears = (obj) => {
     return obj
 }
 
-
-//可以使用ele.classList.contains(v); 来判断当前的样式列表中是否存在
+//判断是否拥有该样式
 export const hasClass = (ele, v) => {
     return classReg( v ).test( ele.className );
 }
 
+//添加样式
 export const addClass = (ele, v) => {
     if(!ele) return
     if (ele.classList) {
@@ -95,7 +94,7 @@ export const addClass = (ele, v) => {
     }
    
 }
-
+//删除样式
 export const removeClass = (ele, v) => {
     if (el.classList) {
         el.classList.remove(clsName);

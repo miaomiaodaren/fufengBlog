@@ -14,6 +14,7 @@
                         <router-link to="/news">问题列表</router-link>
                         <router-link to="/addnews">发布问题</router-link>
                         <router-link to="/outexcel">导出excel</router-link>
+                        <router-link to="/css/uploader">文件上传</router-link>
                     </navsitem>
                 </navs>
                 <!-- <div class="header_right">

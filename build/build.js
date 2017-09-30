@@ -2,6 +2,7 @@ require('./check-versions')()
 
 process.env.NODE_ENV = 'production'
 
+//org 是管理Node 图标的一个库
 var ora = require('ora')
 var rm = require('rimraf')
 var path = require('path')
