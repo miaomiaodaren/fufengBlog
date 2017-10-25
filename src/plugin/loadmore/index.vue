@@ -1,49 +1,290 @@
 <template>
-    <div id="loadmore">
-        <div class="loadmore_content" :style="{ 'transform': 'translate3d(0, ' + translate + 'px, 0)' }">
-            <slot name="top">
-                <div class="load-more-top">
-                    loading.........
-                    <span>{{ topText }}</span>
-                </div>
-            </slot>
+    <div id="loadmore" :style="{ height: wrapperHeight, transform: `translate3d(0, ${diff}px, 0)` }">
+        <div class="action-block" v-if="topLoadMethod" :style="{ height: `${topBlockHeight}px`, marginTop: `${-topBlockHeight}px` }">
+            <slot name="top-block" :state="state" :state-text="topText"></slot>
+        </div>
+        <div class="scroll-container">
             <slot></slot>
+        </div>
+        <div class="action-block" v-if="bottomLoadMethod" :style="{ height: `${bottomBlockHeight}px`, marginBottom: `${-bottomBlockHeight}px` }">
+            <slot name="bootom-block" :state="state" :state-text="bottomText">
+                {{ bottomText }}
+            </slot>
         </div>
     </div>
 </template>
 <script>
+    import { TOP_DEFAULT_CONFIG, BOTTOM_DEFAULT_CONFIG } from './config';
     export default {
+        name: 'Vue-loadMore',
+        props: {
+            distanceIndex: {
+                type: Number,
+                default: 2
+            },
+            topBlockHeight: {
+                type: Number,
+                default: 90
+            },
+            bottomBlockHeight: {
+                type: Number,
+                default: 90
+            },
+            wrapperHeight: {
+                type: String,
+                default: '100%'
+            },
+            topLoadMethod: {
+                type: Function
+            },
+            bottomLoadMethod: {
+                type: Function
+            },
+            isThrottleTopPull: {
+                type: Boolean,
+                default: true
+            },
+            isThrottleBottomPull: {
+                type: Boolean,
+                default: true
+            },
+            isThrottleScroll: {
+                type: Boolean,
+                default: true
+            },
+            isTopBounce: {
+                type: Boolean,
+                default: true
+            },
+            isBottomBounce: {
+                type: Boolean,
+                default: true
+            },
+            topConfig: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            },
+            bottomConfig: {
+                type: Object,
+                default: () => {
+                    return {};
+                }
+            }
+        },
         data() {
             return {
-                translate: 0
+                scrollEl: null,
+                startScrollTop: 0,
+                startY: 0,
+                currentY: 0,
+                distance: 0,
+                direction: 0,
+                diff: 0,
+                beforeDiff: 0,
+                topText: '',
+                bottomText: '',
+                state: '',
+                bottomReached: false,
+                throttleEmitTopPull: null,
+                throttleEmitBottomPull: null,
+                throttleEmitScroll: null,
+                throttleOnInfiniteScroll: null
+            }
+        },
+        computed: {
+            _topConfig: ()=> {
+                return Object.assign({}, TOP_DEFAULT_CONFIG, this.topConfig);
+            },
+            _bottomConfig: ()=> {
+                return Object.assign({}, BOTTOM_DEFAULT_CONFIG, this.bottomConfig);
+            }
+        },
+        watch: {
+            state(val) {
+                if (this.direction === 'down') {
+                    this.$emit('top-state-change', val);
+                } else {
+                    this.$emit('bottom-state-change', val);
+                }
             }
         },
         methods: {
-            init() {
-                this.scrollEventTarget = this.getScrollEventTarget(this.$el);
-                this.bindTouchEvents();
-            },
-            getScrollEventTarget(element) {
-                let currentNode = element;
-                while(currentNode && currentNode.tagName !== 'HTML' && currentNode.tagName !== 'BODY' && currentNode.nodeType === 1) {
-                    let overflowY = document.defaultView.getComputedStyle(currentNode).overflowY;
-                    if(overflowY === 'scroll' || overflowY === 'auto') {
-                        return currentNode;
+            throttle(fn, delay, mustRunDelay = 0) {
+                let timer = null;
+                let tStart;
+                return () => {
+                    const context = this;
+                    const args = arguments;
+                    const tCurr = +new Date();
+                    clearTimeout(timer);
+                    if (!tStart) {
+                        tStart = tCurr;
+                        }
+                    if (mustRunDelay !== 0 && tCurr - tStart >= mustRunDelay) {
+                        fn.apply(context, args);
+                        tStart = tCurr;
+                    } else {
+                        timer = setTimeout(()=> {
+                            fn.apply(context, args);
+                        }, delay);
                     }
-                    currentNode = currentNode.parentNode;
+                };
+            },
+            actionPull() {
+                this.state = 'pull';
+                this.direction === 'down'
+                    ? this.topText = this._topConfig.pullText
+                    : this.bottomText = this._bottomConfig.pullText;
+            },
+            actionTrigger() {
+                this.state = 'trigger';
+                this.direction === 'down'
+                    ? this.topText = this._topConfig.triggerText
+                    : this.bottomText = this._bottomConfig.triggerText;
+            },
+            actionLoading() {
+                this.state = 'loading';
+                if (this.direction === 'down') {
+                    this.topText = this._topConfig.loadingText;
+                    /* eslint-disable no-useless-call */
+                    this.topLoadMethod.call(this, this.actionLoaded);
+                    this.scrollTo(this._topConfig.stayDistance);
+                } else {
+                    this.bottomText = this._bottomConfig.loadingText;
+                    this.bottomLoadMethod.call(this, this.actionLoaded);
+                    this.scrollTo(-this._bottomConfig.stayDistance);
                 }
-                return window;
             },
-            bindTouchEvents() {
-                this.$el.addEventListener('touchstart', this.handleTouchStart);
-                this.$el.addEventListener('touchmove', this.handleTouchMove);
-                this.$el.addEventListener('touchend', this.handleTouchEnd);
+            actionLoaded(loadState = 'done') {
+                this.state = `loaded-${loadState}`;
+                let loadedStayTime;
+                if (this.direction === 'down') {
+                    this.topText = loadState === 'done'
+                    ? this._topConfig.doneText
+                    : this._topConfig.failText;
+                    loadedStayTime = this._topConfig.loadedStayTime;
+                } else {
+                    this.bottomText = loadState === 'done'
+                    ? this._bottomConfig.doneText
+                    : this._bottomConfig.failText;
+                    loadedStayTime = this._bottomConfig.loadedStayTime;
+                }
+                setTimeout(() => {
+                    this.scrollTo(0);
+                    // reset state
+                    setTimeout(() => {
+                        this.state = '';
+                    }, 200);
+                }, loadedStayTime);
             },
-            handleTouchStart() {
-            }
+            throttleEmit(delay, mustRunDelay= 0, eventName) {
+                const throttleMethod = ()=> {
+                    const args = [...arguments];
+                    args.unshift(eventName);
+                    this.$emit.apply(this, args);
+                }
+                return this.throttle(throttleMethod, delay, mustRunDelay);
+            },
+            createThrottleMethods() {
+                this.throttleEmitTopPull = this.throttleEmit(200, 300, 'top-pull');
+                this.throttleEmitBottomPull = this.throttleEmit(200, 300, 'bottom-pull');
+                this.throttleEmitScroll = this.throttleEmit(100, 150, 'scroll');
+                this.throttleOnInfiniteScroll = this.throttle(this.onInfiniteScroll, 400);
+            },
+            checkBottomReached() {
+                return this.scrollEl.scrollTop + this.scrollEl.offsetHeight + 1 >= this.scrollEl.scrollHeight;
+            },
+            scrollTo(y, duration = 200) {
+                this.$el.style.transition = `${duration}ms`;
+                this.diff = y;
+                setTimeout(() => {
+                  this.$el.style.transition = '';
+                }, duration);
+            },
+            handleTouchStart(event) {
+                this.startY = event.touches[0].clientY;
+                this.beforeDiff = this.diff;
+                this.startScrollTop = this.scrollEl.scrollTop;
+                this.bottomReached = this.checkBottomReached();
+            },
+            handleTouchMove(event) {
+                this.currentY = event.touches[0].clientY;
+                this.distance = (this.currentY - this.startY) / this.distanceIndex + this.beforeDiff;
+                this.direction = this.distance > 0 ? 'down' : 'up';
+                if (this.startScrollTop === 0 && this.direction === 'down' && this.isTopBounce) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.diff = this.distance;
+                    this.isThrottleTopPull ? this.throttleEmitTopPull(this.diff) : this.$emit('top-pull', this.diff);
+                    if (typeof this.topLoadMethod !== 'function') return;
+                    if (this.distance < this._topConfig.triggerDistance &&
+                        this.state !== 'pull' && this.state !== 'loading') {
+                        this.actionPull();
+                    } else if (this.distance >= this._topConfig.triggerDistance &&
+                        this.state !== 'trigger' && this.state !== 'loading') {
+                        this.actionTrigger();
+                    }
+                } else if (this.bottomReached && this.direction === 'up' && this.isBottomBounce) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.diff = this.distance;
+                    this.isThrottleBottomPull ? this.throttleEmitBottomPull(this.diff) : this.$emit('bottom-pull', this.diff);
+                    if (typeof this.bottomLoadMethod !== 'function') return;
+                    if (Math.abs(this.distance) < this._bottomConfig.triggerDistance &&
+                    this.state !== 'pull' && this.state !== 'loading') {
+                    this.actionPull();
+                } else if (Math.abs(this.distance) >= this._bottomConfig.triggerDistance &&
+                    this.state !== 'trigger' && this.state !== 'loading') {
+                        this.actionTrigger();
+                    }
+                }
+            },
+            handleTouchEnd() {
+                if (this.diff !== 0) {
+                    if (this.state === 'trigger') {
+                        this.actionLoading();
+                        return;
+                    }
+                    // pull cancel
+                    this.scrollTo(0);
+                }
+            },
+            handleScroll(event) {
+                this.isThrottleScroll ? this.throttleEmitScroll(event) : this.$emit('scroll', event);
+                this.throttleOnInfiniteScroll();
+            },
+            onInfiniteScroll() {
+                if (this.checkBottomReached()) {
+                    this.$emit('infinite-scroll');
+                }
+            },
+            bindEvents() {
+                this.scrollEl.addEventListener('touchstart', this.handleTouchStart);
+                this.scrollEl.addEventListener('touchmove', this.handleTouchMove);
+                this.scrollEl.addEventListener('touchend', this.handleTouchEnd);
+                this.scrollEl.addEventListener('scroll', this.handleScroll);
+            },
+            init() {
+                this.createThrottleMethods();
+                this.scrollEl = this.$el.querySelector('.scroll-container');
+                this.bindEvents();
+            },
         },
         mounted() {
             this.init();
+            console.info('3123123', this);
         }
     }
 </script>
+<style lang="sass" scoped type="text/sass">
+    #loadmore
+        .scroll-container 
+            overflow-y: auto
+            -webkit-overflow-scrolling: touch
+            height: 100%
+        .vue-pull-to-wrapper .action-block
+            position: relative
+            width: 100%
+</style>

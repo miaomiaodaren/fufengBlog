@@ -1,6 +1,5 @@
 <template>
     <div id="question">
-        <headers></headers>
         <div class="QuestionHeader">
             <div class="main">
                 <div class="questiontips">
@@ -13,6 +12,7 @@
         </div>
         <div class="QuestionContent main" v-html="dataview.content">
         </div>
+        <headers></headers>
     </div>
 </template>
 <script>
@@ -78,9 +78,10 @@
         .QuestionContent
             background-color: #fff
             text-align: left
-            padding: 0 px2rem(50)
+            padding: px2rem(30) px2rem(50) 0 px2rem(50)
             @include font-dpr(16px)
             line-height: px2rem(50)
+            margin-bottom: px2rem(100)
             .question_left
                 width: 100%
                 float: left

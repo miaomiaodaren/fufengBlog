@@ -10,7 +10,8 @@ const instance = axios.create({
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     //baseURL: 'http://testh5.huaqiaobao.cn',
     timeout: 300000,
-    // withCredentials: true,
+    responseType: 'json',
+    // withCredentials: true,  //带cookies
 });
 
 instance.interceptors.request.use(config => {
@@ -19,13 +20,13 @@ instance.interceptors.request.use(config => {
     return config
   }, error => {
       return Promise.reject(error)
-})
+}) 
 
 const HOST = process.env.NODE_ENV === 'development' ? '/api' : ''
 
 
 //尝试使用async await 替换promise，使js更加语意化，并简洁
-const GetAjax = async function(url, params, type) {
+const GetAjax = async function(url = '', params = {}, type = 'GET') {
     try {
         return await instance({
             url: HOST + url,
@@ -38,5 +39,6 @@ const GetAjax = async function(url, params, type) {
         console.log(err)
     }
 }
+
 
 export default GetAjax

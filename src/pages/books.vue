@@ -2,6 +2,7 @@
     <div id="books">
         <headertop></headertop>
         <div @click="add">add</div> <div @click="deletes">delete</div>
+        <div @click="deltypeAll">deltype</div>
         <el-row>
             <el-col :span="6" v-for="(n, index) in bookss" :key="index">
                 <div class="grid-content bg-purple">
@@ -32,6 +33,10 @@
             async deletes() {
                 let res = await this.getAjax('/books/deleteBook', {}, 'GET');
                 alert('删除成功！');
+            },
+            async deltypeAll() {
+                let res = await this.getAjax('/books/delBookTypeList', {}, 'GET');
+                console.info(res, '22222');
             }
         },
         components: {

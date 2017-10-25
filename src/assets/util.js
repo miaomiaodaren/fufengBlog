@@ -92,8 +92,8 @@ export const addClass = (ele, v) => {
             ele.className = ele.className + ' ' + v;
         }
     }
-   
 }
+
 //删除样式
 export const removeClass = (ele, v) => {
     if (el.classList) {

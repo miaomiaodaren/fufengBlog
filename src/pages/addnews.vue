@@ -1,6 +1,6 @@
 <template>
     <div id="addnews">
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="form" label-width="80px" class="add_form">
             <el-form-item label="文章标题">
                 <el-input v-model="form.title"></el-input>
             </el-form-item>
@@ -128,6 +128,9 @@
         text-align: left;
         font-size: 14px;
         padding: 20px;
+    }
+    .add_form {
+        margin-bottom: 100px;
     }
     /*修改代码块背景色及字体颜色*/
     .markdown-body .highlight pre, .markdown-body pre {

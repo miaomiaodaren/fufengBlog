@@ -1,21 +1,45 @@
-<!-- <template>
+<template>
     <div id="chating">
-        <div class="xxlist">
-
+        <div class="main-top">
+            socket.io demo
         </div>
-        <div class="gomsg">
-            <el-input v-model="messages" placeholder="请输入内容"></el-input>
-            <button @click="send">发送</button>
+        <div class="main-body" ref="main_html">
+            <section class="chatRoomInfo">
+                <div class="info">当前共有<span class="chatNum">{{UserList.onlineCount}}</span>人在线。在线列表:&nbsp;<span class="chatList">{{UserList.userList}}</span></div>
+            </section>
+        </div>
+        <div class="main-footer clearfix">
+            <div class="input">
+                <input type="text" name="msg" id="msg" value="" v-model="messages" />
+            </div>
+            <button type="button" class="send" @click="send">发送</button>
         </div>
     </div>
 </template>
 <script>
     import * as io from 'socket.io-client'
+    import { uniqueId } from '@/assets/util.js'
     export default {
         data() {
             return {
                 messages: '',
-                msgcon: []
+                msgcon: [],
+                socket: io.connect('127.0.0.1:3000'),
+                User: {
+                    userName: '',
+                    userId: ''
+                },
+                UserList: {
+                    //当前在线列表
+                    onlineUser: '',
+                    //当前在线数
+                    onlineCount: '',
+                    //新加用户
+                    user: '',
+                    //更新在线人数
+                    userList: '',
+                    separator: '',
+                }
             }
         },
         methods: {
@@ -23,28 +47,68 @@
 //                socket.emit() ：向建立该连接的客户端广播
 //                socket.broadcast.emit() ：向除去建立该连接的客户端的所有客户端广播
 //                io.sockets.emit() ：向所有客户端广播，等同于上面两个的和
-                socket.on('news', function (data) {
-                    console.log(data);
-                    socket.emit('my other event', { my: 'data' });
+                // socket.on('news', function (data) {
+                //     console.log(data);
+                //     socket.emit('my other event', { my: 'data' });
+                // });
+                //通知用户有用户登录
+                this.socket.emit('login', this.User);
+                //监听新用户登录
+                this.socket.on('login', (o)=> {
+                    this.updateMsg(o, 'login');
                 });
+                //监听用户退出
+                this.socket.on('logout', (o)=> {
+                    this.updateMsg(o, 'logout');
+                });
+                //发送消息
+                this.socket.on('message', (obj)=> {
+                    if(obj.userid == userId) {
+                        let MsgHtml= '<section class="user clearfix">'
+                        +'<span>'+ obj.username +'</span>'
+                        +'<div>'+ obj.content +'</div>'
+                        +'</section>';
+                    } else {
+                        let MsgHtml='<section class="server clearfix">'
+                        +'<span>'+ obj.username +'</span>'
+                        +'<div>'+ obj.content +'</div>'
+                        +'</section>';
+                    }
+                    this.$refs.main_html.innerHTML = MsgHtml;
+                })
+            },
+            updateMsg(o, action) {
+                //当前在线列表
+                this.UserList.onlineUser = o.onlineUser;
+                //当前在线数
+                this.UserList.onlineCount = o.onlineCount;
+                //新加用户
+                this.UserList.user = o.user;
+                for(let key in this.UserList.onlineUser) {
+                    this.UserList.userList += this.UserList.separator + this.UserList.onlineUser[key];
+                    this.UserList.separator = '、';
+                }
+                //系统消息
+                if(action=='login') {
+                    var sysHtml= '<section class="chatRoomTip"><div>'+ this.User.userName +'进入聊天室</div></section>';
+                }
+                if(action=="logout") {
+                    var sysHtml= '<section class="chatRoomTip"><div>'+ this.User.userName +'退出聊天室</div></section>';
+                }
+                console.info(this.$refs);
+                this.$refs.main_html.innerHTML = sysHtml;
+                // $('.main-body').scrollTop(99999);
             },
             send() {
-                if(this.messages === '') {
-                    return
-                } else {
-                    console.log(this.messages);
-                    socket.emit('sendMsg', {
-                        data: new Date(),
-                        loc: 1,
-                        form: 'fufeng',
-                        content: this.messages
-                    });
-                    this.msgcon.push({
-                        data: new Date(),
-                        loc: 1,
-                        form: 'fufeng',
-                        content: this.messages
-                    })
+                let content= this.messages;
+                if (content) {
+                    let obj = {
+                        'userid': this.User.userId,
+                        'username': this.User.userName,
+                        'content': content
+                    }
+                    this.socket.emit('message', obj);
+                    this.messages = '';
                 }
             },
             getMsg() {
@@ -57,7 +121,153 @@
             //     console.log(data); console.log('222');
             //     this.msgcon.push(data);
             // })
+            this.User.userName = prompt('请输入您的姓名');
+            if(!this.User.userName) {alert('姓名必填'); history.go(0)};
+            this.User.userId = uniqueId('User_');
+            this.getSocket();
         }
     }
 </script>
- -->
+<style>
+    .main-top {
+        height: 30px;
+        background-color: #3d3d3d;
+        text-indent: 15px;
+        color: #ffffff;
+        font-size: 16px;
+        line-height: 30px;
+    }
+
+    .main-body {
+        background-color: #efeff4;
+        position: absolute;
+        top: 30px;
+        bottom: 50px;
+        width: 100%;
+        overflow-y: scroll;
+        scrollbar-3dlight-color: ;
+    }
+
+    .chatRoomInfo {
+        padding: 10px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .chatRoomTip {
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        color: #444;
+    }
+
+    .user {
+        width: 100%;
+        min-height: 38px;
+        min-width: 36px;
+        margin-bottom: 15px;
+    }
+
+    .user span {
+        float: right;
+    }
+
+    .user div {
+        float: right;
+        min-height: 38px;
+        min-width: 38px;
+        max-width: 70%;
+        line-height: 38px;
+        padding: 0 15px;
+        color: #FFFFFF;
+        margin-right: 10px;
+        word-break: break-all;
+        background-color: #007aff;
+        position: relative;
+        border-radius: 5px;
+    }
+
+    .user div:after {
+        content: "";
+        position: absolute;
+        right: -5px;
+        top: 4px;
+        width: 0;
+        height: 0;
+        border-top: solid transparent;
+        border-left: 7px solid #007aff;
+        border-bottom: 4px solid transparent;
+    }
+
+    .server {
+        width: 100%;
+        min-height: 38px;
+        min-width: 36px;
+        margin-bottom: 15px;
+    }
+
+    .server span {
+        float: left;
+    }
+
+    .server div {
+        float: left;
+        min-height: 38px;
+        min-width: 38px;
+        max-width: 70%;
+        line-height: 38px;
+        padding: 0 15px;
+        color: #FFFFFF;
+        margin-left: 10px;
+        word-break: break-all;
+        background-color: #007aff;
+        position: relative;
+        border-radius: 5px;
+    }
+
+    .server div:after {
+        content: "";
+        position: absolute;
+        left: -5px;
+        top: 4px;
+        width: 0;
+        height: 0;
+        border-top: solid transparent;
+        border-right: 7px solid #007aff;
+        border-bottom: 4px solid transparent;
+    }
+    .main-footer{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+    }
+    .input{
+        float: left;
+        width: 80%;
+        height: 40px;
+        margin-top: 5px;
+        margin-left: 1%;
+        margin-right: 1%;
+        border: 1px solid #666666;
+    }
+    .input input{
+        width: 100%;
+        height: 40px;
+        outline: none;
+        border: none;
+        font-size: 14px;
+        color: #333;
+    }
+    .send{
+        float: left;
+        width: 16%;
+        height: 40px;
+        margin-top: 5px;
+        margin-left: 1%;
+        border: none;
+        background-color: #e8e8e8;
+        color: #007aff;
+        outline: none;
+    }
+</style>
