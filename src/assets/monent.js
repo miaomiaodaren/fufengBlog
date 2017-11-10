@@ -56,20 +56,41 @@ class Monent {
     }
 
     //日期加法
-    add(t, p) {
-        const self = this;
-        if(!!this.timeformt[p]) {
-            this.NowTime = this.timestamp(this.cfordate(this.NowTime) + Number(this.timeformt[p] * t));
+    //t 需要添加多少时间
+    //p 需要添加的类型，必须严格遵守this.timeformat的规则
+    //d 2017年11月1日完善了 可以支持多重的写法 比如moment().add({'H': 3, 'd': 2}), 可以接受对象
+    add(p, t) {
+        const self = this, len = arguments.length;
+        if(len < 2) {
+            if(typeof p !== 'object') return this
+            //此处先用es6
+            let keys = Object.keys(p);
+            keys.forEach(function(n) {
+                self.NowTime = self.timestamp(self.cfordate(self.NowTime) + Number(self.timeformt[n] * p[n]));
+            })
             return this
         } else {
-            alert('22');
+            if(!!this.timeformt[p]) {
+                this.NowTime = this.timestamp(this.cfordate(this.NowTime) + Number(this.timeformt[p] * t));
+            }
+            return this
         }
     }
 
     //日期减法
-    subtract(t, p) {
-        if(!!this.timeformt[p]) {
-            this.NowTime = this.timestamp(this.cfordate(this.NowTime) - Number(this.timeformt[p] * t));
+    subtract(p, t) {
+        const self = this, len = arguments.length;
+        if(len < 2) {
+            if(typeof p !== 'object') return this
+            let keys = Object.keys(p);
+            keys.forEach(function(n) {
+                self.NowTime = self.timestamp(self.cfordate(self.NowTime) - Number(self.timeformt[n] * p[n]));
+            })
+            return this
+        } else {
+            if(!!this.timeformt[p]) {
+                this.NowTime = this.timestamp(this.cfordate(this.NowTime) - Number(this.timeformt[p] * t));
+            }
             return this
         }
     }
@@ -148,8 +169,9 @@ class Monent {
     }
 
     //时间格式转换成时间戳格式
+    //2017.11.6 新加判断，if没有传入参数，就以默认的this.noetime做为参数进行转化
     cfordate(c) {
-        return Number(Date.parse(c) / 1000)
+        return Number(Date.parse(c || this.NowTime) / 1000);
     }
 
     //时间戳格式转换成Date格式
@@ -158,8 +180,30 @@ class Monent {
         return type ? new Date(parseInt(timer) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ') : new Date(parseInt(timer) * 1000);
     }
 
+    begin() {
+        let start = [this.getFullYear(), this.getMonth() + 1, this.getDate()].join('-');
+        return new Date(start);
+    }
+
+    end() {
+        return new Date([this.getFullYear(), this.getMonth() + 1, this.getDate()].join('-') + ' 23:59:59.999');
+    }
+    //在这边是获得时间的起始时间跟结束时间(比如要用到开始时间跟结束时间时)。 把this指定指给了this.nowtime。 发现this只能指给function() 对象。
+    //获取一个时间的最起始的时间
+    beginning() {
+        this.NowTime = this.begin.call(this.isDate(this.NowTime) ? this.NowTime : new Date(this.NowTime));
+        return this
+    }
+    //获取一个时间最迟的一个时间
+    ending() {
+        this.NowTime = this.end.call(this.isDate(this.NowTime) ? this.NowTime : new Date(this.NowTime));
+        return this
+    }
+
     //yyyy:MM:dd HH:mm:ss  转换时间格式
     formart(fmt, timer) {
+        //如果没有传入fmt则直接返回默认的格式
+        fmt = fmt || 'yyyy-MM-dd HH:mm:ss';
         //判断传出的timer是否为时间戳格式
         const atimer = !!Number(timer) ? this.timestamp(timer) : timer;
         //如果传入了timer，则把this指向传入的时间，否则就指向monent.NowTime.
@@ -183,6 +227,7 @@ class Monent {
             "5" : "\u4e94",
             "6" : "\u516d"
         };
+        //表示正则表达式中的括号匹配项的结果
         if(/(y+)/.test(fmt)) {
             fmt = fmt.replace(RegExp.$1, (a('FullYear') + "").substr(4 - RegExp.$1.length));
         }

@@ -74,7 +74,7 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon} from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -83,6 +83,29 @@
     import toprefresh from '@/plugin/loadmore/index'
 
     import { GetProList, minApi, hasSearch } from '@/service/index'
+
+    const datas = [
+        {
+            "password": "password0",
+            "note": "note0"
+        },
+        {
+            "password": "password1",
+            "note": "note1"
+        },
+        {
+            "password": "password2",
+            "note": "note2"
+        },
+        {
+            "password": "password0",
+            "note": "note0"
+        },
+        {
+            "password": "password1",
+            "note": "note1"
+        }
+    ];
     export default {
         data() {
             return {
@@ -117,6 +140,7 @@
                         type: type && type === 2 ? con[0] : '',
                     };
                     let res = await GetProList(params, type);
+                    console.info(res, '22222222');
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         // v.content = unescape(delHtmlTag(v.content));
@@ -205,18 +229,18 @@
             page,
             minput,
             tabdel,
-            toprefresh
+            toprefresh,
         },
         mounted() {
             const obj = [1,2,3,4,5];
             clears(obj);
             this.GetNews(this.page);
             this.aa();
+            console.info(moment().cfordate(), '213123')
             // console.info(moment(1503559089).formart('yyyy-MM-dd HH:mm:ss EE')); 
             // console.info(moment().tiemrdeff('1992.07.14').defftime);
             // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));
             // console.info(moment('2017/8/24 14:48:13').subtract(2, 'H').formart('yyyy-MM-dd HH:mm:ss')); console.log('222');
-            console.info(this);
             //使用fetch跨域的实现
             // fetch('http://127.0.0.1:3000/news/newslist', { 
             //     methods: 'GET',
@@ -230,6 +254,10 @@
             // }).then(res => res.json()).then(data => {
             //     console.info(data, '333333');
             // }).catch(err => console.log(err, '3232323'))
+            // console.info(moment().add({'H': 4, 'd': 3}).formart(), 'monent');
+            // console.info(moment().add('H', 4).formart(), 'monent1');
+            // console.info(moment().beginning().formart(), 'moment2');
+            // console.info(moment().add('d', 1).ending().formart(), 'moment2');
         }
     }
 </script>

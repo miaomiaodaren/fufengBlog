@@ -1,5 +1,6 @@
 <template>
     <div id="chating">
+        <div class="aa">以下是实时报价推送 {{justmsg}}</div>
         <div class="main-top">
             socket.io demo
         </div>
@@ -18,7 +19,8 @@
 </template>
 <script>
     import * as io from 'socket.io-client'
-    import { uniqueId } from '@/assets/util.js'
+    import { uniqueId, append } from '@/assets/util.js'
+    import moment from '@/assets/monent.js'
     export default {
         data() {
             return {
@@ -39,18 +41,27 @@
                     //更新在线人数
                     userList: '',
                     separator: '',
-                }
+                },
+                justmsg: 0
             }
         },
         methods: {
             getSocket() {
-//                socket.emit() ：向建立该连接的客户端广播
-//                socket.broadcast.emit() ：向除去建立该连接的客户端的所有客户端广播
-//                io.sockets.emit() ：向所有客户端广播，等同于上面两个的和
+                //socket.emit() ：向建立该连接的客户端广播
+                //socket.broadcast.emit() ：向除去建立该连接的客户端的所有客户端广播
+                //io.sockets.emit() ：向所有客户端广播，等同于上面两个的和
                 // socket.on('news', function (data) {
                 //     console.log(data);
                 //     socket.emit('my other event', { my: 'data' });
                 // });
+
+                this.socket.on('justdata', (o)=> {
+                    console.info(o, '213123123213');
+                    this.justmsg = o;
+                });
+
+                this.socket.emit('justdata');
+
                 //通知用户有用户登录
                 this.socket.emit('login', this.User);
                 //监听新用户登录
@@ -63,18 +74,14 @@
                 });
                 //发送消息
                 this.socket.on('message', (obj)=> {
-                    if(obj.userid == userId) {
-                        let MsgHtml= '<section class="user clearfix">'
-                        +'<span>'+ obj.username +'</span>'
-                        +'<div>'+ obj.content +'</div>'
-                        +'</section>';
+                    let MsgHtml = '';
+                    console.info(obj, '我收到了消息！');
+                    if(obj.userid == this.User.userId) {
+                        MsgHtml= `<section class="user clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
                     } else {
-                        let MsgHtml='<section class="server clearfix">'
-                        +'<span>'+ obj.username +'</span>'
-                        +'<div>'+ obj.content +'</div>'
-                        +'</section>';
+                        MsgHtml= `<section class="server clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
                     }
-                    this.$refs.main_html.innerHTML = MsgHtml;
+                    append(this.$refs.main_html, MsgHtml)
                 })
             },
             updateMsg(o, action) {
@@ -85,19 +92,19 @@
                 //新加用户
                 this.UserList.user = o.user;
                 for(let key in this.UserList.onlineUser) {
+                    this.UserList.userList = '';
                     this.UserList.userList += this.UserList.separator + this.UserList.onlineUser[key];
                     this.UserList.separator = '、';
                 }
+                console.info(this.UserList, '123123123123123123');
                 //系统消息
                 if(action=='login') {
-                    var sysHtml= '<section class="chatRoomTip"><div>'+ this.User.userName +'进入聊天室</div></section>';
+                    var sysHtml= '<section class="chatRoomTip"><div>'+ o.user.userName +'进入聊天室</div></section>';
                 }
                 if(action=="logout") {
-                    var sysHtml= '<section class="chatRoomTip"><div>'+ this.User.userName +'退出聊天室</div></section>';
+                    var sysHtml= '<section class="chatRoomTip"><div>'+ o.user.username +'退出聊天室</div></section>';
                 }
-                console.info(this.$refs);
-                this.$refs.main_html.innerHTML = sysHtml;
-                // $('.main-body').scrollTop(99999);
+                append(this.$refs.main_html, sysHtml)
             },
             send() {
                 let content= this.messages;
@@ -121,9 +128,10 @@
             //     console.log(data); console.log('222');
             //     this.msgcon.push(data);
             // })
-            this.User.userName = prompt('请输入您的姓名');
-            if(!this.User.userName) {alert('姓名必填'); history.go(0)};
-            this.User.userId = uniqueId('User_');
+            // this.User.userName = prompt('请输入您的姓名');
+            // if(!this.User.userName) {alert('姓名必填'); history.go(0)};
+            // // this.User.userId = uniqueId('User_');
+            // this.User.userId = 'User_' + moment().cfordate();
             this.getSocket();
         }
     }
@@ -145,7 +153,7 @@
         bottom: 50px;
         width: 100%;
         overflow-y: scroll;
-        scrollbar-3dlight-color: ;
+
     }
 
     .chatRoomInfo {

@@ -6,6 +6,8 @@
             :type="type"
             :value="value"
             class="mm-input-inner"
+            :placeholder="placeholder"
+            @focus="handleFocus"
         >
     </div>
 </template>
@@ -19,11 +21,15 @@
                 default: 'text'
             },
             icon: String,
-            onIconClick: Function
+            onIconClick: Function,
+            placeholder: String,
         },
         methods: {
             hassearch() {
                 this.onIconClick();
+            },
+            handleFocus(event) {
+                this.$emit('focus', event);
             }
         },
         mounted() {

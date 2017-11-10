@@ -10,3 +10,6 @@ export const minApi = GetAjax('/news/aa', {}, 'GET');
 
 //首页根据内容进行搜索
 export const hasSearch = (params, type) => GetAjax('/news/search', params, type);
+
+//上传用户头像api
+export const huploader = '/api/users/uploader';

@@ -116,6 +116,12 @@ export const trim = (str, type = 1)=> {
     }
 }
 
+//正则在数字中间每隔三位添加一个逗号
+export const groupCommas = (str) => {
+    return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+
 //判断文字的长度(字符串为2字符,数字为1个字符)
 export function getByteLen(val) {
    let len = 0;
@@ -184,3 +190,20 @@ export const setUrlPrmt = (obj)=> {
     return _rs.join('&');
 }
 
+//2017-11-6新增,主要是实现类似jquery append中的效果，参考网上资料，做出更方便的效果
+export const append = (ele, html) => {
+    if(html && typeof html === 'string') {
+        //在此处新建一个div元素
+        let temp = document.createElement('div');
+        temp.innerHTML = html;
+        //此处新建一个碎片文档，参考vue源码 comper
+        //循环遍历，并且移除碎片文档中的数据。直到没有第一个元素即为全部移完
+        let frag = document.createDocumentFragment();
+        while(temp.firstChild) {
+            frag.appendChild(temp.firstChild);
+        }
+        ele.appendChild(frag)
+    } else {
+        ele.appendChild(html)
+    }
+}

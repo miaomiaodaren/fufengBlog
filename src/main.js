@@ -15,6 +15,14 @@ import moment from '@/assets/monent.js'
 
 import '@/assets/base.css'
 
+import ffEle from '@/assets/vueplugin/src'
+console.info(ffEle);
+Vue.use(ffEle)
+
+// import ff from '@/assets/vueplugin/src'
+// console.info(ff, '21312312213123');
+// Vue.use(ff);
+
 Vue.prototype.getAjax = GetAjax
 
 Vue.use(ElementUI)
