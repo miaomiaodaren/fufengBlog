@@ -107,9 +107,9 @@
     }
 </script>
 <style type="text/css">
-    @import '~highlight.js/styles/atom-one-dark.css';
+/*    @import '~highlight.js/styles/atom-one-dark.css';
     @import '~simplemde/dist/simplemde.min.css';
-    @import '~github-markdown-css';
+    @import '~github-markdown-css';*/
     .markdown{
         text-align: left;
         width: 43%;

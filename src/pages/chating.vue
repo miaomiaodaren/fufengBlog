@@ -60,7 +60,7 @@
                     this.justmsg = o;
                 });
 
-                this.socket.emit('justdata');
+                this.socket.emit('justdata', {id: 2});
 
                 //通知用户有用户登录
                 this.socket.emit('login', this.User);
