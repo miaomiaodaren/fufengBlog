@@ -26,7 +26,8 @@
             return {
                 messages: '',
                 msgcon: [],
-                socket: io.connect('127.0.0.1:3000'),
+                // socket: io.connect('http://116.196.114.12:3000'),
+                // socket: io.connect('http://127.0.0.1:3000'),
                 User: {
                     userName: '',
                     userId: ''
@@ -42,7 +43,8 @@
                     userList: '',
                     separator: '',
                 },
-                justmsg: 0
+                justmsg: 0,
+                newSocket: 'ws://116.196.114.12:3000/',
             }
         },
         methods: {
@@ -55,12 +57,19 @@
                 //     socket.emit('my other event', { my: 'data' });
                 // });
 
-                this.socket.on('justdata', (o)=> {
-                    console.info(o, '213123123213');
-                    this.justmsg = o;
-                });
+                // this.socket.on('justdata', (o)=> {
+                //     console.info(o, '213123123213');
+                //     this.justmsg = o;
+                // });
 
-                this.socket.emit('justdata', {id: 2});
+                // this.socket.emit('justdata', {id: 2});
+
+                // this.socket.on(connect, function() {
+                //     this.socket.emit('login', this.User);
+                //     this.socket.on('news', data => {
+                //         alert('2');
+                //     })
+                // })
 
                 //通知用户有用户登录
                 this.socket.emit('login', this.User);
@@ -69,20 +78,20 @@
                     this.updateMsg(o, 'login');
                 });
                 //监听用户退出
-                this.socket.on('logout', (o)=> {
-                    this.updateMsg(o, 'logout');
-                });
-                //发送消息
-                this.socket.on('message', (obj)=> {
-                    let MsgHtml = '';
-                    console.info(obj, '我收到了消息！');
-                    if(obj.userid == this.User.userId) {
-                        MsgHtml= `<section class="user clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
-                    } else {
-                        MsgHtml= `<section class="server clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
-                    }
-                    append(this.$refs.main_html, MsgHtml)
-                })
+                // this.socket.on('logout', (o)=> {
+                //     this.updateMsg(o, 'logout');
+                // });
+                // //发送消息
+                // this.socket.on('message', (obj)=> {
+                //     let MsgHtml = '';
+                //     console.info(obj, '我收到了消息！');
+                //     if(obj.userid == this.User.userId) {
+                //         MsgHtml= `<section class="user clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
+                //     } else {
+                //         MsgHtml= `<section class="server clearfix"><span>${obj.username}</span><div>${obj.content}</div></section>`;
+                //     }
+                //     append(this.$refs.main_html, MsgHtml)
+                // })
             },
             updateMsg(o, action) {
                 //当前在线列表
@@ -120,7 +129,21 @@
             },
             getMsg() {
 
+            },
+            hasNewSocket() {
+                const ws = new WebSocket(this.newSocket);
+                ws.onopen = (e) => {
+                    console.info('已经连接成功！');
+                    this.sendMessage('success');
+                };
+                ws.onclose = (e) => {
+                    console.info('你已断开连接', e)
+                }
+            },
+            sendMessage(msg) {
+                // ws.send(msg)
             }
+
         },
         mounted() {
             // this.getSocket();
@@ -132,7 +155,8 @@
             // if(!this.User.userName) {alert('姓名必填'); history.go(0)};
             // // this.User.userId = uniqueId('User_');
             // this.User.userId = 'User_' + moment().cfordate();
-            this.getSocket();
+            // this.getSocket();
+            this.hasNewSocket();
         }
     }
 </script>
