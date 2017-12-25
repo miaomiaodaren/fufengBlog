@@ -19,7 +19,7 @@
 </template>
 <script>
     import * as io from 'socket.io-client'
-    import { uniqueId, append } from '@/assets/util.js'
+    import { uniqueId, append, random } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     export default {
         data() {
@@ -44,7 +44,9 @@
                     separator: '',
                 },
                 justmsg: 0,
-                newSocket: 'ws://116.196.114.12:3000/',
+                newSocket: 'ws://120.92.167.62:3003',
+                // newSocket: 'ws://127.0.0.1:3003',
+                //参考代码 http://blog.csdn.net/uniquelike/article/details/52574476
             }
         },
         methods: {
@@ -134,7 +136,7 @@
                 const ws = new WebSocket(this.newSocket);
                 ws.onopen = (e) => {
                     console.info('已经连接成功！');
-                    this.sendMessage('success');
+                    ws.send(JSON.stringify({userId:346, houseId: 14, show_status:2, time: Date.parse(new Date())/1000}));
                 };
                 ws.onclose = (e) => {
                     console.info('你已断开连接', e)

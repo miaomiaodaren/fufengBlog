@@ -10,6 +10,25 @@ export default {
     data() {
         return {
         }
+    },
+    beforeCreate() {
+        if(localStorage.getItem('user') == 2) {
+            localStorage.removeItem('user');
+            localStorage.setItem('user', '3')
+        } else if(localStorage.getItem('user') == null) {
+            localStorage.setItem('user', '1')
+        }
+    },
+    destroyed() {
+    },
+    mounted() {
+        window.addEventListener("storage", function (e) {
+            console.info(e, 'woshie');
+            localStorage.setItem('user', e.oldValue);
+        });
+        window.onunload = function() {
+            localStorage.setItem('user', '2');
+        }
     }
 }
 </script>

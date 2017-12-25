@@ -204,6 +204,8 @@ class Monent {
     formart(fmt, timer) {
         //如果没有传入fmt则直接返回默认的格式
         fmt = fmt || 'yyyy-MM-dd HH:mm:ss';
+        //如果没有传入时间格式，则把this中的时间赋值  :ps 2017-11-27修改
+        timer = timer || this.NowTime;
         //判断传出的timer是否为时间戳格式
         const atimer = !!Number(timer) ? this.timestamp(timer) : timer;
         //如果传入了timer，则把this指向传入的时间，否则就指向monent.NowTime.

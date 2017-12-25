@@ -53,6 +53,7 @@
                             </svg>
                         </label>
                     </span>
+                    <img src="" ref="imgss" class="msgcode" @click="changeimg">
                     <button class="loginbtn" @click="onLogin">立即创建</button>
                 </tabitem>
                 <tabitem label="注册" name="registr">
@@ -83,7 +84,8 @@
                     psw: '',
                     imgcode: ''
                 },
-                imgsrc: api + '/users/GetImgCode?'
+                // imgsrc: sbtest + '/users/GetImgCode?'
+                imgsrc: 'http://127.0.0.1:3000/users/GetImgCode?'
             }
         },
         methods: {
@@ -109,6 +111,13 @@
                     if(res.data.code === 1) {
                         if(res.data.code === 1) {
                             this.$message('登录成功!');
+                            this.$store.dispatch('LoginSuccess', res.data.userInfo).then(() => {
+                                this.loading = false
+                                this.$router.push({ path: '/' })
+                                    // this.showDialog = true
+                            }).catch(() => {
+                                this.loading = false
+                            })
                             this.$router.push({path: '/'});
                         } else {
                             this.$message(res.data.message);
@@ -136,9 +145,9 @@
             // onresize(formName) {
             //     this.$refs[formName].resetFields();
             // },
-            // changeimg() {
-            //     this.$refs.imgss.src = this.imgsrc + uniqueId();
-            // }
+            changeimg() {
+                this.$refs.imgss.src = this.imgsrc + uts.uniqueId();
+            }
         },
         components: {
             tabs,
@@ -146,8 +155,7 @@
             headers,
         },
         mounted() {
-            // this.changeimg();
-            alert(this.imgsrc);
+            this.changeimg();
         }
     }
 </script>

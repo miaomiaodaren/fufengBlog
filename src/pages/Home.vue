@@ -74,7 +74,7 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind } from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -258,6 +258,9 @@
             // console.info(moment().add('H', 4).formart(), 'monent1');
             // console.info(moment().beginning().formart(), 'moment2');
             // console.info(moment().add('d', 1).ending().formart(), 'moment2');
+            //测试从数组从中删除 
+            const asd = [1,2,3,4,5,2,3,7,5,3];
+            console.info(delArr(asd, 3), 44444);
         }
     }
 </script>

@@ -5,6 +5,7 @@ import Hello from '@/components/Hello'
 import news from '@/router/map/new'
 import iscss from '@/router/map/css'
 import admin from '@/router/map/admin'
+import { resolve } from 'path';
 
 const Home = resolve => require(['@/pages/Home'], resolve);
 const Home2 = resolve => require(['@/pages/Home2'], resolve);
@@ -23,6 +24,11 @@ const question = resolve => require(['@/pages/question'], resolve);
 const cssing = resolve => require(['@/pages/cssing'], resolve);
 const choujiang1 = resolve => require(['@/pages/choujiang1'], resolve);
 const outexcel = resolve => require(['@/components/outexcel'], resolve);
+
+const Reget = resolve => require(['@/pages/regex/index'], resolve);
+
+//plugin
+const swiper = resolve => require(['@/pages/explame/swiper'], resolve);
 
 Vue.use(Router)
 
@@ -110,6 +116,15 @@ export default new Router({
             name: '导出excel',
             component: outexcel,
         },
-        admin
+        admin,
+        {
+            path: '/plugin/swiper',
+            name: '轮播动画插件案例',
+            component: swiper
+        },{
+            path: '/regex',
+            name: '正则收集',
+            component: Reget
+        }
     ]
 })

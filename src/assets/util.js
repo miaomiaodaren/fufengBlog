@@ -183,7 +183,7 @@ export const getUrlPrmt = (url)=> {
 export const setUrlPrmt = (obj)=> {
     let _rs = [];
     for (let p in obj) {
-        if (obj[p] != null && obj[p] != '') {
+        if (obj[p] != null && obj[p] !== '') {
             _rs.push(p + '=' + obj[p])
         }
     }
@@ -205,5 +205,37 @@ export const append = (ele, html) => {
         ele.appendChild(frag)
     } else {
         ele.appendChild(html)
+    }
+}
+
+// Return a random integer between min and max (inclusive).
+export const random = (min, max) => {
+    if(max == null) {
+        max = min;
+        min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+
+
+//删除指定数组中的某个值
+export const delArr = (arr, opt, type = 'once') => {
+    if(!arr) return false
+    //如果是删除第一个则type传once或不传否则会遍历，进行删除 
+    if(type === 'once') {
+        let index = arr.indexOf(opt);
+        if(index > -1) {
+            arr.splice(index, 1)
+            return arr;
+        }
+    } else {
+        let index = [];
+        arr.forEach((v, i) => {
+            if(v === opt) {
+                delete arr[i];
+            }
+        })
+        let data = arr.filter(v => { return v !== undefined })
+        return data
     }
 }
