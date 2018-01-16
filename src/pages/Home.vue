@@ -26,6 +26,7 @@
                         </div>
                     </div>
                 </div>
+                {{asdf}}
                 <!-- 右侧滑动删除组件 -->
                 <!-- <tabdel></tabdel> -->
                 <toprefresh :top-load-method="refresh" @top-state-change="stateChange" :bottom-load-method="loadmore"  @bottom-state-change="stateChange">
@@ -74,7 +75,7 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr } from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -117,8 +118,10 @@
                 isfocus: false,
                 serchdata: '',
                 iconLink: '',      //加载图标
-                page: 1,
+                page: 0,
                 isinBottom: true,
+                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
+                asdf: ''
             }
         },
         watch: {
@@ -139,26 +142,27 @@
                         page: page,
                         type: type && type === 2 ? con[0] : '',
                     };
-                    let res = await GetProList(params, type);
-                    console.info(res, '22222222');
+                    //此处使用了清理空值的属性,暂时先不处理分页的效果
+                    let res = await GetProList(clearflase(params, true), type);
                     res.data.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         // v.content = unescape(delHtmlTag(v.content));
                         //实现取第一张图片做为缩略图
                     });
+                    this.newList = res.data;
                     //如果传入的是第一页，则直接赋值，否则就合并数据
-                    this.$nextTick(()=> {
-                        if(page === 1) {
-                            this.newList = res.data;
-                        } else {
-                            if(res.data.length) {
-                                this.newList = this.newList.concat(res.data);
-                            } else {
-                                this.isinBottom = false;
-                            }
-                        }
-                    })
-                    this.page ++ 
+                    // this.$nextTick(()=> {
+                    //     if(page === 1) {
+                    //         this.newList = res.data;
+                    //     } else {
+                    //         if(res.data.length) {
+                    //             this.newList = this.newList.concat(res.data);
+                    //         } else {
+                    //             this.isinBottom = false;
+                    //         }
+                    //     }
+                    // })
+                    // this.page ++ 
                 } catch(err) {
                     console.log(err, '23423423423')
                 }
@@ -222,6 +226,18 @@
                     }, 2000);
                 }
                 loaded('done');
+            },
+            sb() {
+                let aa = this.txt, count = this.txt.length, key = 0;
+                let st = setInterval(() => {
+                    if(key === count) {
+                        console.info('222');
+                        clearInterval(st);
+                    } else {
+                        this.asdf = aa.substr(count - key) 
+                        key ++
+                    }
+                }, 100)
             }
         },
         components: {
@@ -232,11 +248,15 @@
             toprefresh,
         },
         mounted() {
-            const obj = [1,2,3,4,5];
-            clears(obj);
+            const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
+            each(obj1, (v,i,o) => {
+                console.info(v, i, o, 8);
+            })
             this.GetNews(this.page);
             this.aa();
-            console.info(moment().cfordate(), '213123')
+            // this.sb();
+            console.info(moment('2018-01-19 23:59:59').cfordate(), '213123')
+            console.info(moment('2018-01-19 23:59:59'), '2222');
             console.info(moment(1503559089).formart('yyyy-MM-dd HH:mm:ss EE')); 
             // console.info(moment().tiemrdeff('1992.07.14').defftime);
             // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));

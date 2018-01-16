@@ -1,8 +1,15 @@
+const Regx = {
+    oreg: /^(\d{4})(\d{2})(\d{2})$/,    //匹配19920714
+    treg: /^(\d{4})[\.|\:|\-|\/]{1}(\d{1,2})[\.|\:|\-|\/]{1}(\d{1,2})$/,   //匹配1992:07:14
+    trreg: /^(\d{4})[\.|\:|\-|\/]{1}(\d{1,2})[\.|\:|\-|\/]{1}(\d{1,2})\s{1}(\d{2})[\.|\:|\-|\/]{1}(\d{2})[\.|\:|\-|\/]{1}(\d{2})$/, //匹配1992-07-14 11:25:36
+}
+
 class Monent {
     constructor(timer) {
         const self = this;
         this.NowTime = timer || new Date;
         this.defftime = 0;
+        this.regData = /^(((\d{4})(\d{2})(\d{2})|((\d{4})(\.|\:|\-|\/){1}(\d{1,2})(\.|\:|\-|\/){1}(\d{1,2}))))$/;
         this.timeformt = {
             y: 31536000,
             M: 2678400,
@@ -100,7 +107,6 @@ class Monent {
         let self = this;
         const length = arguments.length;
         let fv = Object.values(this.timeformt);
-        console.info(this);
         let deff =  length === 1 ? Math.abs(this.cfordate(st) - this.cfordate(this.NowTime)) : this.cfordate(et) - this.cfordate(st),
               o = ['y', 'M', 'd', 'H', 'm', 's'],
               ts = ['年', '月', '日', '时', '分', '秒'];
@@ -169,14 +175,15 @@ class Monent {
     }
 
     //时间格式转换成时间戳格式
-    //2017.11.6 新加判断，if没有传入参数，就以默认的this.noetime做为参数进行转化
+    //2017.11.6 新加判断，if没有传入参数，就以默认的this.nowtime做为参数进行转化
     cfordate(c) {
-        return Number(Date.parse(c || this.NowTime) / 1000);
+        //  Number(Date.parse(c || this.NowTime) / 1000);
+        return Math.round(new Date(c || this.NowTime).getTime() / 1000);
     }
 
     //时间戳格式转换成Date格式
     timestamp(timer, type) {
-        if(!timer) return this
+        if(!timer) return this;
         return type ? new Date(parseInt(timer) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ') : new Date(parseInt(timer) * 1000);
     }
 
@@ -201,13 +208,24 @@ class Monent {
     }
 
     //yyyy:MM:dd HH:mm:ss  转换时间格式
+    // /^((\d{8}|(\d{4}(\.|\:|\-|\/){1}\d{1,2}(\.|\:|\-|\/){1}\d{1,2})))$/.test('1992/17/14')
+    //2018-1-10 new Date(Date.UTC(year, month - 1, day, hour, minute, second)) 使用utc可以根据不同时间段生成一个时间格式 
     formart(fmt, timer) {
         //如果没有传入fmt则直接返回默认的格式
         fmt = fmt || 'yyyy-MM-dd HH:mm:ss';
         //如果没有传入时间格式，则把this中的时间赋值  :ps 2017-11-27修改
         timer = timer || this.NowTime;
+        //2018-1-9新增：如果传入的参数是一个类似20170714/2017-07-14这样的格式,如果有传入fmt就把这些字段进行格式化，如果没有传入则返回原数据，不进行处理
+        //了解了 正则中 RegExp.$xx 的参数，是判断正则的以括号为标识进行分隔  例如： /^(\d{4})(\d{2})(\d{2}))$/.test('19920714');   RegExp.$1: 1992 
+        if(this.regData.test(timer)) {
+            if(/^(\d{4})(\d{2})(\d{2})$/.test(timer)) {
+                return this.formart(fmt, new Date(Date.UTC(RegExp.$1 || '0000', Number(RegExp.$2) - 1 || '00', RegExp.$3 || '00')));
+            } else if (/^(\d{4})[\.|\:|\-|\/]{1}(\d{1,2})[\.|\:|\-|\/]{1}(\d{1,2})$/.test(timer)) {
+                return this.formart(fmt, new Date(Date.UTC(RegExp.$1 || '0000', Number(RegExp.$2) - 1 || '00', RegExp.$3 || '00')));
+            }
+        }
         //判断传出的timer是否为时间戳格式
-        const atimer = !!Number(timer) ? this.timestamp(timer) : timer;
+        const atimer = !this.isDate(new Date(timer)) ? this.timestamp(timer) : timer;
         //如果传入了timer，则把this指向传入的时间，否则就指向monent.NowTime.
         const a = timer ? this.getoftype.bind(atimer) : this.getoftype.bind(this.NowTime);
         const o = {

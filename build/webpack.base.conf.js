@@ -51,7 +51,7 @@ module.exports = {
             test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
             loader: 'url-loader',
             options: {
-                limit: 10000,
+                limit: 10000,              //url-loader会把10M以下的图片进行DataURL转码，转成base64
                 name: utils.assetsPath('img/[name].[hash:7].[ext]')
             }
         },

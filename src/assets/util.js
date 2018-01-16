@@ -45,6 +45,38 @@ var unescapeMap = invert(escapeMap);
 export const escape = createEscaper(escapeMap);
 export const unescape = createEscaper(unescapeMap);
 
+//判断传入值是否为数组 []也算数组
+export function isArray(arr) {
+    return Object.prototype.toString.call(arr) === '[object Array]'
+}
+
+//判断这个数据是否是有值的真数组,如果数据组空，则返回false
+export const isArrayLislk = function(arr) {
+    let length = arr == null ? void 0 : arr['length'];
+    return typeof length == 'number' && length > 0
+}
+
+//判断传入值是否为Object
+export function isObject(obj) {
+    let type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+}
+
+//遍历效果，可以遍历object，返回其key，类似于jquery中的each,效果极其强大
+export function each(obj, iteratee) {
+    if(isArrayLislk(obj)) {
+        let keys = Object.keys(obj), leng = keys.length;
+        for(let i = 0; i < leng; i++) {
+            iteratee && iteratee(obj[i], i, obj)
+        }
+    } else {
+        var keys = Object.keys(obj), values = Object.values(obj), leng = keys.length;
+        for(let i = 0; i < leng; i++) {
+            iteratee(obj[keys[i]], keys[i], obj);
+        }
+    }
+}
+
 //正则去取HTML标签 
 export function delHtmlTag(str) {
     // return str.replace(/<[^>]+>/g,"");
@@ -77,37 +109,24 @@ export const clears = (obj) => {
     return obj
 }
 
-//判断是否拥有该样式
-export const hasClass = (ele, v) => {
-    return classReg( v ).test( ele.className );
-}
-
-//添加样式
-export const addClass = (ele, v) => {
-    if(!ele) return
-    if (ele.classList) {
-        ele.classList.add(v);
-    } else {
-        if( !hasClass( ele, v ) ) {
-            ele.className = ele.className + ' ' + v;
+//去掉空值,在进行AJAX传值的时候，把一些为空的值的key进行忽略(需要注意传入值0与false需要特殊处理)
+//type 默认是false 则说明是对0与false不进行处理，还是会传给后台，如果传true，则进行if(!!obj)处理，会把0 与 值为false的key全部清空掉。
+export const clearflase = (obj, type = false) => {
+    if(!isObject(obj)) return false;
+    let newobj = {};
+    each(obj, (v, i) => {
+        if(!type) {
+            v != null && v != void 0 && v != '' ? newobj[i] = v : '';
+        } else {
+            !!v ? newobj[i] = v : '';
         }
-    }
-}
-
-//删除样式
-export const removeClass = (ele, v) => {
-    if (el.classList) {
-        el.classList.remove(clsName);
-    } else {
-        if(hasClass( ele, v )) {
-            ele.className = ele.className.replace(classReg(v), ' ')
-        }
-    } 
+    })
+    return newobj;
 }
 
 //去除空格 type = 1, 去掉所有的空格, 2 前后空格 3 前空格  4后格
 //正则\s 匹配任意的空白符
-export const trim = (str, type = 1)=> {
+export const trim = (str, type = 2)=> {
     switch(type) {
         case 1: return str.replace(/\s+/g, '');
         case 2: return str.replace(/(^\s*)|(\s*$)/g, '');
@@ -121,7 +140,6 @@ export const groupCommas = (str) => {
     return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-
 //判断文字的长度(字符串为2字符,数字为1个字符)
 export function getByteLen(val) {
    let len = 0;
@@ -132,7 +150,6 @@ export function getByteLen(val) {
    }
    return Math.floor(len);
 }
-
 
 //数字大小写转换
 export const upDigit = (n) => {
@@ -190,24 +207,6 @@ export const setUrlPrmt = (obj)=> {
     return _rs.join('&');
 }
 
-//2017-11-6新增,主要是实现类似jquery append中的效果，参考网上资料，做出更方便的效果
-export const append = (ele, html) => {
-    if(html && typeof html === 'string') {
-        //在此处新建一个div元素
-        let temp = document.createElement('div');
-        temp.innerHTML = html;
-        //此处新建一个碎片文档，参考vue源码 comper
-        //循环遍历，并且移除碎片文档中的数据。直到没有第一个元素即为全部移完
-        let frag = document.createDocumentFragment();
-        while(temp.firstChild) {
-            frag.appendChild(temp.firstChild);
-        }
-        ele.appendChild(frag)
-    } else {
-        ele.appendChild(html)
-    }
-}
-
 // Return a random integer between min and max (inclusive).
 export const random = (min, max) => {
     if(max == null) {
@@ -237,5 +236,53 @@ export const delArr = (arr, opt, type = 'once') => {
         })
         let data = arr.filter(v => { return v !== undefined })
         return data
+    }
+}
+
+//HTML Dom 模块
+
+//判断是否拥有该样式
+export const hasClass = (ele, v) => {
+    return classReg( v ).test( ele.className );
+}
+
+//添加样式
+export const addClass = (ele, v) => {
+    if(!ele) return
+    if (ele.classList) {
+        ele.classList.add(v);
+    } else {
+        if( !hasClass( ele, v ) ) {
+            ele.className = ele.className + ' ' + v;
+        }
+    }
+}
+
+//删除样式
+export const removeClass = (ele, v) => {
+    if (el.classList) {
+        el.classList.remove(clsName);
+    } else {
+        if(hasClass( ele, v )) {
+            ele.className = ele.className.replace(classReg(v), ' ')
+        }
+    } 
+}
+
+//2017-11-6新增,主要是实现类似jquery append中的效果，参考网上资料，做出更方便的效果
+export const append = (ele, html) => {
+    if(html && typeof html === 'string') {
+        //在此处新建一个div元素
+        let temp = document.createElement('div');
+        temp.innerHTML = html;
+        //此处新建一个碎片文档，参考vue源码 comper
+        //循环遍历，并且移除碎片文档中的数据。直到没有第一个元素即为全部移完
+        let frag = document.createDocumentFragment();
+        while(temp.firstChild) {
+            frag.appendChild(temp.firstChild);
+        }
+        ele.appendChild(frag)
+    } else {
+        ele.appendChild(html)
     }
 }
