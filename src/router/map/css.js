@@ -11,6 +11,7 @@ const upload = resolve => require(['@/components/upload/index'], resolve);
 const uploaer = resolve => require(['@/components/uploader'], resolve);
 
 const choujiang2 = resolve => require(['@/components/css/choujiang'], resolve);
+const choujiang3 = resolve => require(['@/components/css/choujiang3'], resolve);
 
 export default {
     path: '/css',
@@ -63,6 +64,12 @@ export default {
         name: '文件上传',
         components: {
             page: uploaer
+        }
+    }, {
+        path: 'cj3',
+        name: '777抽奖',
+        components: {
+            page: choujiang3
         }
     }]
 }

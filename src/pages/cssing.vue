@@ -26,6 +26,9 @@
             <li>
                 <router-link :to="{ path: '/css/cj2'}" class="lists">正方形投奖</router-link>
             </li>
+            <li>
+                <router-link :to="{ path: '/css/cj3'}" class="lists">777抽奖</router-link>
+            </li>
         </ul>
         <headers></headers>
     </div>
