@@ -37,6 +37,11 @@
                             {{props.stateText}}
                         </div>
                     </template> 
+                    <inputnumber v-model="inputnum" :setp="1" :max="10" :min="2"></inputnumber>
+                    <EInputNumber v-model="inputnum"></EInputNumber>
+                    <!-- 防抖节流测试 -->
+                    <div @click="debounces(1000)">213123123</div>
+                    <input v-model="debouncess" @change="sbs">
                     <div class="content_left">
                         <ul>
                             <li v-for="(n, index) in newList" :key="index">
@@ -75,15 +80,18 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase } from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase, debounce, throttle } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
     import tabdel from '@/plugin/tabdel/index'
     //下拉刷新插件
     import toprefresh from '@/plugin/loadmore/index'
+    import inputnumber from '@/plugin/InputNumber/index'
 
     import { GetProList, minApi, hasSearch } from '@/service/index'
+
+    import EInputNumber from 'element-ui/packages/input-number/src/input-number.vue';
 
     const datas = [
         {
@@ -107,6 +115,8 @@
             "note": "note1"
         }
     ];
+
+    var deaa = debounce(function() {console.info(arguments[0], 3333)}, 1000, true);
     export default {
         data() {
             return {
@@ -121,7 +131,9 @@
                 page: 0,
                 isinBottom: true,
                 txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
-                asdf: ''
+                asdf: '',
+                inputnum: 2,
+                debouncess: '',
             }
         },
         watch: {
@@ -238,6 +250,12 @@
                         key ++
                     }
                 }, 100)
+            },
+            debounces(delay) {
+                deaa();
+            },
+            sbs() {
+                deaa(this.debouncess)
             }
         },
         components: {
@@ -246,6 +264,8 @@
             minput,
             tabdel,
             toprefresh,
+            inputnumber,
+            EInputNumber
         },
         mounted() {
             const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
@@ -281,6 +301,11 @@
             //测试从数组从中删除 
             const asd = [1,2,3,4,5,2,3,7,5,3];
             console.info(delArr(asd, 3), 44444);
+            var lazyLayout = throttle(function() {console.info('22')}, 5000);
+            // console.info(lazyLayout, 22);
+            window.onresize = function() {
+                lazyLayout()
+            };
         }
     }
 </script>

@@ -30,6 +30,7 @@
                 <router-link :to="{ path: '/css/cj3'}" class="lists">777抽奖</router-link>
             </li>
         </ul>
+        <div class="calcdemo">这个样式用来测试 css3 元素 calc, 可以用来对css的值进行计算</div>
         <headers></headers>
     </div>
 </template>
@@ -75,4 +76,9 @@
                     margin-rigth: px2rem(30)
                     &:hover
                         transform: scale(.9)
+        .calcdemo
+            width: calc(66px - 8px * 2)
+            width: -webkit-calc(166px + 188px)
+            text-align: center
+            margin: 0 auto
 </style>

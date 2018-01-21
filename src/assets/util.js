@@ -286,3 +286,48 @@ export const append = (ele, html) => {
         ele.appendChild(html)
     }
 }
+
+//2018-1-18新增debounce函数去抖动，throttle函数节流    undesoced 跟 lodash都有封装这种函数
+//此方法是借用了vue element 的一个插件实现的一个比较简单的
+export const debounce = (fn, delay, immediate) => {
+    return throttle(fn, delay, immediate, true);
+}
+
+//debounce 参数的话说明是调用的debounce
+//debounce 将延迟函数的执行(真正的执行)在函数最后一次调用时刻的 wait 毫秒之后   也就是二次事件的触发间隔一定要大于一个值，不然如果一直触发，则只会触发一次
+//throttle 当重复调用函数的时候，最多每隔 wait毫秒调用一次该函数       如果事件一直在触发，则会每隔几秒触发一次，与debounce相比会触发多次，但是有时间间隔
+//immediate 如果是trun 则会把延迟执行，会以最后一个的参数为准，false的话，会先执行，再判断
+export const throttle = function(fn, delay, immediate, debounce) {
+    let currtime = +new Date(),         //当前时间
+        last_call = 0,
+        last_exec = 0,          //最后一次执行时间
+        that,               //赋值当前的this
+        args,               //方法所带参数
+        diff,               //二者时间差
+        timer = null,       //定时执行的方法
+        exec = function() {
+            last_exec = currtime        //执行的时候把当前时间赋值给最后一次执行时间
+            fn.apply(that, args);   //执行方法
+        }
+    return function () {
+        currtime = +new Date();
+        that = this;
+        args = arguments;
+        diff = currtime - (debounce ? last_call : last_exec) - delay;
+        clearTimeout(timer);
+        if(debounce) {
+            if(immediate) {
+                timer = setTimeout(exec, delay);
+            } else if (diff >= 0) {
+                exec();
+            }
+        } else {
+            if(diff >= 0) {
+                exec();
+            } else if(immediate) {
+                timer = setTimeout(exec, -diff);
+            }
+        }
+        last_call = currtime;
+    }
+}
