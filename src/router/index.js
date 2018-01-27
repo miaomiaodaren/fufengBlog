@@ -29,6 +29,7 @@ const Reget = resolve => require(['@/pages/regex/index'], resolve);
 
 //plugin
 const swiper = resolve => require(['@/pages/explame/swiper'], resolve);
+const Plugin = resolve => require(['@/pages/plugin'], resolve);
 
 Vue.use(Router)
 
@@ -125,6 +126,10 @@ export default new Router({
             path: '/regex',
             name: '正则收集',
             component: Reget
+        },{
+            path: '/plugin',
+            name: '组件集合',
+            component: Plugin
         }
     ]
 })

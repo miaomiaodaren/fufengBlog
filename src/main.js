@@ -19,6 +19,12 @@ import ffEle from '@/assets/vueplugin/src'
 console.info(ffEle);
 Vue.use(ffEle)
 
+
+//测试自己的时间插件
+import DatePickers from '@/plugin/timepick'
+Vue.use(DatePickers)
+
+
 // import ff from '@/assets/vueplugin/src'
 // console.info(ff, '21312312213123');
 // Vue.use(ff);

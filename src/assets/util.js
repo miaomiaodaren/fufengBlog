@@ -42,6 +42,7 @@ var createEscaper = function(map) {
 
 var unescapeMap = invert(escapeMap);
 
+//转义字符
 export const escape = createEscaper(escapeMap);
 export const unescape = createEscaper(unescapeMap);
 
@@ -138,6 +139,23 @@ export const trim = (str, type = 2)=> {
 //正则在数字中间每隔三位添加一个逗号
 export const groupCommas = (str) => {
     return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // return num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, `$1${gap}`)
+}
+
+//判断是否为手机号
+export const isPhoneNum = (str) => {
+  return /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(str)
+}
+
+//判断是否为有效邮箱号
+export const isEmail = (str) => {
+  return /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str)
+}
+
+//判断是否为有效身份证号码
+export const isIdCard = (str) => {
+  return /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str)
 }
 
 //判断文字的长度(字符串为2字符,数字为1个字符)
@@ -241,9 +259,18 @@ export const delArr = (arr, opt, type = 'once') => {
 
 //HTML Dom 模块
 
+
 //判断是否拥有该样式
+//20181-22 在阅读element源码的时候，了解了hasClass addClass removeClass更完善的写法，后期可以参考element/utils/dom.js
 export const hasClass = (ele, v) => {
     return classReg( v ).test( ele.className );
+    // if (!el || !cls) return false;
+    // if (cls.indexOf(' ') !== -1) throw new Error('className should not contain space.');
+    // if (el.classList) {
+    //     return el.classList.contains(cls);
+    // } else {
+    //     return (' ' + el.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    // }
 }
 
 //添加样式
@@ -269,6 +296,16 @@ export const removeClass = (ele, v) => {
     } 
 }
 
+//toggleClass 改变这个样式
+export const toggleClass = (el, cls) => {
+    if(el.hasClass(cls)) {
+        let reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+        el.className = el.className.replace(reg, ' ')
+    } else {
+        el.className += ' ' + cls
+    }
+}
+
 //2017-11-6新增,主要是实现类似jquery append中的效果，参考网上资料，做出更方便的效果
 export const append = (ele, html) => {
     if(html && typeof html === 'string') {
@@ -286,6 +323,97 @@ export const append = (ele, html) => {
         ele.appendChild(html)
     }
 }
+
+//注册方法(做了兼容处理)
+//这边on方法是一个立即执行函数。在触发的时候会返回带参数的一个方法，所以On(xx,xx,xx)的参数能取到
+//由于箭头函数不能取到不存在 this arguments、super、new.target，所以导致很多bind call apply等方法不能使用，所以后期要特别注意使用
+//foo::bar 等同于 bar.bind(foo);   foo::bar(...arguments) 等同于 bar.apply(foo, arguments)
+export const on = (() => {
+    return (element, event, handler) => {
+        if(document.addEventListener) {
+            if (element && event && handler) {
+                //addEvenetListener 第三个参数 Booler指定事件是否在捕获或冒泡阶段执行。
+                element.addEventListener(event, handler, false)
+            } else {
+                //注：attachEvent注册的方法要带上on
+                element.attachEvent('on' + event, handler);
+            }
+        }
+    }
+})()
+
+//删除注册的方法(做了兼容处理)  这边做这个注册与删除,主要是后面为了实现once,
+export const off = (() => {
+    return (element, event, handler) => {
+        if(document.removeEventListener) {
+            if (element && event) {
+                //addEvenetListener 第三个参数 Booler指定事件是否在捕获或冒泡阶段执行。
+                element.removeEventListener(event, handler, false)
+            } else {
+                //注：attachEvent注册的方法要带上on
+                element.detachEvent('on' + event, handler);
+            }
+        }
+    }
+})()
+
+//用once注册的方法只会执行一次，执行一次之后就会注销掉
+//es6的箭头函数中不存在 this arguments、super、new.target  
+//此处可能会触发 arguments无法获取的问题
+export const once = (el, event, fn) => {
+    const linster = () => {
+        if(fn) {
+            fn.apply(this, arguments)
+        }
+        off(el, event, linster)
+    }
+    on(el, event, linster)
+}
+
+
+//2018/1/26新加
+//判断是否为微信内置浏览器
+export const isWeixin = () => {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+        return true
+    } else {
+        return false
+    }
+}
+
+//判断操作系统类型
+export const mobileType = () => {
+    let u = navigator.userAgent
+    let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1  //android终端
+    let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)  //ios终端
+    if (isAndroid) {
+        return 'android'
+    } else if (isiOS) {
+        return 'iphone'
+    }
+}
+
+//判断是用手机还是web
+//Navigator 包含了有关浏览器的信息  而userAgent 返回的是浏览器http请求的信息头的数据
+//一般用这个方法来判断当前是如何使用浏览器
+const getOs = () => {
+    let sUserAgent = navigator.userAgent.toLowerCase();
+    let bIsIpad = sUserAgent.match(/ipad/i) == 'ipad'
+    let bIsIphoneOs = sUserAgent.match(/iphone os/i) == 'iphone os'
+    let bIsMidp = sUserAgent.match(/midp/i) == 'midp'
+    let bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == 'rv:1.2.3.4'
+    let bIsUc = sUserAgent.match(/ucweb/i) == 'ucweb'
+    let bIsAndroid = sUserAgent.match(/android/i) == 'android'
+    let bIsCE = sUserAgent.match(/windows ce/i) == 'windows ce'
+    let bIsWM = sUserAgent.match(/windows mobile/i) == 'windows mobile'
+    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+        return 'mobile'
+    } else {
+        return 'web'
+    }
+}
+
 
 //2018-1-18新增debounce函数去抖动，throttle函数节流    undesoced 跟 lodash都有封装这种函数
 //此方法是借用了vue element 的一个插件实现的一个比较简单的

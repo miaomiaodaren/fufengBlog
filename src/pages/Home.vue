@@ -37,11 +37,12 @@
                             {{props.stateText}}
                         </div>
                     </template> 
-                    <inputnumber v-model="inputnum" :setp="1" :max="10" :min="2"></inputnumber>
-                    <EInputNumber v-model="inputnum"></EInputNumber>
+                    <!-- <inputnumber v-model="inputnum" :setp="1" :max="10" :min="2"></inputnumber>
+                    <a href="http://www.baidu.com">2131231</a> -->
+                    <!--  <EInputNumber v-model="inputnum"></EInputNumber> -->
                     <!-- 防抖节流测试 -->
-                    <div @click="debounces(1000)">213123123</div>
-                    <input v-model="debouncess" @change="sbs">
+                    <!-- <div @click="debounces(1000)">213123123</div>
+                    <input v-model="debouncess" @change="sbs"> -->
                     <div class="content_left">
                         <ul>
                             <li v-for="(n, index) in newList" :key="index">
@@ -80,7 +81,7 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase, debounce, throttle } from '@/assets/util.js'
+    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase, debounce, throttle, on } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -130,7 +131,7 @@
                 iconLink: '',      //加载图标
                 page: 0,
                 isinBottom: true,
-                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
+                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',      txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
                 asdf: '',
                 inputnum: 2,
                 debouncess: '',
@@ -267,6 +268,8 @@
             inputnumber,
             EInputNumber
         },
+        created() {
+        },
         mounted() {
             const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
             each(obj1, (v,i,o) => {
@@ -289,7 +292,7 @@
             //         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             //     },
             //     mode: 'cors',
-            //     credentials: 'credentials',
+            //     credentials: 'include',
             //     cache: 'default'
             // }).then(res => res.json()).then(data => {
             //     console.info(data, '333333');
@@ -298,6 +301,22 @@
             // console.info(moment().add('H', 4).formart(), 'monent1');
             // console.info(moment().beginning().formart(), 'moment2');
             // console.info(moment().add('d', 1).ending().formart(), 'moment2');
+
+            fetch('http://127.0.0.1:9200/fufengblog', {
+                methods: 'PUT',
+                headers: {
+                    'Accept': 'application/json, text/javascript, */*; q=0.01',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                mode: 'cors',
+                credentials: 'omit',
+                cache: 'default'
+            }).then(res => res.json()).then(res => {
+                console.info(res, 99);
+            }).catch(err => {
+                console.info(err, 33);
+            })
+
             //测试从数组从中删除 
             const asd = [1,2,3,4,5,2,3,7,5,3];
             console.info(delArr(asd, 3), 44444);
@@ -306,6 +325,14 @@
             window.onresize = function() {
                 lazyLayout()
             };
+            var nc = false;
+            //在进入页面的时候，及离开页面的时候会触发的方法
+            on(window, 'pageshow', function() {
+                // alert(nc);
+            });
+            on(window, 'pagehide', function() {
+                nc = true
+            });
         }
     }
 </script>

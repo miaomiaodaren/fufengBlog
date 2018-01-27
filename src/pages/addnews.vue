@@ -82,7 +82,7 @@
             async getType() {
                 try {
                     let res = await this.getAjax('/types/GetTypes', {}, 'GET');
-                    this.types = res.data;
+                    this.types = res.data.list;
                 }
                 catch(err) {
                     console.log(err)

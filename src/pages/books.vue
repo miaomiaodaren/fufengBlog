@@ -39,6 +39,7 @@
 </template>
 <script>
     import headertop from '@/include/header.vue';
+    import inputnumber from '@/plugin/InputNumber/index'
     import { huploader } from '@/service'
     export default {
         data() {
