@@ -1,7 +1,7 @@
 const TOP_DEFAULT_CONFIG = {
-  pullText: '下拉刷新',
-  triggerText: '释放更新',
-  loadingText: '加载中...',
+  pullText: '下拉可以刷新',
+  triggerText: '松开立即刷新',
+  loadingText: '正在刷新中...',
   doneText: '加载完成',
   failText: '加载失败',
   loadedStayTime: 400,

@@ -29,7 +29,9 @@
             async getDataById(id) {
                 try{
                     let res = await this.getAjax('/news/newslist', {_id: id}, 'POST');
-                    this.dataview = res.data[0];
+                    const { information } = res.data;
+                    console.info(information[0], 99);
+                    this.dataview = information[0];
                 } catch(err) {
                     console.info(err)
                 }

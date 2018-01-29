@@ -40,6 +40,10 @@ Object.keys(filters).forEach(v => {
     Vue.filter(v, filters[v])
 })
 
+//字体图标
+import '@/assets/fonts/iconfont.css'
+import '@/assets/fonts/iconfont.js'
+
 Vue.prototype.onlyid = 1;
 
 /* eslint-disable no-new */

@@ -2,10 +2,10 @@
     <div id="header">
         <header class="banner">
             <nav>
-                <router-link to="/">首页</router-link>
-                <router-link to="/books/index">书城</router-link>
-                <router-link to="/music/index">音乐室</router-link>
-                <router-link to="/im/index">聊天室</router-link>
+                <router-link to="/"><i class="iconfont icon-shouyeicon"></i>首页</router-link>
+                <router-link to="/books/index"><i class="iconfont icon-tixian-icon"></i>书城</router-link>
+                <router-link to="/music/index"><i class="iconfont icon-tequanjifenjiasuicon"></i>音乐室</router-link>
+                <router-link to="/im/index"><i class="iconfont icon-tucaowomenicon"></i>聊天室</router-link>
                 <navs class="more">
                     <navsitem to="/" label="更多" index="1">
                         <router-link to="/abouts">产品介绍</router-link>
@@ -25,7 +25,7 @@
             </nav>
         </header>
     </div>
-</template>
+</template> 
 <script>
     import Nav from '@/plugin/nav/nav.vue'
     import navsitem from '@/plugin/nav/nav-item.vue'
@@ -72,4 +72,11 @@
                     align-content: flex-start
                     white-space: nowrap
                     text-overflow: ellipsis
+                a
+                    @include font-dpr(12px)
+                    line-height: px2rem(20)
+                i
+                    @include font-dpr(20px)
+                    line-height: px2rem(50)
+                    display: block
 </style>

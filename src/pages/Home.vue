@@ -10,6 +10,8 @@
                             @focus="isfocus= true"
                             @blur="isfocus = false"
                             :class="{searchfocus: isfocus}"
+                            @input="debounceHandleInput"
+                            ref="searchinput"
                         >
                         <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
                         <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
@@ -19,6 +21,7 @@
                                     :key="index" 
                                     class="lists"
                                 >
+                                    <i class="el-icon-search"></i>
                                     {{n.title}}
                                 </router-link>
                             </p>
@@ -34,15 +37,15 @@
                         <div class="top-load-wrapper">
                             <div :class="{'el-icon-arrow-down': props.state === 'trigger', 'el-icon-loading': props.state === 'loading'}" style="margin: 0 auto">
                             </div>
-                            {{props.stateText}}
+                            <span v-html="props.stateText"></span>
                         </div>
                     </template> 
                     <!-- <inputnumber v-model="inputnum" :setp="1" :max="10" :min="2"></inputnumber>
                     <a href="http://www.baidu.com">2131231</a> -->
                     <!--  <EInputNumber v-model="inputnum"></EInputNumber> -->
                     <!-- 防抖节流测试 -->
-                    <!-- <div @click="debounces(1000)">213123123</div>
-                    <input v-model="debouncess" @change="sbs"> -->
+                    <!-- <div @click="sdebounces(1000)">213123123</div> -->
+                    <!-- <input v-model="debouncess" @change="sbs"> -->
                     <div class="content_left">
                         <ul>
                             <li v-for="(n, index) in newList" :key="index">
@@ -66,7 +69,7 @@
                         <!-- <page :total="50" @pagechange="pchange" :gopage="false"></page> -->
                     </div>
                     <template slot="bootom-block" scope="props">
-                        <div class="bottom-load-wrapper">
+                        <div class="bottom-load-wrapper" style="text-align: center;">
                             <div :class="{'el-icon-arrow-top': props.state === 'trigger', 'el-icon-loading': props.state === 'loading'}" style="margin: 0 auto">
                             </div>
                             {{ props.stateText }}
@@ -117,7 +120,7 @@
         }
     ];
 
-    var deaa = debounce(function() {console.info(arguments[0], 3333)}, 1000, true);
+    var deaa = debounce(function() {console.info('2222', 3333)}, 1000, true);
     export default {
         data() {
             return {
@@ -129,7 +132,7 @@
                 isfocus: false,
                 serchdata: '',
                 iconLink: '',      //加载图标
-                page: 0,
+                page: 1,
                 isinBottom: true,
                 txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',      txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
                 asdf: '',
@@ -138,14 +141,14 @@
             }
         },
         watch: {
-            searchcon(value, oldval) {
-                if(value != oldval && value.length >= 1) {
-                    this.hassearch(value);
-                } else {
-                    this.serchdata = '';
-                }
-                return value
-            }
+            // searchcon(value, oldval) {
+            //     if(value != oldval && value.length >= 1) {
+            //         this.hassearch(value);
+            //     } else {
+            //         this.serchdata = '';
+            //     }
+            //     return value
+            // }
         },
         methods:{
             //第一个参数传2, 显示type模板的所有内容
@@ -157,24 +160,25 @@
                     };
                     //此处使用了清理空值的属性,暂时先不处理分页的效果
                     let res = await GetProList(clearflase(params, true), type);
-                    res.data.map((v, n) => {
+                    let datainfo = res.data.information;
+                    datainfo.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
                         // v.content = unescape(delHtmlTag(v.content));
                         //实现取第一张图片做为缩略图
                     });
-                    this.newList = res.data;
+                    // this.newList = datainfo;
                     //如果传入的是第一页，则直接赋值，否则就合并数据
-                    // this.$nextTick(()=> {
-                    //     if(page === 1) {
-                    //         this.newList = res.data;
-                    //     } else {
-                    //         if(res.data.length) {
-                    //             this.newList = this.newList.concat(res.data);
-                    //         } else {
-                    //             this.isinBottom = false;
-                    //         }
-                    //     }
-                    // })
+                    this.$nextTick(()=> {
+                        if(page === 1) {
+                            this.newList = datainfo;
+                        } else {
+                            if(datainfo.length) {
+                                this.newList = this.newList.concat(datainfo);
+                            } else {
+                                this.isinBottom = false;
+                            }
+                        }
+                    })
                     // this.page ++ 
                 } catch(err) {
                     console.log(err, '23423423423')
@@ -189,16 +193,20 @@
                 }
             },
             async hassearch(val) {
+                val = Object.prototype.toString.call(val) === '[object InputEvent]' ? val.target.value : val;
                 try{
                     let res = await hasSearch({value: val}, 'POST');
-                    res.data.map((v, n) => {
-                        v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
-                        v.content = unescape(delHtmlTag(v.content));
-                    });
-                    console.info(res);
-                    this.serchdata = res.data;
+                    if(res.data.code == 1) {
+                        this.serchdata = [];
+                    } else {
+                        res.data.map((v, n) => {
+                            v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
+                            v.content = unescape(delHtmlTag(v.content));
+                        });
+                        this.serchdata = res.data;
+                    }
                 } catch (err) {
-                    this.$message(err);
+                    this.$message('2222');
                 }
             },
             getMore(id) {
@@ -218,6 +226,7 @@
                 return delHtmlTag(h)
             },
             refresh(loaded) {
+                //上拉刷新
                 setTimeout(() => {
                     this.GetNews(1);
                     loaded('done');
@@ -234,11 +243,12 @@
             },
             loadmore(loaded) {
                 if(this.isinBottom) {
+                    this.page ++;
                     setTimeout(() => {
                         this.GetNews(this.page);
-                    }, 2000);
+                        loaded('done');
+                    }, 3000);
                 }
-                loaded('done');
             },
             sb() {
                 let aa = this.txt, count = this.txt.length, key = 0;
@@ -252,7 +262,10 @@
                     }
                 }, 100)
             },
-            debounces(delay) {
+            searchchange(val) {
+
+            },
+            sdebounces(delay) {
                 deaa();
             },
             sbs() {
@@ -269,6 +282,8 @@
             EInputNumber
         },
         created() {
+            //这边使用了防抖,会对搜索进行延迟处理，减少服务器压力
+            this.debounceHandleInput = debounce(this.hassearch, 500, true);
         },
         mounted() {
             const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
@@ -333,6 +348,8 @@
             on(window, 'pagehide', function() {
                 nc = true
             });
+
+            console.info(this, 999, this.__proto__);
         }
     }
 </script>
@@ -427,7 +444,7 @@
                     .searchinput
                         width: px2rem(500)
                         height: px2rem(66)
-                        border-radius: 3px
+                        border-radius: 10px
                         margin: px2rem(12) 0 px2rem(12) px2rem(100)
                         @include font-dpr(16px)
                         box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2) 0 1px 0 rgba(255, 255, 255, .1)
@@ -459,6 +476,10 @@
                             line-height: px2rem(80)
                             border-bottom: 1px solid #ddd
                             display: block
+                        .lists
+                            overflow: hidden
+                            white-space: nowrap
+                            text-overflow: ellipsis 
     @mixin keyframes($a) 
         @-webkit-keyframes #{$a} 
             @content 
@@ -475,8 +496,12 @@
 
 
     .top-load-wrapper 
-        line-height: 90px
+        // line-height: px2rem(40)
+        display: table-cell
+        vertical-align: middle
         text-align: center
+        height: px2rem(90)
+        width: 3.5%
     .icon-arrow 
         transition: .2s
         transform: rotate(180deg)

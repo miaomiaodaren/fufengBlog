@@ -15,6 +15,7 @@
 </template>
 <script>
     import { TOP_DEFAULT_CONFIG, BOTTOM_DEFAULT_CONFIG } from './config';
+    import moment from '@/assets/monent.js'
     export default {
         name: 'Vue-loadMore',
         props: {
@@ -90,7 +91,8 @@
                 throttleEmitTopPull: null,
                 throttleEmitBottomPull: null,
                 throttleEmitScroll: null,
-                throttleOnInfiniteScroll: null
+                throttleOnInfiniteScroll: null,
+                nextrefTime: '' //上一次刷新时间
             }
         },
         computed: {
@@ -133,20 +135,23 @@
                 };
             },
             actionPull() {
+                const reftime = this.nextrefTime ? `<span style="display: block; line-height: 1">最后更新: ${this.nextrefTime}</span>` : '';
                 this.state = 'pull';
                 this.direction === 'down'
-                    ? this.topText = this._topConfig.pullText
+                    ? this.topText = this._topConfig.pullText + reftime
                     : this.bottomText = this._bottomConfig.pullText;
             },
             actionTrigger() {
+                const reftime = this.nextrefTime ? `<span style="display: block; line-height: 1">最后更新: ${this.nextrefTime}</span>` : '';
                 this.state = 'trigger';
                 this.direction === 'down'
-                    ? this.topText = this._topConfig.triggerText
+                    ? this.topText = this._topConfig.triggerText + reftime
                     : this.bottomText = this._bottomConfig.triggerText;
             },
             actionLoading() {
                 this.state = 'loading';
                 if (this.direction === 'down') {
+                    this.nextrefTime = moment().formart('yyyy-MM-dd');
                     this.topText = this._topConfig.loadingText;
                     /* eslint-disable no-useless-call */
                     this.topLoadMethod.call(this, this.actionLoaded);

@@ -98,7 +98,8 @@
             markdownEditor
         },
         mounted() {
-            console.info(this.$refs, '123123123');
+            console.info(this.$refs, '123123123', this.$message);
+            this.$message('2222');
             this.getType();
             this.$nextTick(() => {
                 // this.$refs.markdownEditor.initialize();
