@@ -5,14 +5,12 @@ const users = {
     state: JSON.parse(sessionStorage.getItem('user')) || '',
     mutations: {
         LoginSuccess (state, user) {
-            console.info(user, '我是user');
             sessionStorage.setItem('user', JSON.stringify(user) || '');
-            object.assign(state, user);
+            Object.assign(state, user);
         }
     },
     actions: {
         LoginSuccess ({commit}, userinfos) {
-            console.info(userinfos, '我是userinfos');
             commit('LoginSuccess', userinfos)
         }
     }

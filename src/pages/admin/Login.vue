@@ -2,7 +2,7 @@
     <div class="login">
         <div class="login_main">
             <tabs v-model="activeName">
-                <tabitem label="登录1" name="login">
+                <tabitem label="登录" name="login">
                     <span class="inputs inputs-madoka">
                         <input type="text" name="name" @focus="hasfocus" @blur="removefocus" class="input__field input__field--madoka" v-model="form.name" id="login_name" placeholder="请输入用户名">
                         <label class="input__label input__label--madoka" for="login_name">
@@ -19,7 +19,7 @@
                             </svg>
                         </label>
                     </span>
-                    <span class="inputs inputs-madoka imgcodes">
+                   <!--  <span class="inputs inputs-madoka imgcodes">
                         <input type="text" class="input__field input__field--madoka" name="imgcode" v-model="form.imgcode" placeholder="请输入图形验证码">
                         <label class="input__label input__label--madoka" for="input-31">
                             <svg class="graphic graphic--madoka" width="100%" height="100%" viewBox="0 0 404 77" preserveAspectRatio="none">
@@ -27,7 +27,7 @@
                             </svg>
                         </label>
                     </span>
-                    <img src="" ref="imgss" class="msgcode" @click="changeimg">
+                    <img src="" ref="imgss" class="msgcode" @click="changeimg"> -->
                     <button class="loginbtn" @click="onLogin">立即登录</button>
                 </tabitem>
                <!--  <tabitem label="注册" name="registr">
@@ -72,8 +72,8 @@
                 // event.currentTarget  获取元素dom
                 uts.addClass(event.currentTarget.parentNode, 'input--filled')
             },
-            removefocus() {
-                uts.removeClass(event.currentTarget.parentNode, 'input--filled')
+            removefocus(event) {
+                uts.removeClass(event.target.parentNode, 'input--filled')
             },
             async onLogin() {
                 try{
@@ -81,7 +81,7 @@
                     if(res.data.code === 1) {
                         this.$message('登录成功!');
                         this.$store.dispatch('LoginSuccess', this.form);
-                        this.$router.push({path: '/admin'});
+                        this.$router.push({path: '/other'});
                     } else {
                         this.$message(res.data.message);
                     }
@@ -108,7 +108,7 @@
             //     this.$refs[formName].resetFields();
             // },
             changeimg() {
-                this.$refs.imgss.src = this.imgsrc + uts.uniqueId();
+                // this.$refs.imgss.src = this.imgsrc + uts.uniqueId();
             }
         },
         components: {
@@ -118,13 +118,14 @@
         },
         mounted() {
             console.info(document.cookie);
-            this.changeimg();
+            // this.changeimg();
         }
     }
 </script>
 <style lang="sass" scoped type="text/sass">
     .login
         background-color: #f7fafc
+        height: 100%
         .login_main
             width: px2rem(600)
             margin: 0 auto

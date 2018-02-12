@@ -72,6 +72,10 @@
                 default: () => {
                     return {};
                 }
+            },
+            otherfun: {
+                type: [Object, Function],
+                default: ''
             }
         },
         data() {
@@ -259,6 +263,9 @@
             handleScroll(event) {
                 this.isThrottleScroll ? this.throttleEmitScroll(event) : this.$emit('scroll', event);
                 this.throttleOnInfiniteScroll();
+                if(this.otherfun) {
+                    this.otherfun()
+                }
             },
             onInfiniteScroll() {
                 if (this.checkBottomReached()) {

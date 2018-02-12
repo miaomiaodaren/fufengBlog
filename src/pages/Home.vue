@@ -2,37 +2,10 @@
     <div id="Home">
         <div class="main">
             <div class="content">
-                <div class="search">
-                    <!-- <minput v-model="searchcon" type="number" icon="search" :on-icon-click="hassearch"></minput> -->
-                    <div class="mm_input">
-                        <input class="searchinput"
-                            v-model="searchcon"
-                            @focus="isfocus= true"
-                            @blur="isfocus = false"
-                            :class="{searchfocus: isfocus}"
-                            @input="debounceHandleInput"
-                            ref="searchinput"
-                        >
-                        <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
-                        <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
-                            <p v-if="serchdata.length > 0">
-                                <router-link :to="{ path: '/question/' + n._id}"
-                                    v-for="(n, index) in serchdata" 
-                                    :key="index" 
-                                    class="lists"
-                                >
-                                    <i class="el-icon-search"></i>
-                                    {{n.title}}
-                                </router-link>
-                            </p>
-                            <p v-else>暂无搜索记录</p>
-                        </div>
-                    </div>
-                </div>
-                {{asdf}}
                 <!-- 右侧滑动删除组件 -->
                 <!-- <tabdel></tabdel> -->
-                <toprefresh :top-load-method="refresh" @top-state-change="stateChange" :bottom-load-method="loadmore"  @bottom-state-change="stateChange">
+                <toprefresh :top-load-method="refresh" @top-state-change="stateChange" :bottom-load-method="loadmore" @bottom-state-change="stateChange" 
+                :otherfun="stickyfun">
                     <template slot="top-block" scope="props">
                         <div class="top-load-wrapper">
                             <div :class="{'el-icon-arrow-down': props.state === 'trigger', 'el-icon-loading': props.state === 'loading'}" style="margin: 0 auto">
@@ -46,20 +19,49 @@
                     <!-- 防抖节流测试 -->
                     <!-- <div @click="sdebounces(1000)">213123123</div> -->
                     <!-- <input v-model="debouncess" @change="sbs"> -->
-                    <div class="content_left">
+                    <h3 class="pageTitle">博客</h3>
+                    <Sticky ref="stickys" :stickyTop="Number(navheight)">
+                        <div class="search">
+                            <div class="mm_input">
+                                <input class="searchinput"
+                                    v-model="searchcon"
+                                    @focus="startSearch"
+                                    @blur="isfocus = false"
+                                    :class="{searchfocus: isfocus}"
+                                    @input="debounceHandleInput"
+                                    ref="searchinput"
+                                >
+                                <i class="el-icon-search searchicon" @click="hassearch(searchcon)"></i>
+                                <div class="searchdata" v-if="searchcon.length >= 1 || isfocus">
+                                    <p v-if="serchdata.length > 0">
+                                        <router-link :to="{ path: '/question/' + n._id}"
+                                            v-for="(n, index) in serchdata" 
+                                            :key="index" 
+                                            class="lists"
+                                        >
+                                            <i class="el-icon-search"></i>
+                                            {{n.title}}
+                                        </router-link>
+                                    </p>
+                                    <p v-else>暂无搜索记录</p>
+                                </div>
+                            </div>
+                        </div>
+                    </Sticky>
+                    <div class="content_left" ref="content_left">
                         <ul>
                             <li v-for="(n, index) in newList" :key="index">
                                 <span class="feet" @click="GetNews(1, 2, n.type)">来自模块 {{n.type}}</span>
                                 <h2 @click="question(n._id)">{{n.title}}</h2>
+                                <!-- 会有一个问题就是在300字并且的代码或图片的时候，这边应该把前三百个字代码前面的字显示出来 -->
                                 <p class="con_text">
-                                    <!-- 会有一个问题就是在300字并且的代码或图片的时候，这边应该把前三百个字代码前面的字显示出来 -->
-                                    <span ref="conter" v-html="showall ? n.content : getLenht(n.content).length > 300 ? n.content.substring(0, 300) : n.content"></span>
-                                    <span v-if="getLenht(n.content).length > 300 && !showall">
+                                    <span ref="conter" v-html="showall ? n.content : getLenht(n.content).length > 100 ? n.content.substring(0, 100) : n.content"></span>
+                                    <!-- <span v-if="getLenht(n.content).length > 50 && !showall">
                                         ...<em @click="getMore(n._id)"  class="hascheck sdown">阅读全文</em>
                                     </span>
-                                    <span v-if="getLenht(n.content).length > 300 && showall" @click="showall = false" class="hascheck sup">
+                                    <span v-if="getLenht(n.content).length > 50 && showall" @click="showall = false" class="hascheck sup">
                                         收起
-                                    </span>
+                                    </span> -->
                                 </p>
                                 <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
                                 <span class="times">{{n.addtime}}</span>
@@ -84,7 +86,22 @@
 <script>
     import headers from '@/include/header.vue'
     import page from '@/plugin/Pagination.vue'
-    import {clears, delHtmlTag, unescape, getByteLen, getTabsCon, newfind, delArr, each, clearflase, debounce, throttle, on } from '@/assets/util.js'
+    import { mapGetters } from 'vuex'
+    import { 
+        clears, 
+        delHtmlTag, 
+        unescape, 
+        getByteLen, 
+        getTabsCon, 
+        newfind, 
+        delArr, 
+        each, 
+        clearflase, 
+        debounce, 
+        throttle, 
+        on, 
+        delay,
+        isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -96,6 +113,14 @@
     import { GetProList, minApi, hasSearch } from '@/service/index'
 
     import EInputNumber from 'element-ui/packages/input-number/src/input-number.vue';
+    //顶点吸附插件
+    import Sticky from '@/plugin/sticky/index.vue'
+
+    import seamless from '@/assets/seamless'
+
+    import newPromise from '@/assets/newPromise'
+
+    import doAjax from '@/assets/fajax'
 
     const datas = [
         {
@@ -134,10 +159,12 @@
                 iconLink: '',      //加载图标
                 page: 1,
                 isinBottom: true,
-                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',      txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
+                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
                 asdf: '',
                 inputnum: 2,
                 debouncess: '',
+                stickyfun: {},       //srcoll冲突的时候使用的一个小技巧
+                navheight: ''
             }
         },
         watch: {
@@ -149,6 +176,9 @@
             //     }
             //     return value
             // }
+        },
+        computed: {
+            ...mapGetters(['typecount'])
         },
         methods:{
             //第一个参数传2, 显示type模板的所有内容
@@ -209,6 +239,16 @@
                     this.$message('2222');
                 }
             },
+            startSearch() {
+                //当搜索框获得焦点时,进入搜索模式
+                let sheight = this.$refs.searchinput.getBoundingClientRect().height,
+                    scroEl = document.getElementsByClassName('scroll-container')[0];
+                if(scroEl.scrollTop < sheight + 20) {
+                    document.getElementsByClassName('scroll-container')[0].scrollTop = sheight + 50;
+                }
+                // document.body.scrollTop = 0;
+                // document.documentElement.scrollTop = 0;
+            },
             getMore(id) {
                 let refest = this.newList.filter((v) => {
                     return v._id == id
@@ -268,9 +308,22 @@
             sdebounces(delay) {
                 deaa();
             },
-            sbs() {
-                deaa(this.debouncess)
-            }
+            testpromise() {
+                return new newPromise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve('200ms')
+                        // reject('200ms')
+                    }, 2000)
+                })
+            },
+            testpromise2() {
+                return new newPromise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve('300ms')
+                    }, 3000)
+                })
+            },
+
         },
         components: {
             headers,
@@ -279,13 +332,22 @@
             tabdel,
             toprefresh,
             inputnumber,
-            EInputNumber
+            EInputNumber,
+            Sticky
         },
         created() {
             //这边使用了防抖,会对搜索进行延迟处理，减少服务器压力
             this.debounceHandleInput = debounce(this.hassearch, 500, true);
         },
         mounted() {
+            this.$store.dispatch('SetType', this.name).then(res => {
+                console.info(this, res, 887);
+            }).catch(err => {
+                console.info(err);
+            })
+            this.stickyfun = this.$refs.stickys.handleScroll;   //在载入的时候把这个scroll方法记录下来
+            this.navheight = this.$refs.stickys.$el.getBoundingClientRect().height;
+
             const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
             each(obj1, (v,i,o) => {
                 console.info(v, i, o, 8);
@@ -307,7 +369,7 @@
             //         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             //     },
             //     mode: 'cors',
-            //     credentials: 'include',
+            //     credentials: 'include',   //omit
             //     cache: 'default'
             // }).then(res => res.json()).then(data => {
             //     console.info(data, '333333');
@@ -316,21 +378,6 @@
             // console.info(moment().add('H', 4).formart(), 'monent1');
             // console.info(moment().beginning().formart(), 'moment2');
             // console.info(moment().add('d', 1).ending().formart(), 'moment2');
-
-            fetch('http://127.0.0.1:9200/fufengblog', {
-                methods: 'PUT',
-                headers: {
-                    'Accept': 'application/json, text/javascript, */*; q=0.01',
-                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-                },
-                mode: 'cors',
-                credentials: 'omit',
-                cache: 'default'
-            }).then(res => res.json()).then(res => {
-                console.info(res, 99);
-            }).catch(err => {
-                console.info(err, 33);
-            })
 
             //测试从数组从中删除 
             const asd = [1,2,3,4,5,2,3,7,5,3];
@@ -348,8 +395,51 @@
             on(window, 'pagehide', function() {
                 nc = true
             });
+            //用来测试深复制与浅拷贝（只对object有效果）
+            var aal = { name: '33', age: '44' }, bbl = aal, asbs = copyObj(true, {}, {name: 2, age: 3}, {name: 'ff', text: '22'}, aal);
+            bbl.name = 'woshishabi'; console.info(aal, bbl, asbs, 999);
+            //测试animationFrame
+            // animationFrame();
+            // window.requestAnimationFrame(function() {
+            //     console.info('2222221');
+            // })
+            //测试promise
+            let self = this;
+            this.testpromise()
+            .then(function(data) {
+                console.info(data, 99);
+                return self.testpromise2()
+            })
+            .then(function(data) {
+                console.info(data, '100');
+            })
+            // .catch(function(err) {
+            //     console.info(err, '8err');
+            // })
+            delay(function(test) {
+                console.info(22, test)
+            }, 4000, 'ffshishabi');
 
-            console.info(this, 999, this.__proto__);
+            console.info(compact([0, 1, false, 2, '', 3, 'a', 'e' * 23, NaN, 's', 34]), 99999);
+            console.info(countBy([2, 4, 6, 7, 8], function(v) { if(v > 5) { return true } else {return false} }), 10000);
+
+            // var ffaa = doAjax({
+            //     url: `/api/types/GetTypes`,
+            //     type: 'GET',
+            //     success: function(res, xhr) {
+            //         console.info(res, 'niaho', parseJSON(res), '33');
+            //     },
+            //     error: function(err) {
+            //         console.info(err, 'dajiahao');
+            //     }
+            // })
+            // console.info(ffaa, 'woshiffaa');
+            console.info(gettype('21312'), 'woshigettype');
+            var parff = parseJSON('{"name":"John"}');
+
+            getAjax('/books/newSaveBook').then(res => {
+                console.info(res, 'books');
+            })
         }
     }
 </script>
@@ -379,15 +469,20 @@
                 color: #000
                 padding-right: 15px
         .main
-            background-color: #f7f8fa
+            background-color: #fff
             display: block
-            padding-bottom: px2rem(146)
+            padding-bottom: px2rem(90)
             height: 100%
             .content 
                 width: 100%
                 margin: 0 auto
                 text-align: left
                 height: 100%
+                .pageTitle
+                    @include font-dpr(30px)
+                    margin: px2rem(20) px2rem(26)
+                    font-weight: normal
+                    display: block
                 .content_left
                     width: 100%
                     // float: left
@@ -397,7 +492,7 @@
                             position: relative
                             margin-bottom: 10px
                             background-color: #fff
-                            border: 1px solid #e7eaf1
+                            // border: 1px solid #e7eaf1
                             border-radius: 2px
                             box-shadow: 0 1px 3px rgba(0,37,55,.05)
                             box-sizing: border-box
@@ -408,7 +503,8 @@
                                 @include font-dpr(16px)
                                 font-weight: 700
                                 line-height: 1.6
-                                color: $mainColor
+                                // color: $mainColor
+                                color: #000
                                 display: table
                             .times
                                 display: block
@@ -419,6 +515,7 @@
                                 @include font-dpr(14px)
                                 line-height: 2
                                 overflow: hidden
+                                padding-top: px2rem(10)
                                 span
                                     &:first-child
                                         height: auto
@@ -431,37 +528,48 @@
                                     text-align: right
                             .feet
                                 // font-size: px2rem(60)
-                                @include font-dpr(16px)
+                                @include font-dpr(14px)
+                                text-align: right
+                                display: block
                 .search
                     height: px2rem(90)
-                    background-color: $mainColor
+                    // background-color: $mainColor
                     display: block
                     width: 100%
                     flex-grow: 2
                     position: relative
                     z-index: 2
-                    // padding-top: px2rem(14)
-                    .searchinput
-                        width: px2rem(500)
-                        height: px2rem(66)
-                        border-radius: 10px
-                        margin: px2rem(12) 0 px2rem(12) px2rem(100)
-                        @include font-dpr(16px)
-                        box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2) 0 1px 0 rgba(255, 255, 255, .1)
-                        outline: 0
-                        border: 1px solid $mainColor
-                        padding-left: px2rem(20)
-                        // transition: width .5s
-                        padding-right: px2rem(80)
+                    padding: 0 px2rem(25) 0 px2rem(25)
+                    margin-bottom: px2rem(12)
+                    background-color: #fff
+                    .mm_input
+                        width: 100%
+                        height: px2rem(80)
+                        position: relative
+                        margin: 0 auto
+                        // margin: px2rem(12) 0 px2rem(12) px2rem(100)
+                        .searchinput
+                            width: 100%
+                            height: 100%
+                            border-radius: 10px
+                            @include font-dpr(16px)
+                            box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2) 0 1px 0 rgba(255, 255, 255, .1)
+                            outline: 0
+                            border: 1px solid #ebebeb
+                            padding-left: px2rem(76)
+                            background-color: #ddd
+                            -webkit-appearance: none        //消除ios 的input边框阴影样式
+                        .searchicon
+                            color: #fff
+                            @include font-dpr(20px)
+                            position: absolute
+                            margin-top: px2rem(20)
+                            z-index: 1001
+                            top: 0
+                            left: px2rem(20)
                     .searchfocus
                         // width: px2rem(630)
                         // transition: width .7s
-                    .searchicon
-                        color: #ddd
-                        @include font-dpr(20px)
-                        position: relative
-                        margin-top: px2rem(20)
-                        z-index: 99
                     .searchdata
                         width: 100%
                         height: auto

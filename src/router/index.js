@@ -20,6 +20,9 @@ const bookcontent = resolve => require(['@/pages/bookcontent'], resolve);
 const chating = resolve => require(['@/pages/chating'], resolve);
 const question = resolve => require(['@/pages/question'], resolve);
 
+//other
+const others = resolve => require(['@/pages/other/other'], resolve);
+
 // css
 const cssing = resolve => require(['@/pages/cssing'], resolve);
 const choujiang1 = resolve => require(['@/pages/choujiang1'], resolve);
@@ -39,7 +42,10 @@ export default new Router({
         {
             path: '/',
             name: '首页',
-            component: Home
+            component: Home,
+            meta: {
+                active: 'index',
+            },
         },
         {
             path: '/login',
@@ -81,21 +87,30 @@ export default new Router({
                 name: '书名',
                 components: {
                     page: books
-                }
+                },
+                meta: {
+                    active: 'books',
+                },
             },
             {
                 path: 'bookzlist/:id',
                 name: '小说章节',
                 components: {
                     page: bookzlist
-                }
+                },
+                meta: {
+                    active: 'books',
+                },
             },
             {
                 path: 'bookcontent/:id/:_id',
                 name: '小说内容',
                 components: {
                     page: bookcontent
-                }
+                },
+                meta: {
+                    active: 'books',
+                },
             }]
         },
         {
@@ -108,7 +123,10 @@ export default new Router({
                 name: '聊天室',
                 components: {
                     page: chating
-                }
+                },
+                meta: {
+                    active: 'chat',
+                },
             }]
         },
         iscss,
@@ -130,6 +148,21 @@ export default new Router({
             path: '/plugin',
             name: '组件集合',
             component: Plugin
+        },{
+            path: '/other',
+            name: '更多',
+            component: Home2,
+            redirect: '/other/index',
+            children: [{
+                path: 'index',
+                name: '更多首页',
+                components: {
+                    page: others
+                },
+                meta: {
+                    active: 'other'
+                }
+            }]
         }
     ]
 })

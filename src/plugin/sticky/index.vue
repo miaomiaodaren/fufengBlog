@@ -1,11 +1,13 @@
 <template>
     <div :style="{height: height+'px', zIndex: zIndex}">
-        <div :class="className" :style="{top: stickyTop + 'px', zIndex: zIndex, position: position, width: width, height: height + 'px'}">
+        <div :class="className" style="transform: translateZ(0); -webkit-transform: translateZ(0);"
+            :style="{top: stickyTop + 'px', zIndex: zIndex, position: position, width: width, height: height + 'px'}">
             <slot></slot>
         </div>
     </div>
 </template>
 <script>
+    import { on, off } from '@/assets/util'
     export default{
         name: 'Sticky',
         props: {
@@ -15,7 +17,7 @@
             },
             zIndex: {
                 type: Number,
-                default: 1000
+                default: 1011   
             },
             className: {
                 type: String,
@@ -52,7 +54,7 @@
             },
             handleScroll() {
                 this.width = this.$el.getBoundingClientRect().width;
-                const offsetTop = this.$el.getBoundingClientRect().top;
+                const offsetTop = this.$el.getBoundingClientRect().top + this.height;
                 if (offsetTop < this.stickyTop) {
                     this.sticky();
                     return
@@ -62,10 +64,10 @@
         },
         mounted() {
             this.height = this.$el.getBoundingClientRect().height;
-            window.addEventListener('scroll', this.handleScroll);
+            on(window, 'scroll', this.handleScroll);
         },
         destroyed() {
-            window.removeEventListener('scroll', this.handleScroll);
+            off(window, 'scroll', this.handleScroll);
         }
     }
 </script>

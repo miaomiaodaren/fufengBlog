@@ -54,10 +54,12 @@ class Monent {
         return new Date(t)['get' + type]()
     }
 
+    //判断传入的参数是否为日期格式
     isDate(d) {
         return d instanceof Date || Object.prototype.toString.call(d) === '[object Date]'
     }
 
+    //判断传入的参数是否为数字类型
     isNumber(v) {
         return Object.prototype.toString.call(v) === '[objcet Number]'
     }

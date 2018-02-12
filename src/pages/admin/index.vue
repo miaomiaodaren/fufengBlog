@@ -16,7 +16,7 @@
 <script>
 import Nav from '@/plugin/nav/nav.vue'
 import navsitem from '@/plugin/nav/nav-item.vue'
-import headers from '@/include/header'
+import headers from '@/include/header'  
 export default {
     data() {
         return {

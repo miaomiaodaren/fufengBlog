@@ -76,6 +76,16 @@ module.exports = {
             use: ExtractTextPlugin.extract(['css-loader', 'sass-loader?indentedSyntax'])
         },
         // {
+        //     loader: "css-loader",
+        //     options: {
+        //         modules: true, //是否支持css-modules
+        //         camelCase: true,//是否支持 -(中缸线)写法的class,id名称
+        //         localIdentName: "[name]_[local]_[hash:base64:3]",//css-modules的生成格式
+        //         importLoaders: 1, // 是否支持css import方法
+        //         sourceMap: true //是否生成css的sourceMap, 主要用来方便调试
+        //     }
+        // }
+        // {
         //     test: /\.tsx?$/,
         //     loader: 'ts-loader',
         //     exclude: /node_modules|vue\/src/,

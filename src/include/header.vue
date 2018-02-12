@@ -2,11 +2,12 @@
     <div id="header">
         <header class="banner">
             <nav>
-                <router-link to="/"><i class="iconfont icon-shouyeicon"></i>首页</router-link>
-                <router-link to="/books/index"><i class="iconfont icon-tixian-icon"></i>书城</router-link>
-                <router-link to="/music/index"><i class="iconfont icon-tequanjifenjiasuicon"></i>音乐室</router-link>
-                <router-link to="/im/index"><i class="iconfont icon-tucaowomenicon"></i>聊天室</router-link>
-                <navs class="more">
+                <router-link to="/" :class="{hasActive: navActive === 'index'}"><i class="iconfont icon-shouyeicon"></i>首页</router-link>
+                <router-link to="/books/index" :class="{hasActive: navActive === 'books'}"><i class="iconfont icon-tixian-icon"></i>书城</router-link>
+                <router-link to="/music/index" :class="{hasActive: navActive === 'chat'}"><i class="iconfont icon-tequanjifenjiasuicon"></i>音乐室</router-link>
+                <router-link to="/im/index" :class="{hasActive: navActive === 'im'}"><i class="iconfont icon-tucaowomenicon"></i>聊天室</router-link>
+                <router-link to="/other/index" :class="{hasActive: navActive === 'other'}"><i class="iconfont icon-gerenshezhiicon"></i>更多</router-link>
+                <!-- <navs class="more">
                     <navsitem to="/" label="更多" index="1">
                         <router-link to="/abouts">产品介绍</router-link>
                         <router-link to="/css">CSS3样式收集</router-link>
@@ -18,7 +19,7 @@
                         <router-link to="/css/uploader">文件上传</router-link>
                         <router-link to="/plugin">组件集合</router-link>
                     </navsitem>
-                </navs>
+                </navs> -->
                 <!-- <div class="header_right">
                     我要提问
                 </div> -->
@@ -32,6 +33,7 @@
     export default{
         data() {
             return {
+                navActive: this.$route.meta.active
             }
         },
         components: {
@@ -46,7 +48,7 @@
     #header
         .banner
             width: 100%
-            height: px2rem(86)
+            height: px2rem(100)
             position: fixed
             bottom: 0
             left: 0
@@ -58,7 +60,7 @@
             nav
                 width: 100%
                 margin: 0 auto
-                line-height: px2rem(86)
+                line-height: px2rem(100)
                 @include font-dpr(14px)
                 text-align: left
                 display: flex
@@ -75,8 +77,10 @@
                 a
                     @include font-dpr(12px)
                     line-height: px2rem(20)
+                    &.hasActive
+                        color: #00aaff
                 i
-                    @include font-dpr(20px)
-                    line-height: px2rem(50)
+                    @include font-dpr(22px)
+                    line-height: px2rem(66)
                     display: block
 </style>

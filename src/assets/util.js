@@ -14,18 +14,6 @@ var escapeMap = {
     '`': '&#x60;'
 };
 
-//把obj数据中的数据调换， key = val; val = key
-function invert(obj) {
-    if(!obj) return
-    var keys = Object.keys(obj),
-        values = Object.values(obj),
-        resolt = {};
-    keys.forEach((v, n) => {
-        resolt[values[n]] = keys[n]
-    })
-    return resolt
-}
-
 var createEscaper = function(map) {
     var escaper = function(match) {
         return map[match];
@@ -48,7 +36,8 @@ export const unescape = createEscaper(unescapeMap);
 
 //判断传入值是否为数组 []也算数组
 export function isArray(arr) {
-    return Object.prototype.toString.call(arr) === '[object Array]'
+    // return Object.prototype.toString.call(arr) === '[object Array]'
+    return gettype(arr) === 'array'
 }
 
 //判断这个数据是否是有值的真数组,如果数据组空，则返回false
@@ -61,6 +50,38 @@ export const isArrayLislk = function(arr) {
 export function isObject(obj) {
     let type = typeof obj;
     return type === 'function' || type === 'object' && !!obj;
+}
+
+//判断一个参数是不是一个fun方法，并且对es6的Generator做了判断
+export function isFun(obj) {
+    let objStr = Object.prototype.toString.call(obj);
+    return objStr === '[object Function]' || objStr === '[object GeneratorFunction]';
+}
+
+//2018-2-12修改, 封装了gettype函数,类JQ，is判断可以直接使用gettype, 返回值为小写
+export function isString(obj) {
+    // return Object.prototype.toString.call(obj) === '[object String]';
+    return gettype(obj) === 'string'
+}
+
+//判断是否为手机号
+export const isPhoneNum = (str) => {
+  return /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(str)
+}
+
+//判断是否为有效邮箱号
+export const isEmail = (str) => {
+  return /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str)
+}
+
+//判断是否为有效身份证号码
+export const isIdCard = (str) => {
+  return /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str)
+}
+
+//判断是否为URL地址
+export const isUrl = (str) => {
+    return (/[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i.test(str))
 }
 
 //遍历效果，可以遍历object，返回其key，类似于jquery中的each,效果极其强大
@@ -76,6 +97,18 @@ export function each(obj, iteratee) {
             iteratee(obj[keys[i]], keys[i], obj);
         }
     }
+}
+
+//2018-2-11日新加，主要是对一些常用的is判断进行了一层封装。
+//class2type 最终格式为 {'[object Boolean]': boolean, ['obejct Number']: number }
+//toLowerCase 是将字符串都改为小写   toUpperCase 是改为大写
+//正常要获取对象的类型，是通过 Object.prototype.toString.call(obj) 来判断
+export const gettype = (obj) => {
+    let class2type = {};
+    each("Boolean Number String Function Array Date RegExp Object".split(" "), function(name, i) {
+        class2type[ "[object " + name + "]" ] = name.toLowerCase();
+    });
+    return obj == null ? String(obj) : class2type[Object.prototype.toString.call(obj)]  || "object";
 }
 
 //正则去取HTML标签 
@@ -96,7 +129,40 @@ export function uniqueId(prefix) {
     return prefix ? prefix + id : id;
 }
 
+//把一个符合要求的json格式的String格式数据转换成Object对象, 此方法应该是 JSON.parse 的兼容版本
+// JSON RegExp
+const rvalidchars = /^[\],:{}\s]*$/,
+    rvalidescape = /\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,
+    rvalidtokens = /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,
+    rvalidbraces = /(?:^|:|,)(?:\s*\[)+/g;
+export function parseJSON(data) {
+    if(typeof data !== 'string' || !data) {
+        return null;
+    }
+    data = trim(data);
+    if(window.JSON && window.JSON.parse) {
+        return window.JSON.parse(data);
+    }
+    //如果浏览器不兼容JSON.parse
+    if (rvalidchars.test(data.replace(rvalidescape, "@")
+            .replace( rvalidtokens, "]")
+            .replace( rvalidbraces, ""))) {
+        return ( new Function( "return " + data ) )();
+    }
+    throw new Error( "Invalid JSON: " + data );
+}
+
+//判断一个对象是否为空的，如果是有属性的，则返回false
+//原理，使用for in 来获取obj的参数，如果有参数，则直接返回false
+export const isEmptyObject = (obj) => {
+    for(let name in obj) {
+        return false;
+    }
+    return true;
+}
+
 //清空对象
+// 把obj中的对象的value值清空掉，如果值是boolean,则改为false
 export const clears = (obj) => {
     let objtype = Object.prototype.toString.call(obj);
     if(objtype === '[object Object]') {
@@ -108,6 +174,46 @@ export const clears = (obj) => {
        obj.length = 0;
     }
     return obj
+}
+
+//把obj数据中的数据调换， key = val; val = key
+export function invert(obj) {
+    if(!obj) return
+    var keys = Object.keys(obj),
+        values = Object.values(obj),
+        resolt = {};
+    keys.forEach((v, n) => {
+        resolt[values[n]] = keys[n]
+    })
+    return resolt
+}
+
+//数据递归(初版),  obj为传入对象  preid 父级的id标识, pid 子集跟父级关联的id， newname最终生成在父级下面的目录名字
+//此函数只是在写权限管理时，后台返回数据未处理，自己写的一个递归方法。后面遇到该问题可以借鉴
+export const objRecursion = (obj, perid, pid, newname = 'children') => {
+    let map = {}, val = [];
+    obj.forEach(item => {
+        // map[item.id] = item
+        mar[item[perid]] = item
+    });
+    obj.forEach(item => {
+        let parent = map[item[pid]];
+        if(parent) {
+            (parent.newname || (parent.newname = [])).push(item);
+        } else {
+            val.push(item)
+        }
+    })
+    return val
+}
+
+//此方法是在低端版本，不支持Object.keys的时候写的一个方法，做了兼容处理
+//如果浏览器支持Object.keys，则直接返回原生
+export const keys = (obj) => {
+    if(Object.keys) return Object.keys(obj);
+    let res = [], key;
+    for(key in obj) res.push(key);
+    return res 
 }
 
 //去掉空值,在进行AJAX传值的时候，把一些为空的值的key进行忽略(需要注意传入值0与false需要特殊处理)
@@ -125,8 +231,27 @@ export const clearflase = (obj, type = false) => {
     return newobj;
 }
 
+// Use Array.filter() to filter out falsey values (false, null, 0, "", undefined, and NaN).
+// 去掉数组中的 boolean 为 false 的值
+// Examples   compact([0, 1, false, 2, '', 3, 'a', 'e' * 23, NaN, 's', 34]); // [ 1, 2, 3, 'a', 's', 34 ]
+export const compact = arr => arr.filter(Boolean);
+
+
+// countBy([6.1, 4.2, 6.3], Math.floor); // {4: 1, 6: 2}
+// 收获 数组在使用map filter等遍历属性之后，如果参数是一个function，会自动执行
+// 传入一个数组，以及接受一个方法，可以统计出返回结果的各项的统计值。
+// 再记录一次reduce 1-1参数是上一次的参数  第二个是遍历的数据， 第三个是index 第二个参数是默认的数据也就是1-1的a
+export const countBy = (arr, fn) => {
+    if(!isArray(arr)) return
+    return arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((a, b, i) => {
+        a[b] = (a[b] || 0) + 1;
+        return a
+    }, {})
+}
+
 //去除空格 type = 1, 去掉所有的空格, 2 前后空格 3 前空格  4后格
 //正则\s 匹配任意的空白符
+// /^(\s|\u00A0)+|(\s|\u00A0)+$/g   2018-2-11新加,新版正则
 export const trim = (str, type = 2)=> {
     switch(type) {
         case 1: return str.replace(/\s+/g, '');
@@ -139,23 +264,7 @@ export const trim = (str, type = 2)=> {
 //正则在数字中间每隔三位添加一个逗号
 export const groupCommas = (str) => {
     return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
     // return num.toString().replace(/(\d)(?=(?:\d{3})+$)/g, `$1${gap}`)
-}
-
-//判断是否为手机号
-export const isPhoneNum = (str) => {
-  return /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(str)
-}
-
-//判断是否为有效邮箱号
-export const isEmail = (str) => {
-  return /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str)
-}
-
-//判断是否为有效身份证号码
-export const isIdCard = (str) => {
-  return /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str)
 }
 
 //判断文字的长度(字符串为2字符,数字为1个字符)
@@ -235,7 +344,74 @@ export const random = (min, max) => {
 }
 
 
-//删除指定数组中的某个值
+//此处改成 export const copyObj = () => {} 会出错
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+export function copyObj() {
+    if (!Array.isArray) {
+        Array.isArray = function (arg) {
+            return Object.prototype.toString.call(arg) === '[object Array]';
+        };
+    }
+    var name = void 0,
+        options = void 0,
+        src = void 0,
+        copy = void 0,
+        copyIsArray = void 0,
+        clone = void 0,
+        i = 1,
+        target = arguments[0] || {},
+        // 使用||运算符，排除隐式强制类型转换为false的数据类型
+        deep = false,
+        len = arguments.length;
+    if (typeof target === 'boolean') {
+        deep = target;
+        target = arguments[1] || {};
+        i++;
+    }
+    if ((typeof target === 'undefined' ? 'undefined' : _typeof(target)) !== 'object' && typeof target !== 'function') {
+        target = {};
+    }
+    // 如果arguments.length === 1 或typeof arguments[0] === 'boolean',且存在arguments[1]，则直接返回target对象
+    if (i === len) {
+        return target;
+    }
+    for (; i < len; i++) {
+        //所以如果源对象中数据类型为Undefined或Null那么就会跳过本次循环，接着循环下一个源对象
+        if ((options = arguments[i]) != null) {
+            // 如果遇到源对象的数据类型为Boolean, Number for in循环会被跳过，不执行for in循环// src用于判断target对象是否存在name属性
+            for (name in options) {
+                // src用于判断target对象是否存在name属性
+                src = target[name];
+                // 需要复制的属性当前源对象的name属性
+                copy = options[name];
+                // 判断copy是否是数组
+                copyIsArray = Array.isArray(copy);
+                // 如果是深复制且copy是一个对象或数组则需要递归直到copy成为一个基本数据类型为止
+                if (deep && copy && ((typeof copy === 'undefined' ? 'undefined' : _typeof(copy)) === 'object' || copyIsArray)) {
+                    if (copyIsArray) {
+                        copyIsArray = false;
+                        // 如果目标对象存在name属性且是一个数组
+                        // 则使用目标对象的name属性，否则重新创建一个数组，用于复制
+                        clone = src && Array.isArray(src) ? src : [];
+                    } else {
+                        // 如果目标对象存在name属性且是一个对象则使用目标对象的name属性，否则重新创建一个对象，用于复制
+                        clone = src && (typeof src === 'undefined' ? 'undefined' : _typeof(src)) === 'object' ? src : {};
+                    }
+                    // 深复制，所以递归调用copyObject函数
+                    // 返回值为target对象，即clone对象
+                    // copy是一个源对象
+                    target[name] = copyObj(deep, clone, copy);
+                } else if (copy !== undefined) {
+                    // 浅复制，直接复制到target对象上
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+    return target;
+}
+
+//删除指定数组中的某个值  [1,1,2,3,4,5,2]
 export const delArr = (arr, opt, type = 'once') => {
     if(!arr) return false
     //如果是删除第一个则type传once或不传否则会遍历，进行删除 
@@ -257,11 +433,30 @@ export const delArr = (arr, opt, type = 'once') => {
     }
 }
 
+
+//把一个object number string 转换成一个array类型
+//此处其实最好使用map， 而不是用each
+export const toArr = (val) => {
+    if(!val) return [];
+    if(isArray(val)) return val;
+    if(isArrayLislk(val) && !isString(val)) return each(val);
+    return [val]
+}
+
+//延迟几秒执行事件
+//类似undescode的delay事件
+export const delay = (fn, wait, args) => {
+    return setTimeout(() => {
+        return fn.apply(null, [args])
+    }, wait)
+}
+
 //HTML Dom 模块
 
 
 //判断是否拥有该样式
 //20181-22 在阅读element源码的时候，了解了hasClass addClass removeClass更完善的写法，后期可以参考element/utils/dom.js
+//2018/2/1 dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom, null);  style, currentStyle, getComputedStyle 三者都可以获取样式，只有style可以写入 
 export const hasClass = (ele, v) => {
     return classReg( v ).test( ele.className );
     // if (!el || !cls) return false;
@@ -287,8 +482,8 @@ export const addClass = (ele, v) => {
 
 //删除样式
 export const removeClass = (ele, v) => {
-    if (el.classList) {
-        el.classList.remove(clsName);
+    if (ele.classList) {
+        ele.classList.remove(v);
     } else {
         if(hasClass( ele, v )) {
             ele.className = ele.className.replace(classReg(v), ' ')
@@ -413,6 +608,37 @@ const getOs = () => {
         return 'web'
     }
 }
+
+//动画requestAnimationFrame的一个hack方法，在做文字无缝滚动的时候用到了，在引用之后要先触发一下，如果使用requise,则可以 requise(xxx)(); 来直接触发
+export const animationFrame = () => {
+    window.cancelAnimationFrame = function () {
+        return window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.oCancelAnimationFrame || window.msCancelAnimationFrame || function (id) {
+            return window.clearTimeout(id);
+        };
+    }();
+    window.requestAnimationFrame = function () {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+            return window.setTimeout(callback, 1000 / 60);
+        };
+    }();
+};
+
+//对象序列化，类似qs
+export const stringfyQs = (obj) => {
+    if (!obj) return '';
+    var pairs = [];
+    for (var key in obj) {
+        var value = obj[key];
+        if (value instanceof Array) {
+            for (var i = 0; i < value.length; ++i) {
+                pairs.push(encodeURIComponent(key + '[' + i + ']') + '=' + encodeURIComponent(value[i]));
+            }
+            continue;
+        }
+        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+    }
+    return pairs.join('&');
+};
 
 
 //2018-1-18新增debounce函数去抖动，throttle函数节流    undesoced 跟 lodash都有封装这种函数
