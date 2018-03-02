@@ -6,7 +6,7 @@
             </el-form-item>
             <el-form-item label="文章类别">
                 <el-select v-model="form.type" placeholder="请选择活动区域">
-                    <el-option v-for="(t, index) in types" :label="t.name" :value="t.name" :key="index"></el-option>
+                    <el-option v-for="(t, index) in typelist" :label="t.name" :value="t.name" :key="index"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="文章内容">
@@ -35,6 +35,7 @@
 <script>
     import headers from '@/include/header.vue'
     import markdownEditor from 'vue-simplemde/src/markdown-editor'   //引入Markdown编辑器
+    import { mapGetters } from 'vuex'
     export default {
         data() {
             return {
@@ -43,7 +44,6 @@
                     type: '',
                     content: ''
                 },
-                types: [],
                 content: '``` \nconsole.log("lalala") \n```',
                 contentForHtml: '',
                 editorOption: {
@@ -57,7 +57,11 @@
         computed: {
             simplemde () {
                 return this.$refs.markdownEditor.simplemde
-            }
+            },
+            ...mapGetters([
+                'typecount',
+                'typelist',
+            ])
         },
         watch: {
             content() {
@@ -72,21 +76,21 @@
                         this.$message(res.data.message);
                         Object.keys(this.form).forEach(v => {
                             this.form[v] = ''
-                        })
+                        });
+                        this.$router.push({path: '/'})
                     }
                 }
                 catch (err) {
                     console.log(err);
                 }
             },
-            async getType() {
-                try {
-                    let res = await this.getAjax('/types/GetTypes', {}, 'GET');
-                    this.types = res.data.list;
+            getType() {
+                if(!this.typecount) {
+                    this.$store.dispatch('SetType').then(res => {
+                        console.info('分类数据已经生成', this.typelist, this, this.typecount);       
+                    })
                 }
-                catch(err) {
-                    console.log(err)
-                }
+                
             },
             handleOutputHTML() {
                 this.contentForHtml = this.simplemde.markdown(this.content);
@@ -98,12 +102,15 @@
             markdownEditor
         },
         mounted() {
-            console.info(this.$refs, '123123123', this.$message);
-            this.$message('2222');
-            this.getType();
+            console.info(this.$refs, '123123123', this.typecount, this.typelist);
+            // this.$message('2222');
+            
             this.$nextTick(() => {
                 // this.$refs.markdownEditor.initialize();
             });
+        },
+        created() {
+            this.getType();
         }
     }
 </script>

@@ -1,3 +1,6 @@
+//2018-2-23 Elasticsearch 数据库，可使用前端直接进行操作的数据库，暂时记录一下  http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html
+// var e = e || window.event;                    //处理兼容性  IE8下不兼容target
+// var target = e.target || e.srcElement;　
 var count = 0;
 
 //正则检测是否有这个样式
@@ -33,6 +36,14 @@ var unescapeMap = invert(escapeMap);
 //转义字符
 export const escape = createEscaper(escapeMap);
 export const unescape = createEscaper(unescapeMap);
+
+//将Unicode转汉字
+export const reconvert = (str)  => {
+    str = str.replace(/(&#x)(\w{1,4});/gi, function ($0) {
+        return String.fromCharCode(parseInt(escape($0).replace(/(%26%23x)(\w{1,4})(%3B)/g, "$2"), 16));
+    });
+    return str
+}
 
 //判断传入值是否为数组 []也算数组
 export function isArray(arr) {
@@ -85,18 +96,21 @@ export const isUrl = (str) => {
 }
 
 //遍历效果，可以遍历object，返回其key，类似于jquery中的each,效果极其强大
+//2018-2-26新增 在传入obj时,没有返回当前索引，添加第四个项，返回当前i
 export function each(obj, iteratee) {
     if(isArrayLislk(obj)) {
-        let keys = Object.keys(obj), leng = keys.length;
+        // let keys = Object.keys(obj), leng = keys.length;
+        let leng = obj.length;
         for(let i = 0; i < leng; i++) {
             iteratee && iteratee(obj[i], i, obj)
         }
     } else {
         var keys = Object.keys(obj), values = Object.values(obj), leng = keys.length;
         for(let i = 0; i < leng; i++) {
-            iteratee(obj[keys[i]], keys[i], obj);
+            iteratee(obj[keys[i]], keys[i], obj, i);
         }
     }
+    return obj
 }
 
 //2018-2-11日新加，主要是对一些常用的is判断进行了一层封装。
@@ -343,7 +357,6 @@ export const random = (min, max) => {
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-
 //此处改成 export const copyObj = () => {} 会出错
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 export function copyObj() {
@@ -443,6 +456,8 @@ export const toArr = (val) => {
     return [val]
 }
 
+
+
 //延迟几秒执行事件
 //类似undescode的delay事件
 export const delay = (fn, wait, args) => {
@@ -492,13 +507,75 @@ export const removeClass = (ele, v) => {
 }
 
 //toggleClass 改变这个样式
+//控制一个样式的true 与 false 当存在时消失，当消息失存在
 export const toggleClass = (el, cls) => {
-    if(el.hasClass(cls)) {
+    if(hasClass(el, cls)) {
         let reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
         el.className = el.className.replace(reg, ' ')
     } else {
         el.className += ' ' + cls
     }
+}
+
+//实现类似jq的css,传二个参数类似css(el, 'backgournd-color', '#fff'); 也可以css(el, {background-color: #fff})
+//查询的话是 css(el, "color")
+//因为 => 箭头函数不能继承this, arguments, 所以这边还是暂时改回使用function
+export const css = function(element, name, value) {
+    if(arguments.length < 3) {
+        if(isString(name)) {
+            //这种情况说明,是用来查询的css(el, "color")
+            if (!element) return
+            return element.style[camelize(name)] || window.getComputedStyle(element, '').getPropertyValue(name)
+        } else if(isArray(name)) {
+            //这种情况说明,是用来查询的是多条进行赋值，传过来的必须的是array
+            let props = {};
+            each(name, function(v, i) {
+                props[v] = element.style[camelize(v)] || window.getComputedStyle(element, '').getPropertyValue(v);
+            })
+            return props
+        }
+    }
+    let css = '';
+    if(gettype(name) === 'string') {
+       //参数有三个，并且第二个是string类型的 css(el, 'backgournd-color', '#fff'),应该是单条辅值
+       //此处兼容了类似backgroundColor 这种驼峰的css写法
+       //zepto中还使用了maybeAddPx方法，用来判断去除一些属性，可以增加px.
+       css = `${dasherize(name)}: ${value};`
+    } else {
+        //类似 css(el, {background-color: '#fff', color: '#fff', font-szie: '12'}) 多个赋值
+        each(name, function(v, i) {
+            css += `${dasherize(i)}: ${v};`
+        })
+    }
+    element.style.cssText += css;
+}
+
+//2018-2-24新增
+//1. 正则使用备注 如果要测试是否匹配则使用 (/xxx/).test(str); 返回trun false   'fdaf'.match(/\d{1,4}/);  返回符合的指定的值.
+//2. replace的二个属性, 第一个参数要么是字符串，要么是正则
+//重点： 第二个参数，第二个参数，要么是要替换的字符串，但是也可以是function,
+// var sStr='讨论一下正则表达式中的replace的用法';
+//特殊替换字符： 字符 替换文本
+// $& 与正则相匹配的字符串   sStr.replace(/正则表达式/,'《$&》');  得到："讨论一下《正则表达式》中的replace的用法"
+// $` 匹配字符串左边的字符   sStr.replace(/正则表达式/,'《$`》');  得到："讨论一下《讨论一下》中的replace的用法"
+// $’ 匹配字符串右边的字符   sStr.replace(/正则表达式/,"《$'》");  得到："讨论一下《中的replace的用法》中的replace的用法"
+// $1,$2,$,3,…,$n 匹配结果中对应的分组匹配结果 sStr.replace(/(正则)(.+?)(式)/,"《$1》$2<$3>");  得到："讨论一下《正则》表达<式>中的replace的用法"
+// 如果第二个参数是function, 
+//参数的arguments 第一个为  匹配到的字符串  第二个是如果正则使用了分组匹配就为多个否则无此参数，也就是根据括号来的$1,$2,$n
+//第三个参数为 匹配字符在总的字符串中的索引.也就是indexOf的值   第四个参数是原始的参数
+//此方法是用来把以-隔开的字符实现驼峰命名。类似 camelize('aa-name') =====> 'aaName'
+export const camelize = (str) => { 
+    return str.replace(/-+(.)?/g, function(match, chr) { return chr ? chr.toUpperCase() : '' }) 
+}
+
+//此方法是把驼峰命名的css 类似 backgroundColor ====> background-color
+//四个正则解释  1：针对样式中存在::  2.大写开头的字符 3 小写开头
+export const dasherize = (str) => {
+    return str.replace(/::/g, '/')
+       .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+       .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+       .replace(/_/g, '-')
+       .toLowerCase()
 }
 
 //2017-11-6新增,主要是实现类似jquery append中的效果，参考网上资料，做出更方便的效果
@@ -519,10 +596,24 @@ export const append = (ele, html) => {
     }
 }
 
+//设置dom元素的属性的方法(类似jq)
+//新增，尝试把二个方法纳入一个，以传入的参数来进行判断，如果只传入二个参数，那就是get，如果传入的是三个参数，那就是set
+export const Attr = (elem, ...item) => {
+    const len = item.length;
+    if(!len) return false
+    if(len === 1) {
+        elem.getAttribute && elem.getAttribute(item[0])
+    } else {
+        elem.setAttribute && elem.setAttribute(item[0], item[1]);
+    }
+}
+
 //注册方法(做了兼容处理)
 //这边on方法是一个立即执行函数。在触发的时候会返回带参数的一个方法，所以On(xx,xx,xx)的参数能取到
 //由于箭头函数不能取到不存在 this arguments、super、new.target，所以导致很多bind call apply等方法不能使用，所以后期要特别注意使用
 //foo::bar 等同于 bar.bind(foo);   foo::bar(...arguments) 等同于 bar.apply(foo, arguments)
+//事件的各个阶段  捕获阶段  --->  目标阶段 ----->  冒泡阶段  
+//true表示该元素在事件的“捕获阶段”（由外往内传递时）响应事件；  false表示该元素在事件的“冒泡阶段”（由内向外传递时）响应事件。
 export const on = (() => {
     return (element, event, handler) => {
         if(document.addEventListener) {
@@ -684,4 +775,121 @@ export const throttle = function(fn, delay, immediate, debounce) {
         }
         last_call = currtime;
     }
+}
+
+
+//实现加减乘除运算，保证不丢失精度
+//保留几位小数，会根据indexOf('.') 来判断是否是小数点。
+export const numFormat = (num, precision)=> {//字符串加小数点
+    var precision = precision || 2;
+    var tmp = num ? num.toString():'0';
+    var len = tmp.length;
+    var dot = tmp.indexOf('.');
+    if(!num && num!=0){
+        return "";
+    }
+    if(dot < 0) {
+        tmp = tmp + '.';
+        for(var i = 0;i < precision; i++){
+            tmp += '0';
+        }
+        return tmp;
+    }
+    if(len <= dot + precision) {
+        for(;len <= dot + precision; len++){
+            tmp += '0';
+        }
+        return tmp;
+    }  
+    return tmp.substr(0, dot + precision + 1); 
+};
+
+const isInteger = (obj) => {
+    return Math.floor(obj) === obj
+}
+
+const toInteger = (floatNum) => {
+    var ret = {times: 1, num: 0},
+        isNegative = floatNum < 0;  //判断传入参数是否为负数
+    if (isInteger(floatNum)) {
+        ret.num = floatNum
+        return ret
+    }
+    var strfi  = floatNum + '',
+        dotPos = strfi.indexOf('.'),
+        len    = strfi.substr(dotPos + 1).length,
+        times  = Math.pow(10, len),
+        intNum = parseInt(Math.abs(floatNum) * times + 0.5, 10);
+    ret.times  = times;
+    if (isNegative) {
+        intNum = -intNum
+    }
+    ret.num = intNum
+    return ret
+}
+
+//使用方法operation(0.043, 100, 2, 'multiply') ======> 4.30
+// toFixed 修复
+// function toFixed(num, s) {
+//     var times = Math.pow(10, s)
+//     var des = num * times + 0.5
+//     des = parseInt(des, 10) / times
+//     return des + ''
+// }
+//实现思路, 在取到a,b之后,如果有小数点, 先乘以小数点的位数 var aa = num.indexOf('.'); 获取长度 num.substr(aa+1).lenght
+//然后使用math.pow(10, len) 乘以10的位数幂，比如3倍就是10的三次方 1000, 在toInteger的时候返回一个OBJ，num是计算后为整数的数字
+//times是扩大的倍数，在计算完成之后，是需要除以这个times，这样算出来的数据不会产生精度失误
+//总的思路就是如果遇到小数点的，先把他变成整数，进行计算，然后再缩小相应的倍数
+const operation = (a, b, digits, op) => {
+    var o1 = toInteger(a),
+        o2 = toInteger(b),
+        n1 = o1.num,
+        n2 = o2.num,
+        t1 = o1.times,
+        t2 = o2.times,
+        max = t1 > t2 ? t1 : t2,
+        result = null;
+    switch (op) {
+        case 'add':
+            if (t1 === t2) { // 两个小数位数相同
+                result = n1 + n2
+            } else if (t1 > t2) { // o1 小数位 大于 o2
+                result = n1 + n2 * (t1 / t2)
+            } else { // o1 小数位 小于 o2
+                result = n1 * (t2 / t1) + n2
+            }
+            return numFormat((result / max), digits)
+        case 'subtract':
+            if (t1 === t2) {
+                result = n1 - n2
+            } else if (t1 > t2) {
+                result = n1 - n2 * (t1 / t2)
+            } else {
+                result = n1 * (t2 / t1) - n2
+            }
+            return numFormat((result / max), digits)
+        case 'multiply':
+            result = (n1 * n2) / (t1 * t2)
+            return  numFormat(result, digits)
+        case 'divide':
+            result = (n1 / n2) * (t2 / t1)
+            return  numFormat(result, digits)
+    }
+}
+
+//加法
+export const add = (a, b, digits) => {
+    return operation(a, b, digits, 'add')
+}
+//减法
+export const subtract = (a, b, digits) => {
+    return operation(a, b, digits, 'subtract')
+}
+//乘法
+export const multiply = (a, b, digits) => {
+    return operation(a, b, digits, 'multiply')
+}
+//除法
+export const divide = (a, b, digits) => {
+    return operation(a, b, digits, 'divide')
 }

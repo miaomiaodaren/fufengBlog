@@ -5,7 +5,8 @@
         <div class="books_main">
             <template v-for="(data, index) in bList">
                 <div class="book_title">
-                    <router-link :to="{path: '/books/bookzlist/' + data._id}">{{index + 1}} - {{data.title}}</router-link>
+                    <img :src="data.img|imgPath">
+                    <router-link :to="{path: '/books/bookzlist/' + data.bookid}">{{index + 1}} - {{data.title}}</router-link>
                 </div>
             </template>
         </div>
@@ -56,7 +57,7 @@
             height: px2rem(90)
             padding: 0 px2rem(30)
             .book_title
-                width: 100%
+                width: 50%
                 height: px2rem(80)
                 margin: 15px 10px
                 flex-wrap: wrap

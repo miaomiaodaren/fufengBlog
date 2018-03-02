@@ -19,3 +19,9 @@ export const timeFormat = (val, type) => {
     }
     return str;
 };
+
+export const imgPath = (path) => {
+    if(!path) return
+    const servicePath = 'http://127.0.0.1:3000/images';
+    return servicePath + '/' + path
+}

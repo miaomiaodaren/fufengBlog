@@ -1,5 +1,3 @@
-
-
 // if(myreq.readyState == 4 && myreq.status == 200) {
 //     var item = myreq.responseText;
 //     if(getxml == 1) {

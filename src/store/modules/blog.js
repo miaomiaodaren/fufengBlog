@@ -1,4 +1,5 @@
 import { GetBoldTypeList } from '@/service'
+import Vue from 'vue'
 const Blog = {
     state: {
         typeList: [],
@@ -6,7 +7,8 @@ const Blog = {
     },
     mutations: {
         SET_TYPE: (state, type) => {
-            state.typeList = type
+            state.typeList = type;
+            console.info(type, 32323, state);
         },
         SET_TYPECOUNT: (state, count) => {
             state.typecount = count
@@ -14,7 +16,6 @@ const Blog = {
     },
     actions: {
         SetType({ commit, state }, typeInfo) {
-            console.info(typeInfo, 889);
             return new Promise((resolve, reject) => {
                 GetBoldTypeList().then(res => {
                     commit('SET_TYPE', res.data.list);

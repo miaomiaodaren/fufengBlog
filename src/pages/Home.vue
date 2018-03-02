@@ -100,8 +100,8 @@
         debounce, 
         throttle, 
         on, 
-        delay,
-        isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin } from '@/assets/util.js'
+        delay, Attr, multiply, css,
+        isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin, toggleClass } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     import minput from '@/plugin/input/index'
     //右滑删除插件
@@ -119,6 +119,8 @@
     import seamless from '@/assets/seamless'
 
     import newPromise from '@/assets/newPromise'
+
+    import cPromise from '@/assets/creatPromise'
 
     import doAjax from '@/assets/fajax'
 
@@ -323,7 +325,11 @@
                     }, 3000)
                 })
             },
-
+            cpromise() {
+                return new cPromise(function(resolve, reject) {
+                    resolve('222woshinaocan');
+                })
+            }
         },
         components: {
             headers,
@@ -419,6 +425,15 @@
             delay(function(test) {
                 console.info(22, test)
             }, 4000, 'ffshishabi');
+            this.cpromise().then(res => {
+                console.info('我真TM是一个傻逼', res);
+                // return new Promise((resolve ,reject) => {
+                //     resolve('你怕不是一个傻逼吧');
+                // })
+            })
+            // .then(res => {
+            //     console.info('我真TM是一个傻逼2', res);
+            // });
 
             console.info(compact([0, 1, false, 2, '', 3, 'a', 'e' * 23, NaN, 's', 34]), 99999);
             console.info(countBy([2, 4, 6, 7, 8], function(v) { if(v > 5) { return true } else {return false} }), 10000);
@@ -436,10 +451,17 @@
             // console.info(ffaa, 'woshiffaa');
             console.info(gettype('21312'), 'woshigettype');
             var parff = parseJSON('{"name":"John"}');
-
-            getAjax('/books/newSaveBook').then(res => {
-                console.info(res, 'books');
-            })
+            const s_class = this.$refs.content_left;
+            Attr(s_class, 'datas', '111');
+            const s_num = Number(0.072 * 100);
+            console.info(s_num, 8887, multiply(0.072, 100, 2));
+            this.getAjax('/books/newSaveBook').then(res => {
+                console.info(res);
+            }).catch(err => {
+                console.info(err);
+            });
+            var aasb = [1,2,3,4,5];
+            console.info(...aasb, 77);
         }
     }
 </script>

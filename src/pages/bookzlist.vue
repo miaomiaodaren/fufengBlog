@@ -8,7 +8,7 @@
             <span v-html="zlist.jianjie"></span>
         </p>
         <el-row>
-            <el-col :span="24" v-for="(n, index) in zlist.zview" :key="index">
+            <el-col :span="24" v-for="(n, index) in zlist.chapter" :key="index">
                 <div class="grid-content bg-purple">
                     <router-link :to="{ path: '/books/bookcontent/'+ n.id +'/'+ id }">{{n.title}} </router-link>
                 </div>
@@ -27,9 +27,9 @@
             }
         },
         methods: {
-            async getZlist(v) {
+            async getZlist(id) {
                 try {
-                    let res = await this.getAjax('/books/getZlist', {id: v}, 'POST');
+                    let res = await this.getAjax('/books/getZlist', {id: id}, 'POST');
                     console.log(res);
                     this.zlist = res.data
                 } catch (err) {
