@@ -17,7 +17,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(config => {
     //只有在已经登录的情况下才设置请求头
-    console.log(qs);
     return config
   }, error => {
       return Promise.reject(error)

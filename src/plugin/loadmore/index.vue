@@ -123,7 +123,7 @@
                 return () => {
                     const context = this;
                     const args = arguments;
-                    const tCurr = +new Date();
+                    const tCurr = + new Date();
                     clearTimeout(timer);
                     if (!tStart) {
                         tStart = tCurr;
@@ -273,10 +273,10 @@
                 }
             },
             bindEvents() {
-                this.scrollEl.addEventListener('touchstart', this.handleTouchStart);
-                this.scrollEl.addEventListener('touchmove', this.handleTouchMove);
-                this.scrollEl.addEventListener('touchend', this.handleTouchEnd);
-                this.scrollEl.addEventListener('scroll', this.handleScroll);
+                this.scrollEl.addEventListener('touchstart', this.handleTouchStart);            //手指触碰屏幕
+                this.scrollEl.addEventListener('touchmove', this.handleTouchMove);              //手指在屏幕上滑动
+                this.scrollEl.addEventListener('touchend', this.handleTouchEnd);                //手指离开屏幕
+                this.scrollEl.addEventListener('scroll', this.handleScroll);                    //滚动条滚动事件
             },
             init() {
                 this.createThrottleMethods();
@@ -286,7 +286,6 @@
         },
         mounted() {
             this.init();
-            console.info('3123123', this);
         }
     }
 </script>

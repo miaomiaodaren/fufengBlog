@@ -1,7 +1,7 @@
 <template>
     <div :style="{height: height+'px', zIndex: zIndex}">
         <div :class="className" style="transform: translateZ(0); -webkit-transform: translateZ(0);"
-            :style="{top: stickyTop + 'px', zIndex: zIndex, position: position, width: width, height: height + 'px'}">
+            :style="{top: stickyTop + 'px', zIndex: zIndex, position: position, width: width, height: height + 'px', marginTop: '20px'}">
             <slot></slot>
         </div>
     </div>

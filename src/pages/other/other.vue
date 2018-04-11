@@ -7,6 +7,8 @@
                 <span v-else>{{this.$store.state.users.name}}</span>
             </h2>
         </div>
+        <ffInput ref="aa" v-model="countDown"></ffInput>
+        <img :src="imgs">
         <div class="seamless">
             <ul class="other_list" ref="seam">
                 <li><router-link to="/abouts">产品介绍</router-link></li>
@@ -24,21 +26,26 @@
 </template>
 <script type="text/javascript">
     import headers from '@/include/header.vue'
-    import clerar from '@/assets/seamless'
+    import GetAjax from '../../http/index'
+    //https://ecomfe.github.io/zrender-doc/public/api.html#zrenderdisplayable
+    import * as zrender from 'zrender';
+    import moment from '../../assets/monent'
     export default {
         data() {
             return {
+                imgs: '',
+                countDown: '222'
             }
         },
         computed:{
             hasLogin() {
                 return !!this.$store.state.users
-            }
+            },
         },
         mounted() {
-            // clerar({
-            //     dom: this.$refs.seam
-            // })
+            GetAjax('/doImg').then(res => {
+                this.imgs = res.data.url;
+            })
         },
         components: {
             headers,

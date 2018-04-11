@@ -1,7 +1,12 @@
 <template>
     <div id="tabs">
         <div class="tabs-header">
-            <div class="tabs-head-item" :class="{'is-active': (nowtabs || tabcount[0]) === tabcount[index] ? true : false}" v-for="(n, index) in labels" :key="index" @click="changItem(index)">
+            <div class="tabs-head-item" 
+                :class="{'is-active': (nowtabs || tabcount[0]) === tabcount[index] ? true : false}" 
+                v-for="(n, index) in labels" 
+                :key="index" 
+                @click="changItem(index)"
+            >
                 {{n}}
             </div>
         </div>
@@ -35,7 +40,6 @@
             changItem(val) {
                 this.$emit('input', this.tabcount[val]);
                 this.nowtabs = this.tabcount[val];
-                // this.dispatch('tabsitem', 'pname', [this.tabcount[val]]);
             }
         },
         watch: {

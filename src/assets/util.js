@@ -63,6 +63,16 @@ export function isObject(obj) {
     return type === 'function' || type === 'object' && !!obj;
 }
 
+//判断是否为文件
+export function isFile(val) {
+    return toString.call(val) === '[object File]';
+}
+
+//判断是否为blob文件
+export function isBlob(val) {
+    return toString.call(val) === '[object Blob]';
+}
+
 //判断一个参数是不是一个fun方法，并且对es6的Generator做了判断
 export function isFun(obj) {
     let objStr = Object.prototype.toString.call(obj);
@@ -346,6 +356,16 @@ export const setUrlPrmt = (obj)=> {
         }
     }
     return _rs.join('&');
+}
+
+export const buildUrl = (url, params) => {
+    if(!params) {
+        return url;
+    }
+    params = setUrlPrmt(params);
+    url += (url.indexOf('?') === -1 ? '?' : '&') + params;
+    console.info(url);
+    return url;
 }
 
 // Return a random integer between min and max (inclusive).
@@ -893,3 +913,81 @@ export const multiply = (a, b, digits) => {
 export const divide = (a, b, digits) => {
     return operation(a, b, digits, 'divide')
 }
+
+
+//2018/3/29 在segmentfault中发找到一个非常有意思有函数，名字叫作compose,接收N个参数，都为Function类型。右侧函数的执行结果将作为左侧的参数来进行调用
+// compose(arg => `${arg}%`, arg => arg.toFixed(2), arg => arg + 10)(5);
+export const compose = (...fun) => {
+    var len = fun.length;
+    return function(data) {
+        return fun.reduceRight(function(total, currentValue) {
+            return currentValue(total)
+        }, data)
+    }
+}
+
+
+//target 绑定DOM元素  startVal 开始值   endVal 结束值   duration 动画时间   iscoms  是否需要用逗号隔开  target, startVal, endVal, duration, iscoms
+//var up = new countUp({target: 'count', startVal: 0, endVal: 10000000, duration: 1, iscom: true});  up.start();
+//数字滚动
+export function countUp(config) {
+    var self = this;
+    config = copyObj({
+        iscom: false
+    }, config)
+    this.$d = document.getElementById(config.target);
+    this.startVal = config.startVal;
+    this.endVal = config.endVal;
+    this.duration = (config.duration *1000) || 2000;
+    this.iscom = config.iscom;
+    this.startcount = 0;
+    this.rAF;
+    this.starttime;
+    this.timestamp;
+    self.count = function(timestamp) {
+        if(!self.starttime) {
+            self.starttime = timestamp;
+        }
+        self.timestamp = timestamp;
+        if(self.startVal > self.endVal) {
+            self.startcount = Math.round(self.startVal - ((self.startVal - self.endVal) * ((self.timestamp - self.starttime) / self.duration)));
+            self.$d.innerHTML = self.groupCommas(self.startcount);
+            if(self.startcount <= self.startVal && self.startcount > self.endVal) {
+                self.rAF = requestAnimationFrame(self.count);
+            } else {
+                cancelAnimationFrame(self.rAF);
+                self.$d.innerHTML = self.groupCommas(self.endVal);
+            }
+        } else {
+            //公式是 起始值+ （终值-起值）* (时间差/总时间）
+            self.startcount = Math.round(self.startVal + ((self.endVal - self.startVal) * ((self.timestamp - self.starttime) / self.duration)));
+            self.$d.innerHTML = self.groupCommas(self.startcount);
+            if(self.startcount < self.endVal) {
+                self.rAF = requestAnimationFrame(self.count);
+            } else {
+                cancelAnimationFrame(self.rAF);
+                self.$d.innerHTML = self.groupCommas(self.endVal);
+            }
+        }
+    }
+    self.start = function() {
+        self.rAF = requestAnimationFrame(self.count);
+    }
+    self.stop = function() {
+        cancelAnimationFrame(self.rAF);
+    }
+    self.resize = function() {
+        cancelAnimationFrame(self.rAF);
+        self.$d.innerHTML = self.startVal;
+    }
+    self.groupCommas = function(str) {
+        if(!self.iscom) return str
+        return str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+}
+
+
+
+
+
+

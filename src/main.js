@@ -15,8 +15,9 @@ import moment from '@/assets/monent.js'
 
 import '@/assets/base.css'
 
+import './components/global'
+
 import ffEle from '@/assets/vueplugin/src'
-console.info(ffEle);
 Vue.use(ffEle)
 
 
@@ -33,6 +34,7 @@ Vue.prototype.getAjax = GetAjax
 
 Vue.use(ElementUI)
 Vue.use(VueQuillEditor)
+
 
 Vue.config.productionTip = false
 

@@ -2,6 +2,8 @@
     <div id="Home">
         <div class="main">
             <div class="content">
+                <!-- 右侧滑动删除组件 -->
+                <!-- <tabdel></tabdel> -->
                 <toprefresh :top-load-method="refresh" @top-state-change="stateChange" :bottom-load-method="loadmore" @bottom-state-change="stateChange" 
                 :otherfun="stickyfun">
                     <template slot="top-block" scope="props">
@@ -11,6 +13,12 @@
                             <span v-html="props.stateText"></span>
                         </div>
                     </template> 
+                    <!-- <inputnumber v-model="inputnum" :setp="1" :max="10" :min="2"></inputnumber>
+                    <a href="http://www.baidu.com">2131231</a> -->
+                    <!--  <EInputNumber v-model="inputnum"></EInputNumber> -->
+                    <!-- 防抖节流测试 -->
+                    <!-- <div @click="sdebounces(1000)">213123123</div> -->
+                    <!-- <input v-model="debouncess" @change="sbs"> -->
                     <h3 class="pageTitle">博客</h3>
                     <Sticky ref="stickys" :stickyTop="Number(navheight)">
                         <div class="search">
@@ -45,8 +53,22 @@
                             <li v-for="(n, index) in newList" :key="index">
                                 <span class="feet" @click="GetNews(1, 2, n.type)">来自模块 {{n.type}}</span>
                                 <h2 @click="question(n._id)">{{n.title}}</h2>
+                                <!-- 会有一个问题就是在300字并且的代码或图片的时候，这边应该把前三百个字代码前面的字显示出来 -->
+                                <!-- <p class="con_text">
+                                    <span ref="conter" v-html="showall ? n.content : getLenht(n.content).length > 100 ? n.content.substring(0, 100) : n.content"></span>
+                                    <span v-if="getLenht(n.content).length > 50 && !showall">
+                                        ...<em @click="getMore(n._id)"  class="hascheck sdown">阅读全文</em>
+                                    </span>
+                                    <span v-if="getLenht(n.content).length > 50 && showall" @click="showall = false" class="hascheck sup">
+                                        收起
+                                    </span>
+                                </p> -->
+                                <!-- <span class="times">{{Date.parse(n.addtime)/ 1000 | timeFormat}}</span> -->
+                                <span class="times">{{n.addtime}}</span>
                             </li>
                         </ul>
+                        <!-- 分页组件 -->
+                        <!-- <page :total="50" @pagechange="pchange" :gopage="false"></page> -->
                     </div>
                     <template slot="bootom-block" scope="props">
                         <div class="bottom-load-wrapper" style="text-align: center;">
@@ -58,6 +80,7 @@
                 </toprefresh>
             </div>
         </div>
+        <minput :value="222" placeholder="这是一个密码"></minput>
         <headers></headers>
     </div>
 </template>
@@ -81,19 +104,55 @@
         delay, Attr, multiply, css,
         isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin, toggleClass } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
+    import minput from '@/plugin/input/index'
+    //右滑删除插件
+    import tabdel from '@/plugin/tabdel/index'
     //下拉刷新插件
     import toprefresh from '@/plugin/loadmore/index'
+    import inputnumber from '@/plugin/InputNumber/index'
 
     import { GetProList, minApi, hasSearch } from '@/service/index'
 
     import EInputNumber from 'element-ui/packages/input-number/src/input-number.vue';
     //顶点吸附插件
     import Sticky from '@/plugin/sticky/index.vue'
+
     import seamless from '@/assets/seamless'
+
+    import newPromise from '@/assets/newPromise'
+
+    import cPromise from '@/assets/creatPromise'
+
+    import doAjax from '@/assets/fajax'
+
+    const datas = [
+        {
+            "password": "password0",
+            "note": "note0"
+        },
+        {
+            "password": "password1",
+            "note": "note1"
+        },
+        {
+            "password": "password2",
+            "note": "note2"
+        },
+        {
+            "password": "password0",
+            "note": "note0"
+        },
+        {
+            "password": "password1",
+            "note": "note1"
+        }
+    ];
+
+    var deaa = debounce(function() {console.info('2222', 3333)}, 1000, true);
     export default {
         data() {
             return {
-                newList: [],    
+                newList: [],
                 showall: false,
                 name: '2222',
                 total: 0,
@@ -103,6 +162,7 @@
                 iconLink: '',      //加载图标
                 page: 1,
                 isinBottom: true,
+                txt: '朝秦魂牵梦萦要的一要雪了要工发了民届上厅二楼冰灾乳白色宛荆防颗粒',
                 asdf: '',
                 inputnum: 2,
                 debouncess: '',
@@ -111,6 +171,14 @@
             }
         },
         watch: {
+            // searchcon(value, oldval) {
+            //     if(value != oldval && value.length >= 1) {
+            //         this.hassearch(value);
+            //     } else {
+            //         this.serchdata = '';
+            //     }
+            //     return value
+            // }
         },
         computed: {
             ...mapGetters(['typecount'])
@@ -123,11 +191,16 @@
                         page: page,
                         type: type && type === 2 ? con[0] : '',
                     };
+                    //此处使用了清理空值的属性,暂时先不处理分页的效果
                     let res = await GetProList(clearflase(params, true), type);
                     let datainfo = res.data.information;
                     datainfo.map((v, n) => {
                         v.addtime = moment().formart('yyyy-MM-dd HH:mm:ss', v.addtime);
+                        // v.content = unescape(delHtmlTag(v.content));
+                        //实现取第一张图片做为缩略图
                     });
+                    // this.newList = datainfo;
+                    //如果传入的是第一页，则直接赋值，否则就合并数据
                     this.$nextTick(()=> {
                         if(page === 1) {
                             this.newList = datainfo;
@@ -141,6 +214,14 @@
                     })
                     // this.page ++ 
                 } catch(err) {
+                    console.log(err, '23423423423')
+                }
+            },
+            async aa() {
+                try {
+                    let res = await minApi();
+                    console.info(res);
+                } catch (err) {
                     console.log(err)
                 }
             },
@@ -168,12 +249,17 @@
                 if(scroEl.scrollTop < sheight + 20) {
                     document.getElementsByClassName('scroll-container')[0].scrollTop = sheight + 50;
                 }
+                // document.body.scrollTop = 0;
+                // document.documentElement.scrollTop = 0;
             },
             getMore(id) {
                 let refest = this.newList.filter((v) => {
                     return v._id == id
                 });
                 this.showall = true;
+            },
+            pchange(id) {
+                console.log(id);
             },
             question(id) {
                 this.$router.push({path: '/question/' + id})
@@ -206,12 +292,54 @@
                         loaded('done');
                     }, 3000);
                 }
+            },
+            sb() {
+                let aa = this.txt, count = this.txt.length, key = 0;
+                let st = setInterval(() => {
+                    if(key === count) {
+                        console.info('222');
+                        clearInterval(st);
+                    } else {
+                        this.asdf = aa.substr(count - key) 
+                        key ++
+                    }
+                }, 100)
+            },
+            searchchange(val) {
+
+            },
+            sdebounces(delay) {
+                deaa();
+            },
+            testpromise() {
+                return new newPromise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve('200ms')
+                        // reject('200ms')
+                    }, 2000)
+                })
+            },
+            testpromise2() {
+                return new newPromise(function(resolve, reject) {
+                    setTimeout(function() {
+                        resolve('300ms')
+                    }, 3000)
+                })
+            },
+            cpromise() {
+                return new cPromise(function(resolve, reject) {
+                    resolve('222woshinaocan');
+                })
             }
         },
         components: {
             headers,
             page,
+            minput,
+            tabdel,
             toprefresh,
+            inputnumber,
+            EInputNumber,
             Sticky
         },
         created() {
@@ -219,9 +347,123 @@
             this.debounceHandleInput = debounce(this.hassearch, 500, true);
         },
         mounted() {
-            this.GetNews(this.page);
+            this.$store.dispatch('SetType', this.name).then(res => {
+                console.info(this, res, 887);
+            }).catch(err => {
+                console.info(err);
+            })
             this.stickyfun = this.$refs.stickys.handleScroll;   //在载入的时候把这个scroll方法记录下来
             this.navheight = this.$refs.stickys.$el.getBoundingClientRect().height;
+
+            const obj = [1,2,3,4,5], obj1 = { name: 'ff', age: 12, text: 3 };
+            each(obj1, (v,i,o) => {
+                console.info(v, i, o, 8);
+            })
+            this.GetNews(this.page);
+            this.aa();
+            // this.sb();
+            console.info(moment('2018-01-19 23:59:59').cfordate(), '213123')
+            console.info(moment('2018-01-19 23:59:59'), '2222');
+            console.info(moment(1503559089).formart('yyyy-MM-dd HH:mm:ss EE')); 
+            // console.info(moment().tiemrdeff('1992.07.14').defftime);
+            // console.info(moment().tiemrdeff('1992-07-14', '2017-8-24').deffmart('y:M:d'));
+            // console.info(moment('2017/8/24 14:48:13').subtract(2, 'H').formart('yyyy-MM-dd HH:mm:ss')); console.log('222');
+            //使用fetch跨域的实现
+            // fetch('http://127.0.0.1:3000/news/newslist', { 
+            //     methods: 'GET',
+            //     headers: {
+            //         'Accept': 'application/json, text/javascript, */*; q=0.01',
+            //         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            //     },
+            //     mode: 'cors',
+            //     credentials: 'include',   //omit
+            //     cache: 'default'
+            // }).then(res => res.json()).then(data => {
+            //     console.info(data, '333333');
+            // }).catch(err => console.log(err, '3232323'))
+            // console.info(moment().add({'H': 4, 'd': 3}).formart(), 'monent');
+            // console.info(moment().add('H', 4).formart(), 'monent1');
+            // console.info(moment().beginning().formart(), 'moment2');
+            // console.info(moment().add('d', 1).ending().formart(), 'moment2');
+
+            //测试从数组从中删除 
+            const asd = [1,2,3,4,5,2,3,7,5,3];
+            console.info(delArr(asd, 3), 44444);
+            var lazyLayout = throttle(function() {console.info('22')}, 5000);
+            // console.info(lazyLayout, 22);
+            window.onresize = function() {
+                lazyLayout()
+            };
+            var nc = false;
+            //在进入页面的时候，及离开页面的时候会触发的方法
+            on(window, 'pageshow', function() {
+                // alert(nc);
+            });
+            on(window, 'pagehide', function() {
+                nc = true
+            });
+            //用来测试深复制与浅拷贝（只对object有效果）
+            var aal = { name: '33', age: '44' }, bbl = aal, asbs = copyObj(true, {}, {name: 2, age: 3}, {name: 'ff', text: '22'}, aal);
+            bbl.name = 'woshishabi'; console.info(aal, bbl, asbs, 999);
+            //测试animationFrame
+            // animationFrame();
+            // window.requestAnimationFrame(function() {
+            //     console.info('2222221');
+            // })
+            //测试promise
+            let self = this;
+            this.testpromise()
+            .then(function(data) {
+                console.info(data, 99);
+                return self.testpromise2()
+            })
+            .then(function(data) {
+                console.info(data, '100');
+            })
+            // .catch(function(err) {
+            //     console.info(err, '8err');
+            // })
+            delay(function(test) {
+                console.info(22, test)
+            }, 4000, 'ffshishabi');
+            this.cpromise().then(res => {
+                console.info('我真TM是一个傻逼', res);
+                // return new Promise((resolve ,reject) => {
+                //     resolve('你怕不是一个傻逼吧');
+                // })
+            })
+            // .then(res => {
+            //     console.info('我真TM是一个傻逼2', res);
+            // });
+
+            console.info(compact([0, 1, false, 2, '', 3, 'a', 'e' * 23, NaN, 's', 34]), 99999);
+            console.info(countBy([2, 4, 6, 7, 8], function(v) { if(v > 5) { return true } else {return false} }), 10000);
+
+            // var ffaa = doAjax({
+            //     url: `/api/types/GetTypes`,
+            //     type: 'GET',
+            //     success: function(res, xhr) {
+            //         console.info(res, 'niaho', parseJSON(res), '33');
+            //     },
+            //     error: function(err) {
+            //         console.info(err, 'dajiahao');
+            //     }
+            // })
+            // console.info(ffaa, 'woshiffaa');
+            console.info(gettype('21312'), 'woshigettype');
+            var parff = parseJSON('{"name":"John"}');
+            const s_class = this.$refs.content_left;
+            Attr(s_class, 'datas', '111');
+            const s_num = Number(0.072 * 100);
+            console.info(s_num, 8887, multiply(0.072, 100, 2));
+            this.getAjax('/books/newSaveBook').then(res => {
+                console.info(res);
+            }).catch(err => {
+                console.info(err);
+            });
+            var aasb = [1,2,3,4,5];
+            // console.info(...aasb, 77);
+            console.info(moment, 778);
         }
     }
 </script>

@@ -103,7 +103,7 @@ export default new Router({
                 },
             },
             {
-                path: 'bookcontent/:id/:_id',
+                path: 'bookcontent/:_id/:id',
                 name: '小说内容',
                 components: {
                     page: bookcontent

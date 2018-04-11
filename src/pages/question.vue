@@ -1,5 +1,6 @@
 <template>
     <div id="question">
+        <backtop></backtop>
         <div class="QuestionHeader">
             <div class="main">
                 <div class="questiontips">
@@ -30,7 +31,6 @@
                 try{
                     let res = await this.getAjax('/news/newslist', {_id: id}, 'POST');
                     const { information } = res.data;
-                    console.info(information[0], 99);
                     this.dataview = information[0];
                 } catch(err) {
                     console.info(err)
@@ -39,6 +39,7 @@
         },
         mounted() {
             this.getDataById(this.id);
+            console.info(this);
         },
         components: {
             headers
@@ -87,6 +88,5 @@
             .question_left
                 width: 100%
                 float: left
-
 </style>
 

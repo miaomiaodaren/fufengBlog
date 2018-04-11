@@ -1,45 +1,74 @@
 <template>
     <div id="bookcontent">
-        <h2 v-if="aa.zview">{{aa.zview.title}}</h2>
+        <h2 v-if="dataList.zview">{{dataList.zview.title}}</h2>
         <div class="lc">
-            <span>上一章</span>
+            <span @click="flip('top')" >上一章</span>
             <span @click="gozlist">返回目录</span>
-            <span>下一章</span>
+            <span @click="flip('next')">下一章</span>
         </div>
-        <div class="xscon" v-if="aa.zview" v-html="aa.zview.content"></div>
-        <div class="lc lcb">
-            <span>上一章</span>
+        <div class="xscon" v-if="dataList.content" v-html="dataList.content"></div>
+        <div class="lc lcb" v-show="bottom_isshow">
+            <span @click="flip('top')">上一章</span>
             <span @click="gozlist">返回目录</span>
-            <span>下一章</span>
+            <span @click="flip('next')">下一章</span>
         </div>
         <headertop></headertop>
     </div>
 </template>
 <script>
     import headertop from '@/include/header.vue';
+    import { Loading } from 'element-ui';
     export default {
         data() {
             return {
 //                id: this.$route.params.id,
                 type: this.$route.params,
-                aa: {}
+                dataList: {},
+                nowchapter: 0,
+                bottom_isshow: false
             }
+        },
+        watch: {
+            // nowchapter: {
+            //     handler: function(val, odlVal) {
+            //         this.nowchapter = this.$store.state.book.nowchapter;
+            //         console.info(this.nowchapter, 665, this.$store.state.book.nowchapter)
+            //     },
+            //     immediate: true
+            // }
         },
         methods: {
             async getData(v, n) {
                 try {
+                    const loading = this.$loading({lock: true})
                     let res = await this.getAjax('/books/showcontent', {id: v, _id: n}, 'POST');
-                    this.aa = res.data[0];
+                    this.dataList = res.data;
+                    this.bottom_isshow = true;
+                    loading.close();
+                    this.$store.dispatch('SET_CHAPTER_COUNT', v).then(res => {
+                        this.nowchapter = res
+                    });
                 } catch (err) {
                     console.log(err);
                 }
             },
             gozlist() {
                 this.$router.push({path: '/books/bookzlist/' + this.type._id})
+            },
+            flip(edit) {
+                if(edit === 'top') {
+                    if(this.nowchapter == 0) return false
+                    this.$router.push({path: `/books/bookcontent/${this.type._id}/${Number(this.type.id) - 1}`})
+                } else {
+                    if(this.nowchapter == this.$store.state.chapterCount) return false
+                    this.$router.push({path: `/books/bookcontent/${this.type._id}/${Number(this.type.id) + 1}`})
+                }
             }
         },
         components: {
             headertop
+        },
+        mounted() {
         },
         created() {
             this.getData(this.type.id, this.type._id)
@@ -57,7 +86,6 @@
             margin: 0 auto
             text-align: left
             @include font-dpr(14px)
-            
         .lc
             height: px2rem(60)
             @include font-dpr(14px)
@@ -68,4 +96,6 @@
                 cursor: pointer
         .lcb
             margin-bottom: px2rem(100)
+        .textdisable
+            color: #eee
 </style>

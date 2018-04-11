@@ -4,6 +4,7 @@ const Regx = {
     trreg: /^(\d{4})[\.|\:|\-|\/]{1}(\d{1,2})[\.|\:|\-|\/]{1}(\d{1,2})\s{1}(\d{2})[\.|\:|\-|\/]{1}(\d{2})[\.|\:|\-|\/]{1}(\d{2})$/, //匹配1992-07-14 11:25:36
 }
 
+
 class Monent {
     constructor(timer) {
         const self = this;
@@ -26,8 +27,7 @@ class Monent {
             }
             return self
         }
-    }
-        
+    }  
     each(obj, cb) {
         if(!obj) return [];
         const length = obj.length;
@@ -44,6 +44,10 @@ class Monent {
             }
         }
         return obj
+    }
+
+    getNowTime() {
+        return new Date;
     }
     
     //根据传入的type,返回时间的各值
@@ -105,33 +109,25 @@ class Monent {
     }
 
     //二者时间差
-    tiemrdeff(st, et) {
+    tiemrdeff(st, et, type) {
         let self = this;
         const length = arguments.length;
         let fv = Object.values(this.timeformt);
         let deff =  length === 1 ? Math.abs(this.cfordate(st) - this.cfordate(this.NowTime)) : this.cfordate(et) - this.cfordate(st),
               o = ['y', 'M', 'd', 'H', 'm', 's'],
               ts = ['年', '月', '日', '时', '分', '秒'];
-        // let g = get.length > 0 ? o.indexOf(get[0]) : '';
-        // self.each(ts, (v, k, n ,obj) => {
-        //     if(g !== '' && g !== null) {
-        //         if(n <= g) {
-        //             s = Math.floor(deff / fv[g]) + obj[g];
-        //         }
-        //     } else {
-        //         s += Math.floor(deff / fv[n]) + v;
-        //         deff = deff - Math.floor(deff / fv[n]) *  fv[n];
-        //     }
-        // })
-        // ts.forEach((v, n) => {
-        //     s += Math.floor(deff / fv[n]) + v;
-        //     deff = deff - Math.floor(deff / fv[n]) *  fv[n];
-        //     if(g !== null && n === g) {
-        //         return false
-        //     }
-        // })
+        if(type) {
+            //此处为了防止出现0.XX天，则使用了向上取整，哪怕只隔一秒，也是显示一天
+            let dtyps = this.timeformt[type];
+            return  deff < dtyps ? 0 :  Math.ceil(Math.abs(deff / this.timeformt[type]));
+        }
         this.defftime = deff
         return this
+    }
+
+    //2018-3-15新增加，增加天数之间的间隔
+    diffDate(st, et) {
+        
     }
 
     //格式化时间戳
@@ -204,7 +200,7 @@ class Monent {
         return this
     }
     //获取一个时间最迟的一个时间
-    ending() {
+    ending(t) {
         this.NowTime = this.end.call(this.isDate(this.NowTime) ? this.NowTime : new Date(this.NowTime));
         return this
     }

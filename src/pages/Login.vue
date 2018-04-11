@@ -71,6 +71,7 @@
     import tabitem from '@/plugin/tabs/tab-item.vue'
     import * as uts from '@/assets/util.js'
     import headers from '@/include/header.vue'
+    import moment from '@/assets/monent.js'
     export default {
         data() {
             return {
@@ -156,6 +157,8 @@
         },
         mounted() {
             this.changeimg();
+            // console.info(moment().diffDate('2018-01-28 12:59:59', '2018-01-29 01:00:01'), 777);
+            console.info(moment())
         }
     }
 </script>

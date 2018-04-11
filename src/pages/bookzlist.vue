@@ -10,7 +10,7 @@
         <el-row>
             <el-col :span="24" v-for="(n, index) in zlist.chapter" :key="index">
                 <div class="grid-content bg-purple">
-                    <router-link :to="{ path: '/books/bookcontent/'+ n.id +'/'+ id }">{{n.title}} </router-link>
+                    <router-link :to="{ path: '/books/bookcontent/'+ id +'/'+ n.id }">{{n.title}} </router-link>
                 </div>
             </el-col>
         </el-row>
@@ -30,8 +30,10 @@
             async getZlist(id) {
                 try {
                     let res = await this.getAjax('/books/getZlist', {id: id}, 'POST');
-                    console.log(res);
-                    this.zlist = res.data
+                    this.zlist = res.data;
+                    this.$store.dispatch('SET_NOW_CHAPTER', res.data.chapter.length).then(res => {
+                        console.info(res, 'isres', this.$store);
+                    })
                 } catch (err) {
                     console.log(err)
                 }
@@ -41,6 +43,7 @@
             headertop
         },
         mounted() {
+            console.info(this.$store.dispatch, 6, this.$store);
             this.getZlist(this.id)
         }
     }

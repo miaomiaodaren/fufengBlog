@@ -2,7 +2,9 @@ import { getBooktype, getBookList } from '@/service'
 const Book = {
     state: {
         booktype: [],
-        booklist: []
+        booklist: [],
+        nowchapter: 0,      //当前小说在第几章
+        chapterCount: 0,    //當前小說的总章节
     },
     mutations: {
         SET_TYPE: (state, type) => {
@@ -10,6 +12,12 @@ const Book = {
         },
         get_book_name: (state, list) => {
             state.booklist = list
+        },
+        set_chapter: (state, chapter) => {
+            state.nowchapter = chapter
+        },
+        set_chapter_count: (state, chapter_count) => {
+            state.chapterCount = chapter_count
         }
     },
     actions: {
@@ -34,6 +42,14 @@ const Book = {
                     reject(err)
                 })
             })
+        },
+        SET_NOW_CHAPTER({commit, state}, chapterNum) {
+            commit('set_chapter', chapterNum);
+            return Promise.resolve(chapterNum)
+        },
+        SET_CHAPTER_COUNT({commit, state}, chapterCount) {
+            commit('set_chapter_count', chapterCount);
+            return Promise.resolve(chapterCount);
         }
     }
 }
