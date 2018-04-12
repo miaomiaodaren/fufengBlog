@@ -34,6 +34,8 @@ const Reget = resolve => require(['@/pages/regex/index'], resolve);
 const swiper = resolve => require(['@/pages/explame/swiper'], resolve);
 const Plugin = resolve => require(['@/pages/plugin'], resolve);
 
+const Elements = resolve => require(['@/pages/other/element'], resolve);
+
 Vue.use(Router)
 
 export default new Router({
@@ -163,6 +165,10 @@ export default new Router({
                     active: 'other'
                 }
             }]
+        }, {
+            path: '/element',
+            name: 'Vue-Element 插件',
+            component: Elements
         }
     ]
 })

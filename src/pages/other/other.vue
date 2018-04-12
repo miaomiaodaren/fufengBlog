@@ -20,6 +20,7 @@
                 <li><router-link to="/outexcel">导出excel</router-link></li>
                 <li><router-link to="/css/uploader">文件上传</router-link></li>
                 <li><router-link to="/plugin">组件集合</router-link></li>
+                <li><router-link to="/element">VUE-Element组件文档说明</router-link></li>
             </ul>
         </div>
     </div>
@@ -58,7 +59,7 @@
         background-color: #fff
         height: 100%
         .userInfo
-            height: px2rem(180)
+            height: px2rem(100)
             h2
                 @include font-dpr(22px)
                 line-height: px2rem(50)
