@@ -77,14 +77,14 @@
                 if(this.nowPage <= 5) {
                     this.changepage(1)
                 } else {
-                     this.changepage(this.nowPage - 5)
+                    this.changepage(this.nowPage - 5)
                 }
             },
             gonextmorepage() {
                 if(this.nowPage + 5 > this.pageCount) {
                     this.changepage(this.pageCount)
                 } else {
-                   this.changepage(this.nowPage + 5)
+                    this.changepage(this.nowPage + 5)
                 }
             },
             gopagesize() {

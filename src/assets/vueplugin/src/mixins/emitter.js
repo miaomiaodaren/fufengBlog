@@ -10,6 +10,17 @@ export default {
                     parent = parent.$parent;
                 }
             }
+        },
+        isGroup(componentName) {
+            let $parent = this.$parent;
+            while($parent) {
+                if($parent.$options.componentName === componentName) {
+                    return true
+                } else {
+                    $parent = $parent.$parent
+                }
+            }
+            return false
         }
     }
 }

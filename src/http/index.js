@@ -18,12 +18,11 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
     //只有在已经登录的情况下才设置请求头
     return config
-  }, error => {
-      return Promise.reject(error)
+}, error => {
+    return Promise.reject(error)
 }) 
 
 const HOST = process.env.NODE_ENV === 'development' ? '/api' : ''
-
 
 //尝试使用async await 替换promise，使js更加语意化，并简洁
 //尝试在webpack中配置全局变量，替代此处的host。

@@ -16,7 +16,13 @@ module.exports = {
   // add your custom rules here
   'rules': {
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    // allow async-await
+    'generator-star-spacing': 'off',
+    'space-before-function-paren': 0,
+    'no-trailing-spaces': 0,
+    'no-unneeded-ternary': 0,
+    'indent': [1, 4, {"SwitchCase": 1}]
   }
 }
 // module.exports = {

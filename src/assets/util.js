@@ -16,7 +16,6 @@ var escapeMap = {
     "'": '&#x27;',
     '`': '&#x60;'
 };
-
 var createEscaper = function(map) {
     var escaper = function(match) {
         return map[match];

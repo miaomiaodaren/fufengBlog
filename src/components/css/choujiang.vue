@@ -35,7 +35,7 @@
 			chageactive(t) {
 				if(t === 's') {
 					if(this.scycle === this.cycle + 3 ) {
-						this.winid = this.activess.findIndex((v, i, a)=> {
+						this.winid = this.activess.findIndex((v, i, a) => {
 							return v === this.winer
 						});
 						clearInterval(this.st);	

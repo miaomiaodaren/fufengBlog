@@ -3,11 +3,17 @@ import Input from '../packages/input/index';
 import Button from '../packages/button/index';
 import Radio from '../packages/radio/index';
 import RadioGroup from '../packages/radio-group/index';
+import CheckBox from '../packages/checkbox/index'
+import CheckBoxGroup from '../packages/checkbox-group/index'
+import Cascader from '../packages/cascader/index'
 const components = [
     Button,
     Input,
     Radio,
-    RadioGroup
+    RadioGroup,
+    CheckBox,
+    CheckBoxGroup,
+    Cascader
 ];
 const install = function(Vue, opt = {}) {
     components.map(c => {
@@ -25,6 +31,9 @@ const ff = {
     Input,
     Radio,
     RadioGroup,
+    CheckBox,
+    CheckBoxGroup,
+    Cascader,
     version: '1.0.0'
 }
 

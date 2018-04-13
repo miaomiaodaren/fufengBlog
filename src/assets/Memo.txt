@@ -1133,11 +1133,8 @@ var app = new Vue({
 
 
 
-react 状态管理
-实例化
-
+react 状态管理 实例化
 首次实例化
-
     getDefaultProps
     getInitialState
     componentWillMount
@@ -1198,7 +1195,6 @@ typescript 入门备注
 2. let decLiteral: number = 6;  数字
 3. let name: string = "bob";   字符串
 4. let list: number[] = [1,2,3]     let list: Array<number> = [1,2,3]  数组
-
 
 
 

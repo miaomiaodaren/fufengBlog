@@ -127,7 +127,7 @@
                     clearTimeout(timer);
                     if (!tStart) {
                         tStart = tCurr;
-                        }
+                    }
                     if (mustRunDelay !== 0 && tCurr - tStart >= mustRunDelay) {
                         fn.apply(context, args);
                         tStart = tCurr;
@@ -209,7 +209,7 @@
                 this.$el.style.transition = `${duration}ms`;
                 this.diff = y;
                 setTimeout(() => {
-                  this.$el.style.transition = '';
+                    this.$el.style.transition = '';
                 }, duration);
             },
             handleTouchStart(event) {
@@ -243,9 +243,9 @@
                     if (typeof this.bottomLoadMethod !== 'function') return;
                     if (Math.abs(this.distance) < this._bottomConfig.triggerDistance &&
                     this.state !== 'pull' && this.state !== 'loading') {
-                    this.actionPull();
-                } else if (Math.abs(this.distance) >= this._bottomConfig.triggerDistance &&
-                    this.state !== 'trigger' && this.state !== 'loading') {
+                        this.actionPull();
+                    } else if (Math.abs(this.distance) >= this._bottomConfig.triggerDistance &&
+                        this.state !== 'trigger' && this.state !== 'loading') {
                         this.actionTrigger();
                     }
                 }

@@ -38,6 +38,14 @@
                     <ff-radio label="9">备选项33</ff-radio>
                 </ff-radio-group>
             </div>
+            <div class="Checkbox" v-show="defaultVal === 'CheckBox'">
+                <ff-checkbox v-model="eleModel.checkVal">备选项{{eleModel.checkVal}}</ff-checkbox>
+                <ff-checkbox-group v-model="eleModel.checkGroupVal" :max="2" :min="1">
+                    <ff-checkbox label="1" @change="handChange">备选项1</ff-checkbox>
+                    <ff-checkbox label="2" @change="handChange">备选项2</ff-checkbox>
+                    <ff-checkbox label="3" @change="handChange">备选项3</ff-checkbox>
+                </ff-checkbox-group>
+            </div>
         </div>
     </div>
 </template>
@@ -45,18 +53,25 @@
     export default {
         data() {
             return {
-                typeList: ['Button', 'Radio'],
+                typeList: ['Button', 'Radio', 'CheckBox'],
                 defaultVal: 'Button',
                 eleModel: {
                     raidoVal: "2",
-                    reidoVal2: '3'
+                    reidoVal2: '3',
+                    checkVal: true,
+                    checkGroupVal: ["2"]
                 }
             }
         },
         methods: {
             radioChange(v) {
                 console.info(v, 'ischange');
+            },
+            handChange(v) {
+                console.info(v, 'ischeckchange');
             }
+        },
+        mounted() {
         }
     }
 </script>

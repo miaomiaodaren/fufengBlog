@@ -38,28 +38,17 @@
         computed: {
             model: {
                 get() {
-                    return this.isGroup ? this.$parent.value : this.value
+                    return this.isGroup('FFRadioGroup') ? this.$parent.value : this.value
                 },
                 set(val) {
-                    if(this.isGroup) {
+                    if(this.isGroup('FFRadioGroup')) {
                         this.dispatch('FFRadioGroup', 'input', [val]);
                     } else {
                         this.$emit('input', val);
                     }
                 }
             },
-            //查找父级元素,判断是否外层是 group。
-            isGroup() {
-                let $parent = this.$parent;
-                while($parent) {
-                    if($parent.$options.componentName === "FFRadioGroup") {
-                        return true
-                    } else {
-                        $parent = $parent.$parent
-                    }
-                }
-                return false
-            }
+            
         },
         data() {
             return {
@@ -69,12 +58,12 @@
         methods: {
             hanleChange(v) {
                 this.$nextTick(() => {
-                    this.isGroup ? this.dispatch('FFRadioGroup', 'change', this.model) : this.$emit('change', this.model)
+                    this.isGroup('FFRadioGroup') ? this.dispatch('FFRadioGroup', 'change', this.model) : this.$emit('change', this.model)
                 })
             }
         },
         mounted() {
-
+            
         }
     }
 </script>
