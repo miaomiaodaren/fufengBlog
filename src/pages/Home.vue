@@ -79,7 +79,7 @@
         throttle, 
         on, 
         delay, Attr, multiply, css,
-        isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin, toggleClass } from '@/assets/util.js'
+        isEmptyObject, copyObj, animationFrame, compact, countBy, gettype, parseJSON, isWeixin, toggleClass, assign } from '@/assets/util.js'
     import moment from '@/assets/monent.js'
     //下拉刷新插件
     import toprefresh from '@/plugin/loadmore/index'
@@ -222,6 +222,8 @@
             this.GetNews(this.page);
             this.stickyfun = this.$refs.stickys.handleScroll;   //在载入的时候把这个scroll方法记录下来
             this.navheight = this.$refs.stickys.$el.getBoundingClientRect().height;
+
+            console.info(assign({name: 'fuifdsa', age: 12}, {bz: 'wojiaofufeng', name: 'fufeng'}), 7777);
         }
     }
 </script>

@@ -376,6 +376,24 @@ export const random = (min, max) => {
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 
+//浅复制,类似ES6中的Object.assign()
+export function assign() {
+    let arg = [...arguments];
+    if(!arg.length) return {};
+    if(Object.assign) {
+        return Object.assign(...arguments)
+    };
+    let target = arguments[0] || {};
+    for(var i = 0; i < arg.length; i++) {
+        for(let o in arguments[i]) {
+            console.info(o, 66);
+            target[o] = arguments[i][o];
+        }
+    }
+    return target
+}
+
+
 //此处改成 export const copyObj = () => {} 会出错
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 export function copyObj() {
