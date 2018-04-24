@@ -199,6 +199,20 @@ export const clears = (obj) => {
     return obj
 }
 
+//fields是一个数组,删除obj中拥有fields的属性
+export const omit = (obj, fields) => {
+    const shallowCopy = {
+      ...obj,
+    };
+    for (let i = 0; i < fields.length; i++) {
+      const key = fields[i];
+      delete shallowCopy[key];
+    }
+    return shallowCopy;
+}
+
+
+
 //把obj数据中的数据调换， key = val; val = key
 export function invert(obj) {
     if(!obj) return
