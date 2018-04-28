@@ -1,3 +1,114 @@
+Doctype的文档类型
+    声明必须是 HTML 文档的第一行，位于 标签之前.
+    声明不是 HTML 标签；它是指示 web 浏览器关于页面使用哪个 HTML 版本进行编写的指令。
+    严格模式的排版和 JS 运作模式是 以该浏览器支持的最高标准运行。
+    DOCTYPE不存在或格式不正确会导致文档以混杂模式呈现
+    在混杂模式中，页面以宽松的向后兼容的方式显示。模拟老式浏览器的行为以防止站点无法工作。
+    HTML5 只有一种<!DOCTYPE html>
+    HTML 4.01 规定了三种文档类型：Strict、Transitional 以及 Frameset。
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+
+cookie、sessionSttorage、localStory区别
+                    由谁初始化              过期时间        在当前浏览器会话中是否保持不变      是否与域名（domain）相关联      是否随着每个 HTTP 请求发送给服务器  容量（每个域名）    访问权限
+cookie 客户端或服务器，服务器使用Set-Cookie请求头。手动设置         取决于是否设置了过期时间                是                       会在头问的cookie中发出             4KB          任意窗口                                 
+localStorage        客户端                  永不过期                是                              否                              否                          5M             任意窗口
+sessionStorage      客户端                  当前页面关闭时          否                               否                             否                          5M              任意窗口
+
+HTML全局属性(global attribute)有哪些？
+    class:为元素设置类标识，多个类名用空格分开，CSS和javascript可通过class属性获取元素
+    contenteditable: 指定元素内容是否可编辑
+    contextmenu: 自定义鼠标右键弹出菜单内容
+    data-*: 为元素增加自定义属性
+    dir: 设置元素文本方向
+    draggable: 设置元素是否可拖拽
+    dropzone: 设置元素拖放类型： copy, move, link
+    hidden: 表示一个元素是否与文档。样式上会导致元素不显示，但是不能用这个属性实现样式效果
+    id: 元素id，文档内唯一
+    lang: 元素内容的的语言
+    spellcheck: 是否启动拼写和语法检查
+    style: 行内css样式
+    tabindex: 设置元素可以获得焦点，通过tab可以导航
+    title: 元素相关的建议信息
+    translate: 元素和子孙节点内容是否需要本地化
+
+常见的浏览器内核有哪些？
+    Trident内核：IE,MaxThon,TT,The World,360,搜狗浏览器等。[又称MSHTML]
+    Gecko内核：Netscape6及以上版本，FF,MozillaSuite/SeaMonkey等
+    Presto内核：Opera7及以上。 [Opera内核原为：Presto，现为：Blink;]
+    Webkit内核：Safari,Chrome等。 [ Chrome的：Blink（WebKit的分支）]
+    浏览器内核的理解
+        主要分成两部分：渲染引擎(layout engineer或Rendering Engine)和JS引擎。
+        渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入CSS等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。
+        JS引擎则：解析和执行javascript来实现网页的动态效果。
+
+    webSocket如何兼容低浏览器？
+        Adobe Flash Socket
+        ActiveX HTMLFile (IE)
+        基于 multipart 编码发送 XHR
+        基于长轮询的 XHR
+
+如何实现浏览器内多个标签页之间的通信    WebSocket、SharedWorker；
+    1. 使用localStorage 的 storage事件监听添加、修改、删除的动作
+        window.addEventListener("storage",function(event){  
+            $("#name").val(event.key+”=”+event.newValue);  
+        }); 
+    2. 使用cookie+setInterval
+
+iframe有哪些缺点？
+    frame会阻塞主页面的Onload事件(过多会增加服务器的HTTP请求)；
+    搜索引擎的检索程序无法解读这种页面，不利于SEO;
+    页面样式调试麻烦，出现多个滚动条；
+    浏览器的后退按钮失效
+    产生多个页面，不易管理
+    不容易打印
+    iframe和主页面共享连接池，而浏览器对相同域的连接有限制，所以会影响页面的并行加载。
+    改进：使用iframe之前需要考虑这两个缺点。如果需要使用iframe，最好是通过javascript动态给iframe添加src属性值，这样可以绕开以上两个问题
+
+HTML5有哪些新特性？
+    语意化标签 article、footer、header、nav、section
+    新增选择器 document.querySelector、document.querySelectorAll
+    拖拽释放(Drag and drop) API
+    媒体播放的 video 和 audio
+    本地存储 localStorage 和 sessionStorage
+    离线应用 manifest
+    桌面通知 Notifications
+    增强表单控件 calendar、date、time、email、url、search
+    地理位置 Geolocation
+    多任务 webworker
+    全双工通信协议 websocket
+    历史管理 history
+    跨域资源共享(CORS)` Access-Control-Allow-Origin
+    页面可见性改变事件 visibilitychange
+    跨窗口通信 PostMessage
+    Form Data 对象
+    绘画 canvas
+
+css
+    行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
+    行内元素
+        a、b、span、img、input、strong、select、label、em、button、textarea
+    块级元素
+        div、ul、li、dl、dt、dd、p、h1-h6、blockquote
+    空元素
+        即系没有内容的HTML元素，例如：br、meta、hr、link、input、img
+    CSS中居中的几种方式
+        - 块级居中(block)： margin: 0 auto
+        - 行级居中（inline,inline-block）父元素css：text-align: center
+        - 定位水平垂直居中：left：50%;top:50%;margin-left:负自身宽度的一半;margin-top:负自身高度的一半;
+        - 定位水平垂直居中：top:0;bottom:0;left:0;right:0;margin:auto;
+        - css3+定位水平垂直居中：left：50%;top:50%;transfrom:(-50%,-50%);
+        - 水平垂直居中：diplay：table-cell;vertical-align: middle;
+        - 水平垂直居中：flexBox居中 display: flex;justify-content: center;align-items:center;
+        - 水平垂直居中：vertical-align:middle;
+
+
+js 
+    typeof 陷阱
+        主要是 typeof null == 'object'   需要判断是否为null    typeof [] == 'object'   需要先用isArray判断一下
+ 
+
 移动端touch事件(区分webkit 和 winphone)
     当用户手指放在移动设备在屏幕上滑动会触发的touch事件
     以下支持webkit
@@ -32,6 +143,7 @@ Object.assign 把任意多个的源对象自身的可枚举属性拷贝给目标
 //var copy = Object.assign({}, obj);
 Object.defineProperty() 定义单个对象属性或方法(可以设置读写可枚举)
 Object.defineProperties() 定义多个对象属性或方法(可以设置读写可枚举)
+Object.freeze() 阻止修改现有属性的特性和值，并阻止添加新属性。 
 
 Object.assign() //浅拷贝，类似{...obj1,...obj2} 都是浅拷贝
 Object.assign方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）
@@ -305,6 +417,9 @@ toLocaleString()：返回当前对象对应的本地字符串形式。
 hasOwnProperty()：判断某个属性是否为当前对象自身的属性，还是继承自原型对象的属性。 
 isPrototypeOf()：判断当前对象是否为另一个对象的原型。
 propertyIsEnumerable()：判断某个属性是否可枚举。
+
+
+
 3.2 Array对象
 （1）生成实例对象
 var a = new Array()
@@ -315,7 +430,6 @@ Array.isArray(a)   //用来判断一个值是否为数组
 （4）Array实例的方法
 
 [1, [2, [3, 4]]].toString() // "1,2,3,4"
-
 a.valueof()   //返回数组本身
 a.toString()  //返回数组的字符串形式
 a.push(value,vlaue....)   //用于在数组的末端添加一个或多个元素，并返回添加新元素后的数组长度。
@@ -338,6 +452,9 @@ reduce()   //依次处理数组的每个成员，最终累计为一个值。从�
 reduceRight()  //依次处理数组的每个成员，最终累计为一个值。从右到左（从最后一个成员到第一个成员）
 indexOf(s)   //返回给定元素在数组中第一次出现的位置，如果没有出现则返回-1。可以接受第二个参数，表示搜索的开始位置
 lastIndexOf()  //返回给定元素在数组中最后一次出现的位置，如果没有出现则返回-1。
+fill()  //使用固定的值填充数据
+
+
 3.3 Number对象
 （1）生成对象
 var n = new Number()
@@ -377,6 +494,9 @@ s.match(regexp)   //用于确定原字符串是否匹配某个子字符串，返
 s.search()  //返回值为匹配的第一个位置。如果没有找到匹配，则返回-1。
 s.replace(oldValue,newValue)  //用于替换匹配的子字符串，一般情况下只替换第一个匹配（除非使用带有g修饰符的正则表达式）。
 s.split()  //按照给定规则分割字符串，返回一个由分割出来的子字符串组成的数组。还可传入第二个参数，决定了返回数组的成员数。
+
+
+
 3.5 Math对象
 （1）属性
 Math.E：常数e。  
@@ -414,6 +534,8 @@ JSON.stringify()
 //还可以接受第三个参数，用于增加返回的JSON字符串的可读性。如果是数字，表示每个属性前面添加的空格（最多不超过10个）；如果是字符串（不超过10个字符），则该字符串会添加在每行前面。
 
 JSON.parse()   //用于将JSON字符串转化成对象。
+
+
 3.7 console对象
 （1）方法
 console.log(text,text2,...)   //用于在console窗口输出信息。它可以接受多个参数，将它们的结果连接起来输出。如果第一个参数是格式字符串（使用了格式占位符），console.log方法将依次用后面的参数替换占位符，然后再进行输出。
@@ -449,15 +571,12 @@ console.clear()  //用于清除当前控制台的所有输出，将光标回置�
 只允许输入数字：onkeyup="this.value=this.value.replace(/\D/g,'')"
 [1, [2, [3, 4]]].toString() // "1,2,3,4"0、常用选择器
 $('#div1')   //id为div1的节点，如<div id='div1'></div> 
-
 $('span')   //所有的span结点，一个包装集
 $('p span')   //p标签下的所有span节点，后代节点
 $('p>span')   //p标签下的所有span子节点，子代节点
 
 $('.red')  //使用样式red的节点，如<span class="red"></span>
-
 $('*')  //所有节点
-
 $("div,span,p.cls")  //选取所有<div>，<span>和拥有class为cls的<p>标签的一组元素
 
 
@@ -1189,6 +1308,10 @@ componentDidUpdate 完成渲染新的props或state之后调用 ，此时可以�
 componentWillUnmount 组件被移除之前调用，可以用于做一些清理工作，在componentDidMount方法中添加的所有任务都需要在该方法中撤销，比如创建的定时器或添加的事件监听器。
 
 https://juejin.im/post/59eb03b86fb9a0451049a0ae
+
+当组件发生更新时，组件的生命周期方法的调用顺序如下:
+    componentWillReceiveProps -> shouldComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
+    // 组件收到新的props（props中的数据并不一定真正发生变化）-> 决定是否需要继续执行更新过程 -> 组件代表的虚拟DOM即将更新 -> 组件重新计算出新的虚拟DOM -> 虚拟DOM对应的真实DOM更新到真实DOM树中
 
 
 react-copy-to-clipboard   react 复制文本插件   https://github.com/nkbt/react-copy-to-clipboard
