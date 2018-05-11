@@ -1,3 +1,6 @@
+netstat -ano   查看所有端口使用情况
+jenkins 启动   java -jar jenkins.war --httpPort=$xxxx 是使用某个端口启动 
+
 Doctype的文档类型
     声明必须是 HTML 文档的第一行，位于 标签之前.
     声明不是 HTML 标签；它是指示 web 浏览器关于页面使用哪个 HTML 版本进行编写的指令。
@@ -107,6 +110,8 @@ css
 js 
     typeof 陷阱
         主要是 typeof null == 'object'   需要判断是否为null    typeof [] == 'object'   需要先用isArray判断一下
+    javascript数据类型
+        undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object） Symbol(独一无二的值)
  
 
 移动端touch事件(区分webkit 和 winphone)
@@ -978,8 +983,15 @@ isPos(1); // true
 
 
 
+js 阻止事件冒泡
+    e.stopPropagation();
+js阻止链接默认行为，没有停止冒泡
+    e.preventDefault();
+都阻止
+    return false
 
 停止jq中的ajax请求用abort()函数   
+
 
 <html>  
 <head>  
@@ -1012,6 +1024,7 @@ function stopAjax(){
 
 single instanceof Object 运算符用来测试一个对象在其原型链中是否存在一个构造函数的 prototype 属性。
 
+http://www.open-open.com/lib/view/open1449325854077.html    移动端问题列表
 
  <!-- 设置缩放 -->
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
@@ -1080,7 +1093,48 @@ single instanceof Object 运算符用来测试一个对象在其原型链中是�
     4.android无法同时播放多音频audio
     5.oppo 的border-radius 会失效
 
+说明：移动设备上的web网页是有300ms延迟的，玩玩会造成按钮点击延迟甚至是点击失效。
 
+    以下是历史原因，来源一个公司内一个同事的分享：
+    2   007年苹果发布首款iphone上IOS系统搭载的safari为了将适用于PC端上大屏幕的网页能比较好的展示在手机端上，使用了双击缩放(double tap to zoom)的方案，比如你在手机上用浏览器打开一个PC上的网页，你可能在看到页面内容虽然可以撑满整个屏幕，但是字体、图片都很小看不清，此时可以快速双击屏幕上的某一部分，你就能看清该部分放大后的内容，再次双击后能回到原始状态。
+    双击缩放是指用手指在屏幕上快速点击两次，iOS 自带的 Safari 浏览器会将网页缩放至原始比例。
+    原因就出在浏览器需要如何判断快速点击上，当用户在屏幕上单击某一个元素时候，例如跳转链接<a href="#"></a>，此处浏览器会先捕获该次单击，但浏览器不能决定用户是单纯要点击链接还是要双击该部分区域进行缩放操作，所以，捕获第一次单击后，浏览器会先Hold一段时间t，如果在t时间区间里用户未进行下一次点击，则浏览器会做单击跳转链接的处理，如果t时间里用户进行了第二次单击操作，则浏览器会禁止跳转，转而进行对该部分区域页面的缩放操作。那么这个时间区间t有多少呢？在IOS safari下，大概为300毫秒。这就是延迟的由来。造成的后果用户纯粹单击页面，页面需要过一段时间才响应，给用户慢体验感觉，对于web开发者来说是，页面js捕获click事件的回调函数处理，需要300ms后才生效，也就间接导致影响其他业务逻辑的处理。
+    //解决方案：
+    fastclick可以解决在手机上点击事件的300ms延迟
+    zepto的touch模块，tap事件也是为了解决在click的延迟问题
+
+// 运用HTML5的deviceMotion，调用重力感应事件
+    if(window.DeviceMotionEvent){
+        document.addEventListener('devicemotion', deviceMotionHandler, false)
+    }   
+    var speed = 30;
+    var x = y = z = lastX = lastY = lastZ = 0;
+    function deviceMotionHandler(eventData){
+        var acceleration = event.accelerationIncludingGravity;
+        x = acceleration.x;
+        y = acceleration.y; 
+        z = acceleration.z;
+        if(Math.abs(x-lastX)>speed || Math.abs(y-lastY)>speed || Math.abs(z-lastZ)>speed ){
+            //这里是摇动后要执行的方法 
+            yaoAfter();
+        }
+        lastX = x;
+        lastY = y;
+        lastZ = z;
+    }
+
+    function yaoAfter(){
+        //do something
+    }
+
+<!-- 播放视频不全屏
+1.ios7+支持自动播放
+2.支持Airplay的设备（如：音箱、Apple TV)播放
+x-webkit-airplay="true" 
+3.播放视频不全屏
+webkit-playsinline="true" 
+-->
+<video x-webkit-airplay="true" webkit-playsinline="true" preload="auto" autoplay src="http://"></video>
 
 audio元素和video元素在ios和andriod中无法自动播放
     
@@ -1312,12 +1366,18 @@ https://juejin.im/post/59eb03b86fb9a0451049a0ae
 当组件发生更新时，组件的生命周期方法的调用顺序如下:
     componentWillReceiveProps -> shouldComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
     // 组件收到新的props（props中的数据并不一定真正发生变化）-> 决定是否需要继续执行更新过程 -> 组件代表的虚拟DOM即将更新 -> 组件重新计算出新的虚拟DOM -> 虚拟DOM对应的真实DOM更新到真实DOM树中
+组件自身调用setState，导致的组件更新，其生命周期方法的调用情况如下：
+shouldComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
 
-
+react 进阶之路                                 https://juejin.im/post/5ae2b5b851882567161a4af6
 react-copy-to-clipboard   react 复制文本插件   https://github.com/nkbt/react-copy-to-clipboard
 react 图片裁剪                                   https://github.com/jerryshew/react-image-cropper
 react 图片上传  可轮子                          https://github.com/jerryshew/react-file-upload
+immutable-js   对于优化代码很有用，正在学习中    https://github.com/chrisvfritz/prerender-spa-plugin 
 
+https://mobile.ant.design/components/progress-cn/       react antd-mobile 
+
+https://github.com/jimwmg/JiM-Blog/tree/master/React/React%E5%9F%BA%E7%A1%80            很有用的源码分析资料   主要学习这一块
 
 base64解码
 atob(decodeURIComponent('MTMzMzI4MzA0MTM%3D'));
@@ -1329,6 +1389,10 @@ typescript 入门备注
 3. let name: string = "bob";   字符串
 4. let list: number[] = [1,2,3]     let list: Array<number> = [1,2,3]  数组
 
+install typescript -g 之后，可以使用tsc 来进行编译, 编译文件是根据tsconfig.json 来判断,
+在本地调试typescript 使用 ts-node 来启动
+在node中使用typescript 出现 2034 not find require 的时候，需要安装一个@type/node 插件, 但是还是统一为好
+
 
 
 https://regex101.com/r/7g1JSQ/1   正则在线验证
@@ -1337,8 +1401,7 @@ nodejs
     https://github.com/ijse/freemarker.js     nodejs中渲染使用java的 freemarker.js
 
 
-
-
+react 谷歌调试
 
 js对象分为  普通对象 跟  函数对象
 
@@ -1390,16 +1453,21 @@ ES7的Decorator语法类似于Python中的Decorator，在ES7中也仅仅只是�
 
 
 
+git 第一步
 
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/miaomiaodaren/KoaAdmin.git
+git push -u origin master
 
-
-
-
-
-
-
-
-
+git add    把文件修改提交到 暂存区
+git commit 把文件提交到本地仓库，可以使用push再提交到线上
+git status 查看有哪些还没提交
+git push   git push <远程主机名> <本地分支名>:<远程分支名>
+git add    git add . 将所有修改添加到暂存区
+git reset  把add的文件还原掉 
+git clone xx.git    把远程仓库中的代码复制到本地仓库中
 
 
 
@@ -1408,7 +1476,8 @@ https://github.com/noahlam/Miment/blob/master/src/miment.js    //类似moment的
 
 
 
-
+mongoose
+    Schema中所支持的数据类型有：String, Number, Date, Buffer, Boolean, Mixed, Objectid, Array
 
 
 
@@ -1421,3 +1490,6 @@ DOM原生
     6.左右可手动穿梭框  --------------
     7.左右滑动手势 ------------------ 
     8.model弹窗 -------------------- 
+
+
+https://segmentfault.com/a/1190000014683917         用 ES6 写全屏滚动插件
