@@ -89,7 +89,16 @@
     import EInputNumber from 'element-ui/packages/input-number/src/input-number.vue';
     //顶点吸附插件
     import Sticky from '@/plugin/sticky/index.vue'
-    import seamless from '@/assets/seamless'
+    import seamless from '@/assets/seamless';
+
+    function aabb(target, name, descriptor) {
+        console.info(descriptor.vlaue)
+        var oldValue = descriptor.value;
+        descriptor.value = function() {
+            return oldValue.apply(this, arguments);
+        };
+        return descriptor;
+    }
     export default {
         data() {
             return {

@@ -1024,6 +1024,30 @@ function stopAjax(){
 
 single instanceof Object 运算符用来测试一个对象在其原型链中是否存在一个构造函数的 prototype 属性。
 
+常用DOM指令
+    Element 平时常用的div, span ,a就是element的一种，有这几种特性
+        nodetype = 1;  nodeName为标签名  tagName也是标签名  nodeValue为null  parentNode可能是Document或element 子节点可能是 elemeht text comment processing_instruction ，CDATASection或EntityReference
+    TEXT 表示节点文本 纯文本，不能包含html 但可以包含转义后的html代码 
+        nodetype = 3 nodeNmae为 #text  nodeVlaue为文本内容   parentNode是一个Element   没有子节点
+    Comment 表示文档注释  
+        nodeType为8  nodeName为#comment  nodeValue为注释的内容 parentNode可能是Document或Element  没有子节点
+    Document 表示文档 在浏览器中，document对象是HTMLDocument的一个实例，表示整个页面，它同时也是window对象的一个属性
+        nodeType为9    nodeName为#document    nodeValue为null   parentNode为null    子节点可能是一个DocumentType或Element
+    DocumentFragment  能当作一个临时的仓库用来保存可能会添加到文档中的节点
+        nodeType为11   nodeName为#document-fragment   nodeValue为null    parentNode为null
+
+    createElement
+        let element = document .createElement(tagName);   document.body.appendChild(elem);
+    createTextNode      用来创建一个文本节点
+    cloneNode  复制节点
+        var dupNode = node.cloneNode(deep);   接受一个参数，表示是否要深复制子组件。  事件如果 是addEventListener 或onclick 则不会复制 ，如果是内联方式则会复制
+
+    appendChild  xx.appendChild(child)   会在xx元素最后添加
+    insertBefore
+        parentNode.insertBefore(newNode,refNode);    parentNode为父节点    newNode为添加的新节点，   refNode为要参照节点
+    replaceChild    替换节点
+    removeChild     删除节点
+
 http://www.open-open.com/lib/view/open1449325854077.html    移动端问题列表
 
  <!-- 设置缩放 -->
@@ -1360,6 +1384,8 @@ componentWillUpdate 接收新props或state后，进行渲染之前调用，此�
 componentDidUpdate 完成渲染新的props或state之后调用 ，此时可以访问DOM元素。
 
 componentWillUnmount 组件被移除之前调用，可以用于做一些清理工作，在componentDidMount方法中添加的所有任务都需要在该方法中撤销，比如创建的定时器或添加的事件监听器。
+
+getDerivedStateFromProps
 
 https://juejin.im/post/59eb03b86fb9a0451049a0ae
 
