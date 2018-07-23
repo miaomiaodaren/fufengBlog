@@ -184,6 +184,39 @@ export const isEmptyObject = (obj) => {
     return true;
 }
 
+//数组的sort实现之一， Array[num]排序
+export const arrSort = (arr) => {
+    let result = [].concat(arr);
+    for(let i = 0; i < result.length; i++) {
+        let min = result[i];
+        let minIndex = i;
+        for(let j = i + 1; j < result.length; j ++) {
+            if(min > result[j]) {
+                min = result[j];
+                minIndex = j;
+            }
+        }
+        result.splice(i, 0, min);
+        result.splice(minIndex + 1, 1);
+    }
+    return result
+}
+
+//參考undescore.js 的sortBy 以及 loadsh的 orderBy 函數，实现了数据根据某一个key值的排序。
+//算法思路是 先使用map遍历，返回一个value为item，且criter为key属性的arr,进行排序，排序完成之后，遍历新数组返回value的值。
+//同时第三个参数，不传是增序，传入desc 则是倒序。后续继续优化。
+export const orderBy = (arr, dec, order='asc') => {
+    return arr.map((item, index) => {
+        return {value: item, criter: item[dec]}
+    }).sort((left, right) => {
+        let a = left.criter;
+        let b = right.criter;
+        return order === 'desc' ? a < b : a > b
+    }).map((item) => {
+        return item['value']
+    })
+}
+
 //清空对象
 // 把obj中的对象的value值清空掉，如果值是boolean,则改为false
 export const clears = (obj) => {
@@ -765,6 +798,28 @@ export const animationFrame = () => {
     }();
 };
 
+//让滚动条滚动到某一个位置, window.scrollX, window.scrollY 分别能获取到滚动条当前的位置
+//window.scrollTo(x, y) 则可以让浏览器滚动到当前传入的值的位置.(但是没有动画效果)。
+//window.onscroll=function (){xxx} 使用onscroll方法可以监听滚动条滚动事件
+export const scrollTop = (value = 0) => {
+    let anim;
+    let st = document.documentElement.scrollTop;
+    if(st === value) return false;
+    let types = value <= st ? 'down' : 'up';
+    cancelAnimationFrame(anim);
+    anim = requestAnimationFrame(function fn() {
+        let scrTop = document.documentElement.scrollTop;          //=== window.scrollY; 约等于document.body.scrollTop
+        const step = scrTop > value ? 50 : -50;
+        if((types === 'down' && scrTop <= value) || (types === 'up' && scrTop > value)) {
+            window.scrollTo(0, value);
+            window.cancelAnimationFrame(anim);
+        } else {
+            window.scrollTo(0, scrTop - step);
+            anim = window.requestAnimationFrame(fn);
+        }
+    })
+}
+
 //对象序列化，类似qs
 export const stringfyQs = (obj) => {
     if (!obj) return '';
@@ -1018,7 +1073,38 @@ export function countUp(config) {
 }
 
 
+/**
+ * @description 设置cookie
+ * @param name cookie名称
+ * @param value 值
+ * @param iDay 有效时间（天数）
+ */
+export const setCookie = (name, value, iDay) => {
+    let oDate = new Date();
+    oDate.setDate(oDate.getDate() + iDay);
+    document.cookie = name + '=' + value + ';expires=' + oDate;
+}
 
+/**
+ * @description 获取cookie
+ * @param name cookie名称
+ */
+export const getCookie = (name) => {
+    let arr = document.cookie.split('; '),arr2;
+    for (let i = 0; i < arr.length; i++) {
+        arr2 = arr[i].split('=');
+        if (arr2[0] == name) {
+            return arr2[1];
+        }
+    }
+    return '';
+}
 
-
+/**
+ * @description 删除cookie
+ * @param name cookie名称
+ */
+export const removeCookie = (name) => {
+    this.setCookie(name, 1, -1);
+}
 

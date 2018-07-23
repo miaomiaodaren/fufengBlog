@@ -35,6 +35,9 @@ Vue.prototype.getAjax = GetAjax
 Vue.use(ElementUI)
 Vue.use(VueQuillEditor)
 
+import $ajax from './components/alert/alert.js';
+Vue.prototype.$ajax = $ajax;
+
 
 Vue.config.productionTip = false
 

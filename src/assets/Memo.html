@@ -1,18 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .onetype{
+            margin: 20px;
+            background-color: #fff;
+            font-size: 14px;
+        }
+        h2{
+            font-size: 22px;
+            display: block;
+            font-weight: 600;
+            margin: 0;
+        }
+        div{
+            display: block;
+        }
+        p{
+            line-height: 20px;
+            padding-left: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="onetype Doctype">
+        <h2>Doctype的文档类型</h2>
+        <div>
+            <p>声明必须是 HTML 文档的第一行，位于 标签之前.</p>
+            <p>声明不是 HTML 标签；它是指示 web 浏览器关于页面使用哪个 HTML 版本进行编写的指令。严格模式的排版和 JS 运作模式是 以该浏览器支持的最高标准运行。</p>
+            <p>DOCTYPE不存在或格式不正确会导致文档以混杂模式呈现</p>
+            <p>在混杂模式中，页面以宽松的向后兼容的方式显示。模拟老式浏览器的行为以防止站点无法工作。</p>
+            <p>HTML5 只有一种<!DOCTYPE html></p>
+            <p>HTML 4.01 规定了三种文档类型：Strict、Transitional 以及 Frameset。</p>
+            <p><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"></p>
+            <p><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"></p>
+            <p><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd"></p>
+        </div>
+    </div>
+    <div class="onetype thisuse">
+            <!-- https://segmentfault.com/a/1190000002640298 -->
+        <h2>js中this的使用</h2>  
+        <div>
+            <h3>global this</h3>
+                <p>1.在浏览器里，在全局范围内，this等价于window对象. console.log(this === window)  true</p>
+                <p>2.在浏览器里，在全局范围内，用var声明一个变量和给this或者window添加属性是等价的; </p>
+                <p>3.在声明变量的时候,如果没有使用var或let的时候,就是在全局添加或修改这个值</p>
+                <p>4.在node环境中,如果执行js脚本,this === {}, 而并不等于 global</p>
+                <p>5.总结起来就是：在浏览器里面this是老大，它等价于window对象，如果你声明一些全局变量(不管在任何地方)，这些变量都会作为this的属性。在node里面，有两种执行JavaScript代码的方式，一种是直接执行写好的JavaScript文件，另外一种是直接在里面执行一行行代码。对于直接运行一行行JavaScript代码的方式，global才是老大，this和它是等价的。在这种情况下，和浏览器比较相似，也就是声明一些全局变量会自动添加给老大global，顺带也会添加给this。但是在node里面直接脚本文件就不一样了，你声明的全局变量不会自动添加到this，但是会添加到global对象。所以相同点是，在全局范围内，全局变量终究是属于老大的。</p>
+            <h3>function this</h3>
+                <p>6.如果不是用new调用，在函数里面使用this都是指代全局范围的this。(除非你使用严格模式，这时候this就会变成undefined。)</p>
+                <p>7.如果你在调用函数的时候在前面使用了new，this就会变成一个新的值，和global的this脱离干系。this指代这个实例</p>
+            <h3>prototype this</h3>
+                <p>创建的每一个函数都是函数对象。它们会自动获得一个特殊的属性prototype，你可以给这个属性赋值。当你用new的方式调用一个函数的时候，你就能通过this访问你给prototype赋的值了</p>
+                <p>当你使用new为你的函数创建多个实例的时候，这些实例会共享你给prototype设定的值</p>
+                <p>实例里面的this是一个特殊的对象。你可以把this想成一种获取prototype的值的一种方式。当你在一个实例里面直接给this添加属性的时候，会隐藏prototype中与之同名的属性。如果你想访问prototype中的这个属性值而不是你自己设定的属性值，你可以通过在实例里面删除你自己添加的属性的方式来实现。 或者你也能直接通过引用函数对象的prototype 来获得你需要的值。</p>
+                <p>通过函数创建的实例会共享这个函数的proptype的属性的值, 如果有一个实例改变了这个函数的prototype,那所有的实例都会被影响</p>
+                <p>给一个函数的prototype赋值一个Array通常是一个错误的做法。如果你想每一个实例有他们专属的Array，你应该在函数里面创建而不是在prototype里面创建。</p>
+                <p>你可以通过使用Object.create来避免使用new，这样同样能够创建一个实例。</p>
+            <h3>object this</h3>
+            <p>在一个对象的一个函数里，你可以通过this来引用这个对象的其他属性。这个用new来新建一个实例是不一样的</p>
+        </div>
+    </div>
+</body>
+</html>
+
 netstat -ano   查看所有端口使用情况
 jenkins 启动   java -jar jenkins.war --httpPort=$xxxx 是使用某个端口启动 
-
-Doctype的文档类型
-    声明必须是 HTML 文档的第一行，位于 标签之前.
-    声明不是 HTML 标签；它是指示 web 浏览器关于页面使用哪个 HTML 版本进行编写的指令。
-    严格模式的排版和 JS 运作模式是 以该浏览器支持的最高标准运行。
-    DOCTYPE不存在或格式不正确会导致文档以混杂模式呈现
-    在混杂模式中，页面以宽松的向后兼容的方式显示。模拟老式浏览器的行为以防止站点无法工作。
-    HTML5 只有一种<!DOCTYPE html>
-    HTML 4.01 规定了三种文档类型：Strict、Transitional 以及 Frameset。
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
-
+    
 cookie、sessionSttorage、localStory区别
                     由谁初始化              过期时间        在当前浏览器会话中是否保持不变      是否与域名（domain）相关联      是否随着每个 HTTP 请求发送给服务器  容量（每个域名）    访问权限
 cookie 客户端或服务器，服务器使用Set-Cookie请求头。手动设置         取决于是否设置了过期时间                是                       会在头问的cookie中发出             4KB          任意窗口                                 
@@ -182,6 +241,83 @@ css
              Text-fill-color: 文字内部填充颜色
              Text-stroke-color: 文字边界填充颜色
              Text-stroke-width: 文字边界宽度
+        css3
+             多列布局
+             .multi_column_style{ 
+                 -webkit-column-count: 3; 
+                 -webkit-column-rule: 1px solid #bbb; 
+                 -webkit-column-gap: 2em; 
+                 } 
+             渐变效果
+                 background-image:-webkit-gradient(linear,0% 0%,100% 0%,from(#2A8BBE),to(#FE280E));
+            径向渐变
+                 backgroud: -webkit-gradient(radial,50 50,50,50 50,0,from(black),color-stop(0.5,red),to(blue));
+             返射效果
+                 .classReflect{ 
+                     -webkit-box-reflect: below 10px 
+                     -webkit-gradient(linear, left top, left bottom, from(transparent), 
+                          to(rgba(255, 255, 255, 0.51))); 
+                 }
+            transition  css过渡
+                transition-property     规定设置过渡效果的 CSS 属性的名称。 none|all|property;
+                transition-duration     规定完成过渡效果需要多少秒或毫秒。   time
+                transition-timing-function      规定速度效果的速度曲线。
+                linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n);
+                linear   规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。
+                ease    规定慢速开始，然后变快，然后慢速结束的过渡效果（cubic-bezier(0.25,0.1,0.25,1)）。
+                ease-in 规定以慢速开始的过渡效果（等于 cubic-bezier(0.42,0,1,1)）。
+                ease-out    规定以慢速结束的过渡效果（等于 cubic-bezier(0,0,0.58,1)）。
+                ease-in-out     规定以慢速开始和结束的过渡效果（等于 cubic-bezier(0.42,0,0.58,1)）。
+                cubic-bezier(n,n,n,n)   在 cubic-bezier 函数中定义自己的值。可能的值是 0 至 1 之间的数值。
+                transition-delay        定义过渡效果何时开始。 time
+                http:cubic-bezier.com/#.22,.89,.95,.04   自己定义贝塞尔曲线的网站
+                 transition: width 2s, height 2s, transform 2s;       demo
+            transform   变化 css变形 
+            animation   动画
+                animation-name      规定需要绑定到选择器的 keyframe 名称。。
+                animation-duration      规定完成动画所花费的时间，以秒或毫秒计。
+                animation-timing-function       规定动画的速度曲线。
+                animation-delay     规定在动画开始之前的延迟。
+                animation-iteration-count       规定动画应该播放的次数。
+                animation-direction     规定是否应该轮流反向播放动画。
+                animation-fill-mode     定义动画完成之后停留在最后    
+            http:www.w3school.com.cn/css3/css3_animation.asp
+            demo: 
+                 @keyframes myfirst
+                 {
+                     from {background: red;}
+                     to {background: yellow;}
+                 }
+                
+                 @-webkit-keyframes myfirst /* Safari 与 Chrome */
+                 {
+                     from {background: red;}
+                     to {background: yellow;}
+                 }
+                 div
+                 {
+                     animation: myfirst 5s;
+                     -webkit-animation: myfirst 5s; /* Safari 与 Chrome */
+                 }
+            flex：
+                .外面的容器
+                    display: flex;
+                    flex-direction: row;        //伸缩流方向: 水平方向row | 反向水平row-reverse | 垂直方向column | 反向垂直column-reverse
+                    flex-wrap: wrap;            //溢出时是否换行    不换行nowrap | 换行wrap  | 反转换行wrap-reverse
+                    justify-content: space-between;    //主轴对齐方式: 左对齐flex-start | 居中对齐center | 右对齐flex-end | 两端对齐space-between | 扩散对齐space-around
+                    align-items: center;       //侧轴对齐方式: 顶边对齐flex-start | 中间对齐center  | 底部对齐flex-end | 基线对齐baseline | 伸缩项目拉伸填充整个伸缩容器stretch
+                    align-content: center;     //侧轴多个对齐方式: 顶边对齐flex-start | 中间对齐center  | 底部对齐flex-end | 两端对齐space-between  | 扩散对齐space-around | 伸缩项目拉伸填充整个伸缩容器stretch
+                .里面的容器
+                    align-self: auto[默认]     //侧轴对齐方式: 自动auto | 顶边对齐flex-start | 中间对齐center | 底部对齐flex-end | 基线对齐baseline | 伸缩项目拉伸填充整个伸缩容器stretch
+                    flex-basis: <length> | auto[默认]  //伸缩项目在主轴方向上的初始大小
+                    order: <number>[默认为0]       //显示顺序: 定义伸缩项目的排列顺序，数值越小，排列越靠前
+                    flex: none | [<flex-grow> <flex-shrink>? || <flex-basis>]
+                        flex: none => flex: 0 0 auto;//表示宽度为原始宽度，不发生扩展或收缩
+                        flex: auto => flex: 1 1 auto;//表示除了占据原先的宽度外，还要分配剩余宽度(包括扩展或收缩)
+                        flex: 0 => flex: 0 1 0%;//表示收缩为最小宽度
+                        flex: 1 => flex: 1 1 0%;//表示分配所有宽度(包括扩展或收缩)
+                        flex: 0 auto => flex: 0 1 auto;(默认值)//表除了占据原先的宽度外，还要分配剩余宽度(只收缩，不扩展)
+                        flex: 0 1 => flex: 0 1 0%;
 js  
     typeof 陷阱
         主要是 typeof null == 'object'   需要判断是否为null    typeof [] == 'object'   需要先用isArray判断一下
@@ -230,12 +366,12 @@ offsetLeft:获取对象相对于版面或由 offsetParent 属性指定的父坐�
 offsetTop:获取对象相对于版面或由 offsetTop 属性指定的父坐标的计算顶端位置 
 event.clientX 相对文档的水平座标
 event.clientY 相对文档的垂直座标
+
 event.offsetX 相对容器的水平坐标
 event.offsetY 相对容器的垂直坐标 
 document.documentElement.scrollTop 垂直方向滚动的值
 event.clientX+document.documentElement.scrollTop 相对文档的水平座标+垂直方向滚动的量
-documnet.getBoundingClientRect();   这个方法取到的值是根据这个浏览器的窗口来算的，而不是根据整个文档来算的
-document.documentElement.scrollHeight  =  document.documentElement.scrollTop + document.documentElement.clientHeight  
+
 
 Window 方法
     window.innerHeight - 浏览器窗口的内部高度
@@ -281,7 +417,6 @@ Object.freeze() 阻止修改现有属性的特性和值，并阻止添加新属�
 Object.assign() //浅拷贝，类似{...obj1,...obj2} 都是浅拷贝
 Object.assign方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）
 Object.getPrototypeOf(ColorPoint) === Point  以使用这个方法判断，一个类是否继承了另一个类。
-Object.setPrototypeOf  为现有对象设置原型，返回一个新对象
 
 var target = { a: 1 };
 var source1 = { b: 2 };
@@ -520,8 +655,11 @@ element.classList.contains(className)  //是否包含
 element.classList.toggle(className)  //toggle class
 （2）style操作
 element.setAttribute('style','')
+
 element.style.backgroundColor = 'red'
+
 element.style.cssText //用来读写或删除整个style属性
+
 element.style.setProperty(propertyName,value)  //设置css属性
 element.style.getPropertyValue(property)  //获取css属性
 element.style.removeProperty(property)  //删除css属性
@@ -549,6 +687,8 @@ toLocaleString()：返回当前对象对应的本地字符串形式。
 hasOwnProperty()：判断某个属性是否为当前对象自身的属性，还是继承自原型对象的属性。 
 isPrototypeOf()：判断当前对象是否为另一个对象的原型。
 propertyIsEnumerable()：判断某个属性是否可枚举。
+
+
 
 3.2 Array对象
 （1）生成实例对象
@@ -624,7 +764,7 @@ s.match(regexp)   //用于确定原字符串是否匹配某个子字符串，返
 s.search()  //返回值为匹配的第一个位置。如果没有找到匹配，则返回-1。
 s.replace(oldValue,newValue)  //用于替换匹配的子字符串，一般情况下只替换第一个匹配（除非使用带有g修饰符的正则表达式）。
 s.split()  //按照给定规则分割字符串，返回一个由分割出来的子字符串组成的数组。还可传入第二个参数，决定了返回数组的成员数。
-String.fromCharCode(numX,numX,...,numX)   把十进制的数字转换成指定的 Unicode 值,(在写字体转换的时候,用到过这个属性)
+
 
 
 3.5 Math对象
@@ -648,7 +788,7 @@ Math.sqrt()：返回参数值的平方根。如果参数是一个负值，则返
 Math.log()：返回以e为底的自然对数值。
 Math.exp()：返回e的指数，也就是常数e的参数次方。
 Math.round()：四舍五入  
-Math.random()：返回0到1之间的一个伪随机数，可能等于0，但是一定小于1。  Math.floor((Math.random()*10));   取0 - 10 之间的随机数 
+Math.random()：返回0到1之间的一个伪随机数，可能等于0，但是一定小于1。
 （3）三角函数方法
 Math.sin()：返回参数的正弦  
 Math.cos()：返回参数的余弦  
@@ -713,13 +853,17 @@ $("div,span,p.cls")  //选取所有<div>，<span>和拥有class为cls的<p>标�
 1、基本筛选器
 $('span:first')    //第一个节点
 $('span:last')     //最后一个节点
+
 $("td:even")     //索引为偶数的节点，从 0 开始
 $("td:odd")      //索引为奇数的节点，从 0 开始
+ 
 $("td:eq(1)")    //给定索引值的节点
 $("td:gt(0)")    //大于给定索引值的节点
 $("td:lt(2)")    //小于给定索引值的节点
+
 $(":focus")      //当前获取焦点的节点
 $(":animated")   //正在执行动画效果的节点
+
 
 2、内容选择器
 $("div:contains('hello')")    //包含hello文本的节点
@@ -727,9 +871,11 @@ $("td:empty")    //不包含子节点或者文本的空节点
 $("div:has(p)")  //含有选择器所匹配的节点
 $("td:parent")   //含有子节点或者文本的节点
 
+
 3、表单选择器
 $("input:checked")    //所有选中的节点
 $("select option:selected")    //select中所有选中的option节点
+
 $(":input")      //匹配所有 input, textarea, select 和 button 节点
 $(":text")       //所有的单行文本框
 $(":password")   //所有密码框
@@ -740,37 +886,47 @@ $(":reset")      //所有重置按钮
 $(":button")     //所有button按钮
 $(":file")       //所有文件域
 
+
 4、筛选与查找
 $("p").eq(0)       //当前操作中第N个jQuery对象,类似索引
 $('li').first()    //第一个节点
 $('li').last()     //最后一个节点
 $(this).hasClass("node")    //节点是否含有某个特定的类,返回布尔值
 $('li').has('ul')  //包含特定后代的节点
+
 $("div").children()      //div中的每个子节点,第一层
 $("div").find("span")    //查找div下的所有span节点
+
 $("p").next()       　　　//紧邻p节点后的一个同辈节点
 $("p").nextAll()         //p节点之后所有的同辈节点
 $("#node").nextUntil("#node2")    //id为"#node"节点之后到id为'#node2'之间所有的同辈节点,掐头去尾
+
 $("p").prev()            //紧邻p节点前的一个同辈节点
 $("p").prevAll()         //p节点之前所有的同辈节点
 $("#node").prevUntil("#node2")    //id为"#node"节点之前到id为'#node2'之间所有的同辈节点,掐头去尾
+
 $("p").parent()          //每个p节点的父节点
 $("p").parents()         //每个p节点的所有祖先节点,body,html
 $("#node").parentsUntil("#node2")    //id为"#node"节点到id为'#node2'之间所有的父级节点,掐头去尾
+
 $("div").siblings()      //所有的同辈节点,不包括自己
+
 
 5、属性操作
 $("img").attr("src");    　　　　　　 //返回文档中所有图像的src属性值
 $("img").attr("src","node.jpg");    //设置所有图像的src属性
 $("img").removeAttr("src");    　　　//将文档中图像的src属性删除
+
 $("input[type='checkbox']").prop("checked", true);    //选中复选框
 $("input[type='checkbox']").prop("checked", false);   //不选中复选框
 $("img").removeProp("src");    　　 //删除img的src属性
+
 
 6、样式操作
 $("p").addClass("selected");    　　//为p节点加上 'selected' 类
 $("p").removeClass("selected");    //从p节点中删除 'selected' 类
 $("p").toggleClass("selected");    //如果存在就删除,否则就添加HTML代码/文本/值
+
 
 7、内容操作
 $('p').html();    　　　　　　　　　　 //返回p节点的html内容
@@ -779,11 +935,13 @@ $('p').text();    　　　　　　　　　　 //返回p节点的文本内容
 $("p").text("hello");    　　　　　　　//设置p节点的文本内容
 $("input").val();    　　　　　　　　 //获取文本框中的值
 $("input").val("hello");     　　　　 //设置文本框中的内容
+ 
 
 8、CSS操作
 $("p").css("color");          //访问查看p节点的color属性
 $("p").css("color","red");    //设置p节点的color属性为red
 $("p").css({ "color": "red", "background": "yellow" });    //设置p节点的color为red，background属性为yellow（设置多个属性要用{}字典形式）
+
 
 9、定位与偏移
 $('p').offset()     //节点在当前视口的相对偏移,对象 {top: 5, left: 9}
@@ -795,14 +953,18 @@ $(window).scrollTop()    //获取滚轮滑的高度
 $(window).scrollLeft()   //获取滚轮滑的宽度
 $(window).scrollTop('25')    //设置滚轮滑的高度为25
 
+
 10、尺寸
 $("p").height();    //获取p节点的高度
 $("p").width();     //获取p节点的宽度
+
 $("p:first").innerHeight()    //获取第一个匹配节点内部区域高度(包括补白、不包括边框)
 $("p:first").innerWidth()     //获取第一个匹配节点内部区域宽度(包括补白、不包括边框)
+
 $("p:first").outerHeight()    //匹配节点外部高度(默认包括补白和边框)
 $("p:first").outerWidth()     //匹配节点外部宽度(默认包括补白和边框)
 $("p:first").outerHeight(true)    //为true时包括边距
+
 
 11、DOM内部插入
 $("p").append("<b>hello</b>");    //每个p节点内后面追加内容
@@ -810,29 +972,35 @@ $("p").appendTo("div");    　　　 //p节点追加到div内后
 $("p").prepend("<b>Hello</b>");  //每个p节点内前面追加内容
 $("p").prependTo("div");    　   //p节点追加到div内前
 
+
 12、DOM外部插入
 $("p").after("<b>hello</b>");     //每个p节点同级之后插入内容
 $("p").before("<b>hello</b>");    //在每个p节点同级之前插入内容
 $("p").insertAfter("#node");     //所有p节点插入到id为node节点的后面
 $("p").insertBefore("#node");    //所有p节点插入到id为node节点的前面
 
+
 13、DOM替换
 $("p").replaceWith("<b>Paragraph. </b>");    //将所有匹配的节点替换成指定的HTML或DOM节点
 $("<b>Paragraph. </b>").replaceAll("p");     //用匹配的节点替换掉所有 selector匹配到的节点
+
 
 14、DOM删除
 $("p").empty();     //删除匹配的节点集合中所有的子节点，不包括本身
 $("p").remove();    //删除所有匹配的节点,包括本身
 $("p").detach();    //删除所有匹配的节点(和remove()不同的是:所有绑定的事件、附加的数据会保留下来)
 
+
 15、DOM复制
 $("p").clone()    　　//克隆节点并选中克隆的副本
 $("p").clone(true)   //布尔值指事件处理函数是否会被复制
+ 
 
 16、DOM加载完成事件
 $(document).ready(function(){
   您的代码...
 });
+
 //缩写
 $(function($) {
   您的代码...
@@ -895,7 +1063,6 @@ event.type 　　//事件的类型
 event.which 　 //按下了哪一个键
 event.data 　　//在事件对象上绑定数据，然后传入事件处理函数
 event.target 　//事件针对的网页节点
-event.currentTarget  //可以监听哪个节点触发的事件.与target事件不同
 event.preventDefault() 　//阻止事件的默认行为(比如点击链接，会自动打开新页面)
 event.stopPropagation()  //停止事件向上层节点冒泡
 
@@ -1257,16 +1424,6 @@ x-webkit-airplay="true"
 webkit-playsinline="true" 
 -->
 <video x-webkit-airplay="true" webkit-playsinline="true" preload="auto" autoplay src="http://"></video>
-https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement  video api
-video | audio 在加载的时候会依次触发如下事件
-    loadstart
-    durationchange
-    loadedmetadata
-    loadeddata
-    progress
-    canplay
-    canplaythrough
-
 
 audio元素和video元素在ios和andriod中无法自动播放
     
@@ -1281,7 +1438,7 @@ audio元素和video元素在ios和andriod中无法自动播放
         <source src="music/bg.mp3" type="audio/mpeg"></source>
         优先播放音乐bg.ogg，不支持在播放bg.mp3
     </audio>
-    https://www.jianshu.com/p/653a860b8dcb   //audio的各种方法以及各种事件效果的实现
+    
     //JS绑定自动播放（操作window时，播放音乐）
     $(window).one('touchstart', function(){
         music.play();
@@ -1313,127 +1470,66 @@ css实现单行文本溢出显示 ...
   -moz-user-select: none;
   -khtml-user-select: none;
   user-select: none;
-    媒体查询iphone4 (注: 查询样式应该写到原样式的后面,这样才不会被外面的替换掉)
-    @media screen and (device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2){}
-    媒体查询iphone5
-    @media screen and (device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2){}
-    /* 判断ipad */
-    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px){}
-    /* ipad横屏 */ 
-    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape){}
-    /* ipad竖屏 */
-    @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait){}
-    选择器
-        E:nth-last-child(n)     从最后开始的第N个元素
-        E:nth-of-type(n)        从头开始的第N个元素
-        E:nth-last-of-type(n) 
-        E:last-child 
-        E:first-of-type 
-        E:only-child 
-        E:only-of-type 
-        E:empty 
-        E:checked 
-        E:enabled 
-        E:disabled 
-        E::selection 
-        E:not(s)
-    多列布局
-    .multi_column_style{ 
-        -webkit-column-count: 3; 
-        -webkit-column-rule: 1px solid #bbb; 
-       -webkit-column-gap: 2em; 
-    }
-    阴影
-        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.12);
-    渐变效果
-        background-image:-webkit-gradient(linear,0% 0%,100% 0%,from(#2A8BBE),to(#FE280E));
-    径向渐变
-        backgroud: -webkit-gradient(radial,50 50,50,50 50,0,from(black),color-stop(0.5,red),to(blue));
-    返射效果
-        .classReflect{ 
-            -webkit-box-reflect: below 10px 
-            -webkit-gradient(linear, left top, left bottom, from(transparent), 
-            to(rgba(255, 255, 255, 0.51))); 
-        }
-    transition  //css过渡
-        transition-property     //规定设置过渡效果的 CSS 属性的名称。 none|all|property;
-        transition-duration     //规定完成过渡效果需要多少秒或毫秒。   time
-        transition-timing-function      //规定速度效果的速度曲线。
-        linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n);
-        linear   //规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。
-        ease    //规定慢速开始，然后变快，然后慢速结束的过渡效果（cubic-bezier(0.25,0.1,0.25,1)）。
-        ease-in //规定以慢速开始的过渡效果（等于 cubic-bezier(0.42,0,1,1)）。
-        ease-out    //规定以慢速结束的过渡效果（等于 cubic-bezier(0,0,0.58,1)）。
-        ease-in-out     //规定以慢速开始和结束的过渡效果（等于 cubic-bezier(0.42,0,0.58,1)）。
-        cubic-bezier(n,n,n,n)   //在 cubic-bezier 函数中定义自己的值。可能的值是 0 至 1 之间的数值。
-        transition-delay        //定义过渡效果何时开始。 time
-        //http://cubic-bezier.com/#.22,.89,.95,.04   自己定义贝塞尔曲线的网站
-        // transition: width 2s, height 2s, transform 2s;       demo
-    transform   //变化 css变形 
-        常用属性  translate  位移,   scale 缩放,s   rotate 旋转
-    animation   //动画
-        animation-name      //规定需要绑定到选择器的 keyframe 名称。。
-        animation-duration      //规定完成动画所花费的时间，以秒或毫秒计。
-        animation-timing-function       //规定动画的速度曲线。
-        animation-delay     //规定在动画开始之前的延迟。
-        animation-iteration-count       //规定动画应该播放的次数。
-        animation-direction     //规定是否应该轮流反向播放动画。
-        animation-play-state    //paused  running  暂停 启动
-        animation-fill-mode     定义动画完成之后停留在最后  
-    http://www.w3school.com.cn/css3/css3_animation.asp
-    demo: 
-        // @keyframes myfirst
-        // {
-        //     from {background: red;}
-        //     to {background: yellow;}
-        // }
-        // @-webkit-keyframes myfirst /* Safari 与 Chrome */
-        // {
-        //     from {background: red;}
-        //     to {background: yellow;}
-        // }
-        // div
-        // {
-        //     animation: myfirst 5s;
-        //     -webkit-animation: myfirst 5s; /* Safari 与 Chrome */
-        // }
-    flex：
-        .外面的容器
-            display: flex;
-            flex-direction: row;        //伸缩流方向: 水平方向row | 反向水平row-reverse | 垂直方向column | 反向垂直column-reverse
-            flex-wrap: wrap;            //溢出时是否换行    不换行nowrap | 换行wrap  | 反转换行wrap-reverse
-            justify-content: space-between;    //主轴对齐方式: 左对齐flex-start | 居中对齐center | 右对齐flex-end | 两端对齐space-between | 扩散对齐space-around
-            align-items: center;       //侧轴对齐方式: 顶边对齐flex-start | 中间对齐center  | 底部对齐flex-end | 基线对齐baseline | 伸缩项目拉伸填充整个伸缩容器stretch
-            align-content: center;     //侧轴多个对齐方式: 顶边对齐flex-start | 中间对齐center  | 底部对齐flex-end | 两端对齐space-between  | 扩散对齐space-around | 伸缩项目拉伸填充整个伸缩容器stretch
-        .里面的容器
-            align-self: auto[默认]     //侧轴对齐方式: 自动auto | 顶边对齐flex-start | 中间对齐center | 底部对齐flex-end | 基线对齐baseline | 伸缩项目拉伸填充整个伸缩容器stretch
-            flex-basis: <length> | auto[默认]  //伸缩项目在主轴方向上的初始大小
-            order: <number>[默认为0]       //显示顺序: 定义伸缩项目的排列顺序，数值越小，排列越靠前
-            flex: none | [<flex-grow> <flex-shrink>? || <flex-basis>]
-                flex: none => flex: 0 0 auto;//表示宽度为原始宽度，不发生扩展或收缩
-                flex: auto => flex: 1 1 auto;//表示除了占据原先的宽度外，还要分配剩余宽度(包括扩展或收缩)
-                flex: 0 => flex: 0 1 0%;//表示收缩为最小宽度
-                flex: 1 => flex: 1 1 0%;//表示分配所有宽度(包括扩展或收缩)
-                flex: 0 auto => flex: 0 1 auto;(默认值)//表除了占据原先的宽度外，还要分配剩余宽度(只收缩，不扩展)
-                flex: 0 1 => flex: 0 1 0%;
+  
 
-ES6:
-    class 必定会有一个constructor方法.  constructor默认返回this    constructor也算是实例prototype中的一个属性
-    在new 这个实例的时候，会自动执行一次constructor  例子 
-        class print {
-            constructor(x, y) { 
-                this.x = x;
-                this.y = y;
-            }
-        }
-        var aa = new print(2,5);   此时会执行一次 aa.constructor === print   
-    继承的时候需要 super()  一次,  super() 相当于是执行一次 print.prototype.constructor.call(this);  从而返回的是自身的实例,  并且是继承了父组件中的constructor中的属性
-    es5中的继承 
-        function Super() {}
-        function Sub() {}
-        Sub.prototype = new Super();
-        Sub.prototype.constructor = Sub;
-        var sub = new Sub();
+            // 多列布局
+            // .multi_column_style{ 
+            //     -webkit-column-count: 3; 
+            //     -webkit-column-rule: 1px solid #bbb; 
+            //     -webkit-column-gap: 2em; 
+            //     } 
+            // 渐变效果
+                // background-image:-webkit-gradient(linear,0% 0%,100% 0%,from(#2A8BBE),to(#FE280E));
+            //径向渐变
+                // backgroud: -webkit-gradient(radial,50 50,50,50 50,0,from(black),color-stop(0.5,red),to(blue));
+            // 返射效果
+                // .classReflect{ 
+                //     -webkit-box-reflect: below 10px 
+                //     -webkit-gradient(linear, left top, left bottom, from(transparent), 
+                //          to(rgba(255, 255, 255, 0.51))); 
+                // }
+            transition  //css过渡
+                transition-property     //规定设置过渡效果的 CSS 属性的名称。 none|all|property;
+                transition-duration     //规定完成过渡效果需要多少秒或毫秒。   time
+                transition-timing-function      //规定速度效果的速度曲线。
+                linear|ease|ease-in|ease-out|ease-in-out|cubic-bezier(n,n,n,n);
+                linear   //规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。
+                ease    //规定慢速开始，然后变快，然后慢速结束的过渡效果（cubic-bezier(0.25,0.1,0.25,1)）。
+                ease-in //规定以慢速开始的过渡效果（等于 cubic-bezier(0.42,0,1,1)）。
+                ease-out    //规定以慢速结束的过渡效果（等于 cubic-bezier(0,0,0.58,1)）。
+                ease-in-out     //规定以慢速开始和结束的过渡效果（等于 cubic-bezier(0.42,0,0.58,1)）。
+                cubic-bezier(n,n,n,n)   //在 cubic-bezier 函数中定义自己的值。可能的值是 0 至 1 之间的数值。
+                transition-delay        //定义过渡效果何时开始。 time
+                //http://cubic-bezier.com/#.22,.89,.95,.04   自己定义贝塞尔曲线的网站
+                // transition: width 2s, height 2s, transform 2s;       demo
+            transform   //变化 css变形 
+            animation   //动画
+                animation-name      //规定需要绑定到选择器的 keyframe 名称。。
+                animation-duration      //规定完成动画所花费的时间，以秒或毫秒计。
+                animation-timing-function       //规定动画的速度曲线。
+                animation-delay     //规定在动画开始之前的延迟。
+                animation-iteration-count       //规定动画应该播放的次数。
+                animation-direction     //规定是否应该轮流反向播放动画。
+            http://www.w3school.com.cn/css3/css3_animation.asp
+            demo: 
+                // @keyframes myfirst
+                // {
+                //     from {background: red;}
+                //     to {background: yellow;}
+                // }
+                
+                // @-webkit-keyframes myfirst /* Safari 与 Chrome */
+                // {
+                //     from {background: red;}
+                //     to {background: yellow;}
+                // }
+                // div
+                // {
+                //     animation: myfirst 5s;
+                //     -webkit-animation: myfirst 5s; /* Safari 与 Chrome */
+                // }
+
+                
 
 VUE
     var app = new Vue({
@@ -1506,73 +1602,6 @@ VUE
     //  vnode：Vue 编译生成的虚拟节点
     //  oldVnode：上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用。
 
-    Vue常用的三种传值方法、
-        1.父组件传子组件   props
-        2.子组件传父组件   this.$emit(aa,  ang);       v-on:aa="xxx"
-        3.兄弟组件传值    bus.js
-            import Vue from 'vue'
-            export default new Vue()
-            A： Bus.$emit('val', this.elementValue)
-            B： Bus.$on('val', (data) => { console.log(data) vm.name = data })
-
-    vue router 路由
-        1.全局守卫:
-            router.beforeEach 全局前置守卫 进入路由之前
-            router.beforeResolve 全局解析守卫(2.5.0+) 在beforeRouteEnter调用之后调用
-            router.afterEach 全局后置钩子 进入路由之后
-            to,from,next 这三个参数：
-            to和from是将要进入和将要离开的路由对象,路由对象指的是平时通过this.$route获取到的路由对象。
-            next:Function 这个参数是个函数，且必须调用，否则不能进入路由(页面空白)。
-            import router from './router'; // 引入路由
-            router.beforeEach((to, from, next) => { 
-                next();
-            });
-            router.beforeResolve((to, from, next) => {
-                next();
-            });
-            router.afterEach((to, from) => {
-                console.log('afterEach 全局后置钩子');
-            });
-        2.单独页面配置
-            const router = new VueRouter({
-                routes: [
-                    {
-                    path: '/foo',
-                    component: Foo,
-                    beforeEnter: (to, from, next) => { 
-                        // 参数用法什么的都一样,调用顺序在全局前置守卫后面，所以不会被全局守卫覆盖
-                        // ...
-                    }
-                    }
-                ]
-            })
-            beforeRouteEnter (to, from, next) {
-                // 在路由独享守卫后调用 不！能！获取组件实例 `this`，组件实例还没被创建
-                console.log('在路由独享守卫后调用');
-                next(vm => {
-                    // 通过 `vm` 访问组件实例`this` 执行回调的时机在mounted后面，
-                })
-            },
-            beforeRouteUpdate (to, from, next) {
-                // 在当前路由改变，但是该组件被复用时调用 可以访问组件实例 `this`
-                // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
-                // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
-            },
-            beforeRouteLeave (to, from, next) {
-                // 导航离开该组件的对应路由时调用，可以访问组件实例 `this`
-            }
-    路由缓存
-        <keep-alive>
-            <router-view></router-view>
-        </keeo-alive>
-    Vue.extend
-    Vue.component: 将一个组件构造成一个全局组件,(可以是Vue.extend的的实例，也可以是普通组件，会自动执行extend) ;
-        Vue.component('component-one', xxxx);    new Vue({el: '#app'});  直接在子组件中使用即可   一般在model中使用
-
-    <route-view></route-view>  组件中如果设置了name属性, 在router中的children中的component要是object components: {name: xxx};
-    要入传入的name一致才会显示，否则不会渲染。
-    
-    https://segmentfault.com/a/1190000011057149  EXCEL 导出
 
 
 react 状态管理 实例化
@@ -1583,7 +1612,9 @@ react 状态管理 实例化
     render
     componentDidMount
 存在期
+
 组件已经存在，状态发生改变时
+
     componentWillReceiveProps
     shouldComponentUpdate
     ComponentWillUpdate
@@ -1593,20 +1624,30 @@ react 状态管理 实例化
 销毁期 
     componentWillUnmount
 
-detDefaultProps 作用于组件类，只调用一次，返回对象用于设置默认的props，对于引用值，会在实例中共享
+
+etDefaultProps 作用于组件类，只调用一次，返回对象用于设置默认的props，对于引用值，会在实例中共享
+
 getInitialState 作用于组件实例，在实例创建时调用一次，用于初始化每个实例的state，此时可以访问this.props
+
 componentWillMount 在完成首次渲染之前调用，此时可以修改组件的state
+
 render 必选方法，创建虚拟DOM，该方法具有特殊规则：
     只能通过this.props 和this.state访问数据
     可以返回null、false或任何React组件
     只能出现一个顶级组件，数组不可以
     不能改变组件的状态
     不能修改DOM
+
 componentDidMount 真实的DOM被渲染出来后调用，可以在此方法中通过 this.getDOMNode()访问真实的DOM元素。此时可以使用其它类库操作DOM。服务端不会被调用
+
 componentWillReceiveProps 组件在接收到新的props时调用，并将其作为参数nextProps使用，此时可以更改组件的props及state
+
 shouldComponentUpdate 组件是否应当渲染新的props或state，返回false表示跳过后续的生命周期方法，通常不需要使用以避免出现bug。在出现应用性能瓶颈时，是一个可以优化的点。
+
 componentWillUpdate 接收新props或state后，进行渲染之前调用，此时不允许更新props或state
+
 componentDidUpdate 完成渲染新的props或state之后调用 ，此时可以访问DOM元素。
+
 componentWillUnmount 组件被移除之前调用，可以用于做一些清理工作，在componentDidMount方法中添加的所有任务都需要在该方法中撤销，比如创建的定时器或添加的事件监听器。
 
 getDerivedStateFromProps
@@ -1627,15 +1668,6 @@ immutable-js   对于优化代码很有用，正在学习中    https://github.c
 
 https://mobile.ant.design/components/progress-cn/       react antd-mobile 
 
-create-react-app 安装使用
-    npm install -g create-react-app
-    create-react-app my-app
-    cd my-app
-    npm run start
-
-    修改端口号: 在node_modules文件夹里面react-scripts，看到scripts文件夹。在start.js里面找到端口号并修改
-    增加接口代理： "proxy":"http://localhost:8000",  在package.json,里面添加
-
 https://github.com/jimwmg/JiM-Blog/tree/master/React/React%E5%9F%BA%E7%A1%80            很有用的源码分析资料   主要学习这一块
 
 base64解码
@@ -1647,8 +1679,6 @@ typescript 入门备注
 2. let decLiteral: number = 6;  数字
 3. let name: string = "bob";   字符串
 4. let list: number[] = [1,2,3]     let list: Array<number> = [1,2,3]  数组
-
-element.clientTop  等dom元素属性操作时, 需要 (xxx as HTMLElement).clientHeight;
 
 public 公有 任何人可以访问
 private 私有 只有类内部可以访问
@@ -1663,74 +1693,9 @@ https://regex101.com/r/7g1JSQ/1   正则在线验证
 
 nodejs
     https://github.com/ijse/freemarker.js     nodejs中渲染使用java的 freemarker.js
-    全局变量:
-        __dirname:   指向的是当前文件目录的绝对路径   例如:  src/components/login/index.jsx  指向的是 E:/pro/react/src/components/login
 
 
 react 谷歌调试
-
-
-js继承
-    https://segmentfault.com/a/1190000015727237?utm_source=tag-newest
-    1.原型式继承
-        function superType() {}
-        function super() {}
-        super.prototype = new superType()
-        super.prototype.constructor = super; //所有涉及到原型链继承的继承方式都要修改子类构造函数的指向，否则子类实例的构造函数会指向SuperType。
-    2.构造函数继承
-        superType.call(super);
-    3.组合继承
-        function SuperType() {this.name = 'parent';this.arr = [1, 2, 3];}
-        SuperType.prototype.say = function() { console.log('this is parent')}
-        function SubType() {SuperType.call(this) // 第二次调用SuperType}
-        SubType.prototype = new SuperType() // 第一次调用SuperType
-    4.原型式继承
-        function object(o){
-            function F(){}
-            F.prototype = o;
-            return new F();
-        }
-        var person = {
-            name: "Nicholas",
-            friends: ["Shelby", "Court", "Van"]
-        };
-        var anotherPerson = object(person);
-        anotherPerson.name = "Greg";
-        anotherPerson.friends.push("Rob");
-
-        var yetAnotherPerson = object(person);
-        yetAnotherPerson.name = "Linda";
-        yetAnotherPerson.friends.push("Barbie");
-        alert(person.friends);   //"Shelby,Court,Van,Rob,Barbie"
-    5.寄生组合继承
-        function object(o){
-            function F(){}
-            F.prototype = o;
-            return new F();
-        }
-        function inheritPrototype(subType, superType) {
-            var proto = object(superType.prototype)
-            proto.constructor = subType
-            subType.prototype = subType
-        }
-        function SuperType(name){
-            this.name = name;
-            this.colors = ["red", "blue", "green"];
-        }
-
-        SuperType.prototype.sayName = function(){
-            alert(this.name);
-        };
-
-        function SubType(name, age){
-            SuperType.call(this, name);
-            this.age = age;
-        }
-        SubType.prototype.sayAge = function(){
-            alert(this.age);
-        }
-        inheritPrototype(SubType, SuperType);
-
 
 js对象分为  普通对象 跟  函数对象
 
@@ -1780,7 +1745,7 @@ git add README.md
 git commit -m "first commit"
 git remote add origin https://github.com/miaomiaodaren/KoaAdmin.git
 git push -u origin master
-git log     查看提交的历史记录    -p，用来显示每次提交的内容差异。 你也可以加上 -2 来仅显示最近两次提交
+
 git add    把文件修改提交到 暂存区
 git commit 把文件提交到本地仓库，可以使用push再提交到线上
 git status 查看有哪些还没提交
@@ -1788,12 +1753,6 @@ git push   git push <远程主机名> <本地分支名>:<远程分支名>
 git add    git add . 将所有修改添加到暂存区
 git reset  把add的文件还原掉 
 git clone xx.git    把远程仓库中的代码复制到本地仓库中
-git remote -v  查看连接了哪些远程分支， 以及名字
-git remote rm [name] 删除远程分支   
-
-git it stash save "test-cmd-stash"   用于把本地的代码先暂存到,  在pull远程代码冲突时需要这样做
-git stash pop stash@{0}    还原暂存的东西  也可以使用 apply <-> pop  用来多次使用
-git stash list      查看暂存的列表
 
 
 https://github.com/noahlam/Miment/blob/master/src/miment.js    //类似moment的的一个日期插件
@@ -1806,16 +1765,6 @@ https://motion.ant.design/language/basic            react 动效网站
 
 mongoose
     Schema中所支持的数据类型有：String, Number, Date, Buffer, Boolean, Mixed, Objectid, Array
-
-webpack
-    在webpack单页中使用less or sass 的全局变量
-    {
-        loader: 'sass-resources-loader',
-        options: { resources: [ 
-            path.join(__dirname, '../../../src/static/css/main.less'),
-        ]}
-    }
-    引入此Loader,(注: 全局的less只能放全局变量,否则会造成大量冗余.)
 
 
 DOM原生
@@ -1835,39 +1784,3 @@ npm 显示所有可以升级的包列表   安装 npm install npm-check -g  然�
 npm 安装当前插件的最新版本  npm instll axios@latest --save
 
 
-网易云音乐歌词
-    http://music.163.com/api/song/media?id=109751
-    http://lxgandlz.cn/459.html   //歌词同步教程
-    https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=%E8%8E%B7%E5%8F%96%E9%9F%B3%E4%B9%90-url  网易云音乐API接口文档
-
-678293  服务器密码  
-http://47.96.114.115  服务器地址
-
-shutdown -r now   立即重启
-./mongod -f mongodb.conf  连接mongodb数据库
-db.createUser({user: 'root', pwd: '123456', roles: ["root"]})
-db.createUser({user: 'nodejs', pwd: '123456', roles: [{role: 'userAdmin', db: "nodejs"}]})
-db.createUser({user: "admin", pwd: 'admin', roles: [{role: "userAdmin",db: "admin"}]})
-
-use admin
-db.shutdownServer()  关闭mongodb数据库
-
-netstat -tunlp		//查看端口使用情况
-使用npm全局安装之后。需要这样ln一下
-sudo ln -s /root/node-v8.11.2-linux-x64/lib/node_modules/pm2/bin/pm2 /usr/bin/pm2   文件夹移动
-systemctl stop firewalld		//关闭当前防火墙
-systemctl disable  firewalld	//开机自动关闭防火墙
-curl localhost:3003				//在linux系统中访问这个端口
-
-
-linux nginx 使用
-	killall -9 nginx   删除nginx
-	ps aux|grep nginx  查看是否启动nginx
-	/usr/local/nginx/sbin/nginx  启动nginx
-	/usr/local/nginx/conf/		设置nginx地址
-	
-pm2 使用
-pm2 list   查看当前启动的列表
-pm2 restart all  重启所有的项目
-pm2 delete all  删除PM2列表中所有的进程
-pm2 start app.js --watch   #实时监控app.js的方式启动，当app.js文件有变动时，pm2会自动reloa

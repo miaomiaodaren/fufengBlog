@@ -159,11 +159,15 @@ export default new Router({
                 path: 'index',
                 name: '更多首页',
                 components: {
-                    page: others
+                    page: others,
+                    page1: cssing
                 },
                 meta: {
                     active: 'other'
-                }
+                },
+                children: [
+                    {path: '/', component: cssing}
+                ]
             }]
         }, {
             path: '/element',

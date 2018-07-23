@@ -232,6 +232,8 @@
             this.stickyfun = this.$refs.stickys.handleScroll;   //在载入的时候把这个scroll方法记录下来
             this.navheight = this.$refs.stickys.$el.getBoundingClientRect().height;
 
+            this.$ajax();
+
             console.info(assign({name: 'fuifdsa', age: 12}, {bz: 'wojiaofufeng', name: 'fufeng'}), 7777);
         }
     }

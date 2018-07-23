@@ -32,7 +32,6 @@
             // nowchapter: {
             //     handler: function(val, odlVal) {
             //         this.nowchapter = this.$store.state.book.nowchapter;
-            //         console.info(this.nowchapter, 665, this.$store.state.book.nowchapter)
             //     },
             //     immediate: true
             // }

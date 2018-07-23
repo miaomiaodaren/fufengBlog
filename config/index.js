@@ -32,7 +32,7 @@ module.exports = {
               target:'http://127.0.0.1:3000',
               changeOrigin:true,
               pathRewrite:{
-                '^/api':''
+                '^/api':''            //这个的意思是会把url中的api替换成空，这样代码中就不会出现api的字样，实际是会映射到这个地址
               }
           },
       },
