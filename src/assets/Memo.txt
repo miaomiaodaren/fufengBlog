@@ -136,57 +136,13 @@ HTML5有哪些新特性？
     在使用/g全局搜索的时候,正则会把lastindexof保留下来，导致出现问题  //https://segmentfault.com/q/1010000011857035
     https://segmentfault.com/a/1190000015333121  正则表达式学习网站 
 },
-
-css
-    行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
-    行内元素
-        a、b、span、img、input、strong、select、label、em、button、textarea
-    块级元素
-        div、ul、li、dl、dt、dd、p、h1-h6、blockquote
-    空元素
-        即系没有内容的HTML元素，例如：br、meta、hr、link、input、img
-    CSS中居中的几种方式
-        - 块级居中(block)： margin: 0 auto
-        - 行级居中（inline,inline-block）父元素css：text-align: center
-        - 定位水平垂直居中：left：50%;top:50%;margin-left:负自身宽度的一半;margin-top:负自身高度的一半;
-        - 定位水平垂直居中：top:0;bottom:0;left:0;right:0;margin:auto;
-        - css3+定位水平垂直居中：left：50%;top:50%;transfrom:(-50%,-50%);
-        - 水平垂直居中：diplay：table-cell;vertical-align: middle;
-        - 水平垂直居中：flexBox居中 display: flex;justify-content: center;align-items:center;
-        - 水平垂直居中：vertical-align:middle;
-         让div出现滚动条     overflow-y: auto;
-         user-select: none    让文字不能被选中（2017.8.8写分页插件时需要双击时文字不被选中）
-         行内元素使用了dispaly: inline-block 之后要使用 vertical-align: top;  会出现下移的情况
-         letter-spacing   字间距
-        栅格布局解析
-             1.圣杯布局    圣杯布局是一种三列布局，两边定宽，中间自适应
-             .main{width: 100%; padding: 0 290px 0 290px};  left{width: 290px; margin-left: -100%;} right:{width: 290px; margin-left: 290px;}
-         不论鼠标指针穿过被选元素或其子元素，都会触发 mouseover 事件。对应mouseout
-         只有在鼠标指针穿过被选元素时，才会触发 mouseenter 事件。对应mouseleave
-         选择器
-             E:nth-last-child(n)     从最后开始的第N个元素
-             E:nth-of-type(n)        从头开始的第N个元素
-             E:nth-last-of-type(n) 
-             E:last-child 
-             E:first-of-type 
-             E:only-child 
-             E:only-of-type 
-             E:empty 
-             E:checked 
-             E:enabled 
-             E:disabled 
-             E::selection 
-             E:not(s)
-        文字渲染
-             Text-decoration
-             Text-fill-color: 文字内部填充颜色
-             Text-stroke-color: 文字边界填充颜色
-             Text-stroke-width: 文字边界宽度
 js  
     typeof 陷阱
         主要是 typeof null == 'object'   需要判断是否为null    typeof [] == 'object'   需要先用isArray判断一下
     javascript数据类型
         undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object） Symbol(独一无二的值)
+    try{} catch(err) {} finally{}
+        finally在try 或 catch 之后运行, 不管对错都会执行.    finally中的return 把之前的覆盖掉   finally中如果返回错，则会反之前的错替换掉，只返回finally的错的
  
 https://my.oschina.net/maomi/blog/88086
 移动端touch事件(区分webkit 和 winphone)
@@ -282,6 +238,8 @@ Object.assign() //浅拷贝，类似{...obj1,...obj2} 都是浅拷贝
 Object.assign方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）
 Object.getPrototypeOf(ColorPoint) === Point  以使用这个方法判断，一个类是否继承了另一个类。
 Object.setPrototypeOf  为现有对象设置原型，返回一个新对象
+Object.getOwnPropertyDescriptor方法，返回某个对象属性的描述对象（ descriptor ）。
+    var obj = { p: 'a' }; Object.getOwnPropertyDescriptor(obj, 'p')Object { value: "a",writable: true,enumerable: true,configurable: true}
 
 var target = { a: 1 };
 var source1 = { b: 2 };
@@ -623,6 +581,8 @@ s.localeCompare(s2)  //用于比较两个字符串。它返回一个整数，如
 s.match(regexp)   //用于确定原字符串是否匹配某个子字符串，返回一个数组，成员为匹配的第一个字符串。如果没有找到匹配，则返回null。
 s.search()  //返回值为匹配的第一个位置。如果没有找到匹配，则返回-1。
 s.replace(oldValue,newValue)  //用于替换匹配的子字符串，一般情况下只替换第一个匹配（除非使用带有g修饰符的正则表达式）。
+    第二个参数,可以是替换的string类型, 也可以是一个function, 例如换成大小写的方法, g
+    第三个方法是输出格式 name.replace(/(\w+)\s*, \s*(\w+)/, "$2 $1");  一般是使用正则的$1, $2 这种匹配方式  
 s.split()  //按照给定规则分割字符串，返回一个由分割出来的子字符串组成的数组。还可传入第二个参数，决定了返回数组的成员数。
 String.fromCharCode(numX,numX,...,numX)   把十进制的数字转换成指定的 Unicode 值,(在写字体转换的时候,用到过这个属性)
 
@@ -1297,6 +1257,34 @@ audio元素和video元素在ios和andriod中无法自动播放
     //2.audio元素没有设置controls时，在IOS及Android会占据空间大小，而在PC端Chrome是不会占据任何空间；
     //3.注意不要遗漏微信的兼容处理需要引用微信JS；
 
+
+css:
+    行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
+    行内元素
+        a、b、span、img、input、strong、select、label、em、button、textarea
+    块级元素
+        div、ul、li、dl、dt、dd、p、h1-h6、blockquote
+    空元素
+        即系没有内容的HTML元素，例如：br、meta、hr、link、input、img
+    CSS中居中的几种方式
+        - 块级居中(block)： margin: 0 auto
+        - 行级居中（inline,inline-block）父元素css：text-align: center
+        - 定位水平垂直居中：left：50%;top:50%;margin-left:负自身宽度的一半;margin-top:负自身高度的一半;
+        - 定位水平垂直居中：top:0;bottom:0;left:0;right:0;margin:auto;
+        - css3+定位水平垂直居中：left：50%;top:50%;transfrom:(-50%,-50%);
+        - 水平垂直居中：diplay：table-cell;vertical-align: middle;
+        - 水平垂直居中：flexBox居中 display: flex;justify-content: center;align-items:center;
+        - 水平垂直居中：vertical-align:middle;
+         让div出现滚动条     overflow-y: auto;
+         user-select: none    让文字不能被选中（2017.8.8写分页插件时需要双击时文字不被选中）
+         行内元素使用了dispaly: inline-block 之后要使用 vertical-align: top;  会出现下移的情况
+         letter-spacing   字间距
+         pre 标签设置自动换行 white-space: pre-wrap;
+         user-select: none; // 禁止文字被选中
+        outline:none; // 去除点击外边框,点击无轮廓
+        -webkit-touch-callout: none; // 长按链接不弹出菜单
+        -webkit-tap-highlight-color: rgba(0,0,0,0); // 去除点击高亮
+        鼠标禁用 .disabled { pointer-events: none; }
 css实现单行文本溢出显示 ...
     overflow: hidden;
     text-overflow:ellipsis;
@@ -1337,6 +1325,11 @@ css实现单行文本溢出显示 ...
         E:disabled 
         E::selection 
         E:not(s)
+    文字渲染
+        Text-decoration
+        Text-fill-color: 文字内部填充颜色
+        Text-stroke-color: 文字边界填充颜色
+        Text-stroke-width: 文字边界宽度
     多列布局
     .multi_column_style{ 
         -webkit-column-count: 3; 
@@ -1417,6 +1410,54 @@ css实现单行文本溢出显示 ...
                 flex: 0 auto => flex: 0 1 auto;(默认值)//表除了占据原先的宽度外，还要分配剩余宽度(只收缩，不扩展)
                 flex: 0 1 => flex: 0 1 0%;
 
+xhr  xmlhttprequest 使用
+    1. var xhr = new XMLHttpRequest();
+    open
+        这个方法必须在实际发送请求之前调用,用来验证请求方法,url,以及用户信息
+        可以接受5个参数
+        open( Method, URL, Asynchronous, UserName, Password )
+            method:  请求的方法,  get/post,
+            url: 请求的url
+            Asynchronous： 是否是异步上传 默认是true
+            username, password 是用户名密码
+    sendRequestHeader
+        在成功初始化请求之后，XMLHttpRequest对象的setRequestHeader方法可以用来设置请求头。
+        setRequestHeader( Name, Value )
+        第一个参数是header的字符串名称，第二个参数是字符串值。如果请求需要多个header，这个方法就要被调用多次。这个方法附加的请求头，在下次open方法调用时会被清空。
+    send
+        用来发送请求，这个方法接收一个参数，这个参数就是要发送的内容。
+        send(Data)
+    onreadystatechange事件监听器
+        状态改变过程如下：
+        当open方法被成功调用，readyState属性被置为1(OPEND)
+        当send方法被调用，成功接收到HTTP响应头，readyState属性被置为2(HEADERS_RECEIVED)
+        一旦HTTP响应内容开始加载，readyState属性被置为3(LOADING)
+        一旦HTTP响应内容结束加载，readyState属性被置为4(DONE)
+        当监听器被定义之后，每次状态改变时都会触发。为了检测状态1和状态2，监听器必须在open方法调用前调用。open方法必须在send方法调用前调用。
+    abort方法
+        如果XMLHttpRequest对象的readyState属性还没有变成4，这个方法可以终止请求。这个方法可以确保异步请求中的回调不被执行。
+
+    比较冷门的方法
+        //设置xhr请求的超时时间
+        xhr.timeout = 3000;
+        //设置响应返回的数据格式
+        xhr.responseType = "json";
+    在xhr2.0中还引入了
+        xhr.onload  === onreadystatechange
+        xhr.onerror
+
+    正确的使用方法是
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState !== 4) {return}
+            if((status >= 200 && status < 300) || status === 304) {}
+            执行options传过来的success方法
+        }
+        xhr.open('get', 'www.baidu.com');
+        xhr.sendRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        xhr.send(options.data)
+    以上是一个完整的流程
+
 ES6:
     class 必定会有一个constructor方法.  constructor默认返回this    constructor也算是实例prototype中的一个属性
     在new 这个实例的时候，会自动执行一次constructor  例子 
@@ -1434,6 +1475,33 @@ ES6:
         Sub.prototype = new Super();
         Sub.prototype.constructor = Sub;
         var sub = new Sub();
+
+    class A {}
+    class B extend A {} 
+    es6 class 中 子类的的__proto__ 指向 A    子类的prototype的__proto__指向父类的prototype    B.prototype.__proto__ === A.prototype 
+    
+    修饰器 Decorator @ 的使用
+        1.主要分为三种,一种是对类的使用 class
+            @types
+            class aa {}
+            function types(target) {}
+            这样使用的时候 types 带一个target参数，是指向这个被修饰的类,  可以在这个类里添加属性
+        2.在类的原型中使用 prototype
+            class aa{
+                @types
+                add(){}
+            }
+            function types(target, name, descriptor)
+            接收三个参数，分别是类的原型 也就是 aa.prototype, name 就是要修饰的属性名， 也就是add , descriptor 是该属性的描述对象 
+            // descriptor对象原来的值如下
+            {
+                value: specifiedFunction,
+                enumerable: false,
+                configurable: true,
+                ritable: true
+            };
+            最后return descriptor
+
 
 VUE
     var app = new Vue({
@@ -1573,6 +1641,7 @@ VUE
     要入传入的name一致才会显示，否则不会渲染。
     
     https://segmentfault.com/a/1190000011057149  EXCEL 导出
+    http://element-cn.eleme.io/#/zh-CN/component/installation  element-ui 官网
 
 
 react 状态管理 实例化
@@ -1609,6 +1678,34 @@ componentWillUpdate 接收新props或state后，进行渲染之前调用，此�
 componentDidUpdate 完成渲染新的props或state之后调用 ，此时可以访问DOM元素。
 componentWillUnmount 组件被移除之前调用，可以用于做一些清理工作，在componentDidMount方法中添加的所有任务都需要在该方法中撤销，比如创建的定时器或添加的事件监听器。
 
+react新建组件分别react.createClass 与 React.Component
+    使用React.createClass创建时, 每一个成员的this都会被react自动绑定  在 React.Componet的时候需要手动绑定一次
+    React.Component开发组件是一般有四种方法绑定
+    1. class re extend React.Component {
+        constructor(props) {super(props)}
+        haclick() {}
+        render() {
+            return (<div onClick={this.haclick.bind(this)}></div>)
+        }
+    }
+    2. class re extend React.Component {
+        constructor(props) {super(props)  this.haclick= this.haclick.bind(this)}
+        haclick() {}
+        render() {
+            return (<div onClick={this.haclick}></div>)
+        }
+    }
+    3. class re extend React.Component {
+        constructor(props) {super(props) }
+        haclick = () => {}
+        render() {
+            return (<div onClick={this.haclick}></div>)
+        }
+    }
+    如果不绑定this; 执行haclick方法时,实际上执行的是原型方法;可这样看起来并没有什么影响，如果当前组件的构造器中初始化了state这个属那么原型方法执行时，this.state会直接获取实例的state属性，
+    如果构造其中没有初始化state这个属性（比如React中的UI组件），说明组件没有自身状态，此时即使调用原型方法似乎也没什么影响。
+    http://www.cnblogs.com/dashnowords/p/9343383.html
+
 getDerivedStateFromProps
 
 https://juejin.im/post/59eb03b86fb9a0451049a0ae
@@ -1618,6 +1715,8 @@ https://juejin.im/post/59eb03b86fb9a0451049a0ae
     // 组件收到新的props（props中的数据并不一定真正发生变化）-> 决定是否需要继续执行更新过程 -> 组件代表的虚拟DOM即将更新 -> 组件重新计算出新的虚拟DOM -> 虚拟DOM对应的真实DOM更新到真实DOM树中
 组件自身调用setState，导致的组件更新，其生命周期方法的调用情况如下：
 shouldComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
+
+react-router 4.x 权限控制地址  https://reacttraining.com/react-router/web/example/auth-workflow
 
 react 进阶之路                                 https://juejin.im/post/5ae2b5b851882567161a4af6
 react-copy-to-clipboard   react 复制文本插件   https://github.com/nkbt/react-copy-to-clipboard
@@ -1636,7 +1735,11 @@ create-react-app 安装使用
     修改端口号: 在node_modules文件夹里面react-scripts，看到scripts文件夹。在start.js里面找到端口号并修改
     增加接口代理： "proxy":"http://localhost:8000",  在package.json,里面添加
 
+使用typescript
+create-react-app my-app --scripts-version=react-scripts-ts
+
 https://github.com/jimwmg/JiM-Blog/tree/master/React/React%E5%9F%BA%E7%A1%80            很有用的源码分析资料   主要学习这一块
+https://elemefe.github.io/element-react/#/zh-CN/quick-start  element-ui-react 地址
 
 base64解码
 atob(decodeURIComponent('MTMzMzI4MzA0MTM%3D'));
@@ -1760,6 +1863,13 @@ console.log(bb.constructor == aa); //true
 
 var a = {}  ===   var a = new Object();    所以a.constructor === Object   a.__proto__ = Object.prototype;    Object.prototype.constructor = Object  
 
+new() 做了些什么？
+
+var obj = new Base();
+var obj  = {};
+obj.__proto__ = Base.prototype;
+Base.call(obj);
+
 AMD CMD  ES6 Module
 1.CMD是平常NODE使用的,也是使用rquire('..')引入，暴露模块的话是  exports.module   CMD是同步的。需要等上面的加载完成才能够执行
 2.AMD常见的是requier.js, 是有二个参数的 require('define', callback);  在暴露的时候需要使用define封装一层。
@@ -1808,7 +1918,7 @@ mongoose
     Schema中所支持的数据类型有：String, Number, Date, Buffer, Boolean, Mixed, Objectid, Array
 
 webpack
-    在webpack单页中使用less or sass 的全局变量
+    1.在webpack单页中使用less or sass 的全局变量
     {
         loader: 'sass-resources-loader',
         options: { resources: [ 
@@ -1816,7 +1926,27 @@ webpack
         ]}
     }
     引入此Loader,(注: 全局的less只能放全局变量,否则会造成大量冗余.)
-
+    2.在打包之后的html中,对文件进行一些操作
+        新建一个文件
+            function insertHtmlCode(options) {
+                this.options = options
+            }
+            insertHtmlCode.prototype.apply = function(compiler) {
+            var source = this.options.source,
+                target = this.options.target
+            compiler.plugin('compilation', function(compilation) {
+                compilation.plugin('html-webpack-plugin-after-html-processing', function(htmlPluginData, callback) {
+                htmlPluginData.html = htmlPluginData.html.toString().replace(source,target)
+                callback()
+                });
+            });
+            };
+            module.exports = insertHtmlCode;
+        在webpack.pro.conf.js的plugin中使用
+            new insertHtmlCode({
+                source:'<input type="hidden" id="access_token" value="">',
+                target:'<#if session_user?exists><input type="hidden" id="access_token" value="${session_user.oauth_token}"><#else><input type="hidden" id="access_token"></#if>'
+            })
 
 DOM原生
     1.tab切换  ----------------------  完成
@@ -1833,6 +1963,7 @@ https://segmentfault.com/a/1190000014683917         用 ES6 写全屏滚动插�
 
 npm 显示所有可以升级的包列表   安装 npm install npm-check -g  然后  npm-check -u -g
 npm 安装当前插件的最新版本  npm instll axios@latest --save
+npm 全局删除包   npm uninstall -g xxxx
 
 
 网易云音乐歌词
@@ -1871,3 +2002,33 @@ pm2 list   查看当前启动的列表
 pm2 restart all  重启所有的项目
 pm2 delete all  删除PM2列表中所有的进程
 pm2 start app.js --watch   #实时监控app.js的方式启动，当app.js文件有变动时，pm2会自动reloa
+
+
+Electron
+    桌面应用开发
+
+angular
+    ionic  开发框架
+
+react native  
+    C:\Users\fufeng\Downloads\android-sdk_r24.4.1-windows\android-sdk-windows
+react native 入门教程
+    1.安装Chocolatey   cmd进入  @powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
+    2.安装ptyhon2   choco install python2
+    android sdk 下载地址 http://tools.android-studio.org/index.php/sdk
+    adb devices
+    adb connect 127.0.0.1:5555          //连接模拟器
+
+    npm start -- --reset-cache
+    react-native run-android
+
+    错误列表
+        unable to load script form assets 
+            在 android/app/src/main 目录下创建一个 assets空文件夹
+            在项目根目录运行
+            react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
+        SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.
+            android下新建local.properties
+            sdk.dir = C:/Users/fufeng/Downloads/android-sdk_r24.4.1-windows/android-sdk-windows
+        Unable to resolve module AccessibilityInfo from XXX 是因为版本问题
+            https://blog.csdn.net/j550341130/article/details/81027700
