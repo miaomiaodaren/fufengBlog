@@ -1445,6 +1445,9 @@ xhr  xmlhttprequest 使用
     在xhr2.0中还引入了
         xhr.onload  === onreadystatechange
         xhr.onerror
+        CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，需要
+        xhr.withCredentials = true;  
+        (如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名)
 
     正确的使用方法是
         var xhr = new XMLHttpRequest();
@@ -1458,28 +1461,98 @@ xhr  xmlhttprequest 使用
         xhr.send(options.data)
     以上是一个完整的流程
 
-ES6:
-    class 必定会有一个constructor方法.  constructor默认返回this    constructor也算是实例prototype中的一个属性
-    在new 这个实例的时候，会自动执行一次constructor  例子 
-        class print {
-            constructor(x, y) { 
-                this.x = x;
-                this.y = y;
-            }
-        }
-        var aa = new print(2,5);   此时会执行一次 aa.constructor === print   
-    继承的时候需要 super()  一次,  super() 相当于是执行一次 print.prototype.constructor.call(this);  从而返回的是自身的实例,  并且是继承了父组件中的constructor中的属性
-    es5中的继承 
-        function Super() {}
-        function Sub() {}
-        Sub.prototype = new Super();
-        Sub.prototype.constructor = Sub;
-        var sub = new Sub();
+formData            https://segmentfault.com/a/1190000012327982
+    1.formData主要用一些键值对来模拟一系列的表单控件,即把form中所有的表单元素的name与value组装成一个querystring
+    2.异步上传文件
+    3.formData的使用
+        let formData = new FormData()
+        formData.append('user', 'zhang')
+        获取 formData.get('user')  //zhang
+        删除 formData.delete('user')
+    4.new FormData的参数是一个DOM对象，而非jQuery对象
+        var formData = new FormData($("#file")[0]);
+    5.序列表表格内容为字符串，用于 Ajax 请求。 jquery 语法
+        $("form").serialize()
 
-    class A {}
-    class B extend A {} 
-    es6 class 中 子类的的__proto__ 指向 A    子类的prototype的__proto__指向父类的prototype    B.prototype.__proto__ === A.prototype 
-    
+
+canvas, dataurl, file, blob 对象之间的相互转换      https://blog.csdn.net/cuixiping/article/details/45932793
+    1.canvas转换为dataURL (从canvas获取dataURL)
+        var dataurl = canvas.toDataURL('image/png');
+        var dataurl2 = canvas.toDataURL('image/jpeg', 0.8);
+    2.File对象转换为dataURL、Blob对象转换为dataURL
+        window.URL.createObjectURL(file)  好像这种效果更加方便
+            or
+        function readBlobAsDataURL(blob, callback) {
+            var a = new FileReader();
+            a.onload = function(e) {callback(e.target.result);};
+            a.readAsDataURL(blob);
+        }
+        readBlobAsDataURL(blob, function (dataurl){
+            console.log(dataurl);
+        });
+        readBlobAsDataURL(file, function (dataurl){
+            console.log(dataurl);
+        });
+    3.dataURL转换为Blob对象、dataURL转换为File对象
+        function dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {type:mime});
+        }
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, {type:mime});
+        }
+        var blob = dataURLtoBlob('data:text/plain;base64,YWFhYWFhYQ==');
+        var file = dataURLtoFile('data:text/plain;base64,YWFhYWFhYQ==', 'test.txt');
+    4.dataURL图片数据绘制到canvas
+        var img = new Image();
+        img.onload = function(){
+            canvas.drawImage(img);
+        };
+        img.src = dataurl;
+    5.File,Blob的图片文件数据绘制到canvas
+        readBlobAsDataURL(file, function (dataurl){
+            var img = new Image();
+            img.onload = function(){
+                canvas.drawImage(img);
+            };
+            img.src = dataurl;
+        });
+
+ES6:
+    变量结构赋值
+        let { foo: baz } = { foo: 'aaa', bar: 'bbb' };
+        如果要把值定义成不是对象中的属性的名字的话，可以这样使用，在react中比如说要把这个值变成component, 第一个字母要大写，可以使用这种方法
+    class
+        class 必定会有一个constructor方法.  constructor默认返回this    constructor也算是实例prototype中的一个属性
+        在new 这个实例的时候，会自动执行一次constructor  例子 
+            class print {
+                constructor(x, y) { 
+                    this.x = x;
+                    this.y = y;
+                }
+            }
+            var aa = new print(2,5);   此时会执行一次 aa.constructor === print   
+        继承的时候需要 super()  一次,  super() 相当于是执行一次 print.prototype.constructor.call(this);  从而返回的是自身的实例,  并且是继承了父组件中的constructor中的属性
+        es5中的继承 
+            function Super() {}
+            function Sub() {}
+            Sub.prototype = new Super();
+            Sub.prototype.constructor = Sub;
+            var sub = new Sub();
+
+        class A {}
+        class B extend A {} 
+        es6 class 中 子类的的__proto__ 指向 A    子类的prototype的__proto__指向父类的prototype    B.prototype.__proto__ === A.prototype 
+        
     修饰器 Decorator @ 的使用
         1.主要分为三种,一种是对类的使用 class
             @types
@@ -1501,7 +1574,6 @@ ES6:
                 ritable: true
             };
             最后return descriptor
-
 
 VUE
     var app = new Vue({
@@ -2032,3 +2104,8 @@ react native 入门教程
             sdk.dir = C:/Users/fufeng/Downloads/android-sdk_r24.4.1-windows/android-sdk-windows
         Unable to resolve module AccessibilityInfo from XXX 是因为版本问题
             https://blog.csdn.net/j550341130/article/details/81027700
+
+高德地图接口平台    地图轨迹回放
+    https://lbs.amap.com/api/javascript-api/example/marker/replaying-historical-running-data/   
+
+
