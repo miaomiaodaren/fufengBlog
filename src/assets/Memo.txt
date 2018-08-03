@@ -194,7 +194,7 @@ documnet.getBoundingClientRect();   这个方法取到的值是根据这个浏�
 document.documentElement.scrollHeight  =  document.documentElement.scrollTop + document.documentElement.clientHeight  
 
 Window 方法
-    window.innerHeight - 浏览器窗口的内部高度
+    window.innerHeight - 浏览器窗口的内部高度   不包括地址栏，导航栏
     window.innerWidth - 浏览器窗口的内部宽度
     window.open() - 打开新窗口
     window.close() - 关闭当前窗口
@@ -907,7 +907,9 @@ $.ajax({
    data: "name=John&location=Boston",
    success: function(msg){
      alert( "Data Saved: " + msg );
-   }
+   },
+   error: function(err) {},
+   complete: function(xhr, xhrstatus) {}  //无论成功失败都会执行
 });
 
 //加载 feeds.html 文件内容。
@@ -979,7 +981,24 @@ $.ajaxSetup({
 });
 $.ajax({ data: myData });
 
-
+jsonp 的日常使用
+$.ajax({
+    url: 'http://www.aaaaa.com?appId=' + appIds + '&uId=' + uIds + '&from=' + froms + '&sign' + signs,
+    type: "GET",
+    dataType: "jsonp", 
+    complete: function() {
+        setTimeout(function(){
+        if(successUrl){
+            window.location.href=successUrl;
+        }else if(commonSuccess == 1){
+            window.location.href="/user/common/registerSuccess.html?activityName="+actName;
+        }else{
+            window.location.href="/user/regSuccess.html?activityName="+actName;
+        }
+        })
+        regFlag=0;
+    }
+})
 
 
 
@@ -1228,6 +1247,7 @@ video | audio 在加载的时候会依次触发如下事件
     canplaythrough
 
 
+
 audio元素和video元素在ios和andriod中无法自动播放
     
     原因： 因为各大浏览器都为了节省流量，做出了优化，在用户没有行为动作时（交互）不予许自动播放；
@@ -1257,6 +1277,25 @@ audio元素和video元素在ios和andriod中无法自动播放
     //2.audio元素没有设置controls时，在IOS及Android会占据空间大小，而在PC端Chrome是不会占据任何空间；
     //3.注意不要遗漏微信的兼容处理需要引用微信JS；
 
+    <video id="hqb_3year_html5_api" class="vjs-tech" poster="/view/pages/activity/complex/threeYearH5/img/videoPoster.png" preload="auto" webkit-playsinline="true" playsinline="playsinline" x-webkit-airplay="true" x5-video-player-type="h5" x5-video-player-fullscreen="true" x5-video-ignore-metadata="true" style="object-fit: fill;" tabindex="-1" src="/view/pages/activity/complex/threeYearH5/img/video.mp4">
+        <source src="/view/pages/activity/complex/threeYearH5/img/video.mp4" type="video/mp4">
+        <source src="/view/pages/activity/complex/threeYearH5/img/video.webm" type="video/webm">
+        <source src="/view/pages/activity/complex/threeYearH5/img/video.Ogg" type="video/ogg">
+        <p class="vjs-no-js">
+        抱歉，您的手机不支持视频文件<span id="J_skip">跳过</span>
+        </p>
+    </video>
+
+    poster:  刚进入时的缩略图
+    preload：是否预加载
+    webkit-playsinline="true"  这个属性是ios 10中设置可以让视频在小窗内播放，也就是不是全屏播放*/  
+    playsinline=true           IOS微信浏览器支持小窗内播放
+    x-webkit-airplay="true"   不知道什么意思
+    x5-video-player-type="h5"   启用H5播放器,是wechat安卓版特性
+    x5-video-player-fullscreen="true"   全屏设置，设置为 true 是防止横屏
+    x5-video-ignore-metadata="true"
+    style="object-fit: fill;"  加这个style会让 Android / web 的视频在微信里的视频全屏，如果是在手机上预览，会让视频的封面同视频一样大小
+    tabindex="-1"       允许tab键进行切换
 
 css:
     行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
@@ -1518,7 +1557,7 @@ canvas, dataurl, file, blob 对象之间的相互转换      https://blog.csdn.n
             canvas.drawImage(img);
         };
         img.src = dataurl;
-    5.File,Blob的图片文件数据绘制到canvas
+    5.File,Blob的图片文件数据绘制到canvasFile,Blob的图片文件数据绘制到canvas
         readBlobAsDataURL(file, function (dataurl){
             var img = new Image();
             img.onload = function(){
@@ -1526,6 +1565,28 @@ canvas, dataurl, file, blob 对象之间的相互转换      https://blog.csdn.n
             };
             img.src = dataurl;
         });
+HTML5文件拖放   拖拽：Drag    释放：Drop
+    1.在一个元素中添加  draggable='true' 则可以设置这个元素为可拖放元素
+        dataTransfer.setData() 方法设置被拖动数据的数据类型和值：
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+        数据类型是 "text"，而值是这个可拖动元素的 id ("drag1")。
+    2.设置元素被拖动时触发的事件 ondragstart      <label draggable="true" ondragstart="drag(event)">...</label>
+    3.ondragover 事件规定被拖动的数据能够被放置到何处。
+    4.ondrop  当放开被拖数据时，会发生 drop 事件。
+
+    源对象：
+        dragstart：源对象开始拖放。
+        drag：源对象拖放过程中。
+        dragend：源对象拖放结束。
+    过程对象：
+        dragenter：源对象开始进入过程对象范围内。
+        dragover：源对象在过程对象范围内移动。
+        dragleave：源对象离开过程对象的范围。
+    目标对象：
+        drop：源对象被拖放到目标对象内。
+
 
 ES6:
     变量结构赋值
@@ -2045,6 +2106,8 @@ npm 全局删除包   npm uninstall -g xxxx
 
 678293  服务器密码  
 http://47.96.114.115  服务器地址
+root   fy5201314*
+项目地址   /usr/local/src/
 
 shutdown -r now   立即重启
 ./mongod -f mongodb.conf  连接mongodb数据库
@@ -2107,5 +2170,11 @@ react native 入门教程
 
 高德地图接口平台    地图轨迹回放
     https://lbs.amap.com/api/javascript-api/example/marker/replaying-historical-running-data/   
+
+
+微信公众号 
+    帐号： tsjw51042562163.com
+    AppID:   wxc17275a872d36e36
+    AppSecret:   726b75ce07554990ec124f31b10e1e66
 
 
