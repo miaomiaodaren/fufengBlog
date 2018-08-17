@@ -1109,4 +1109,36 @@ export const removeCookie = (name) => {
 }
 
 
+export const  unix_to_datetime = (unix,time) => { //time=1 无时分秒  time=2 仅时与分
 
+    if(unix){
+      var length = unix.length;
+      if (length == 10) {
+        unix = unix*1000
+      }
+    }
+  
+    var myDate = new Date(parseInt(unix));
+    var year = myDate.getFullYear();
+    var month = myDate.getMonth();
+    var date = checkTime(myDate.getDate());
+    var hours = checkTime(myDate.getHours());
+    var minutes = checkTime(myDate.getMinutes());
+    var seconds = checkTime(myDate.getSeconds());
+    if (time == 1) {
+      var day = year+"-"+checkTime(parseInt(month)+1)+"-"+date;
+    } else if(time === 2) {
+        var day = hours + ":" + minutes;
+    } else if(time === 3) {
+        var day = (parseInt(month)+1)+"月"+date +"日 "+ hours + ":" + minutes;
+    } else{
+      var day = year+"-"+checkTime(parseInt(month)+1)+"-"+date+" "+hours+":"+minutes+":"+seconds;
+    }
+    return day;
+  }
+  
+  function checkTime(i){
+  if (i<10)
+    {i="0" + i}
+    return i
+}

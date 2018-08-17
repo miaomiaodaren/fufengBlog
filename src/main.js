@@ -25,6 +25,8 @@ Vue.use(ffEle)
 import DatePickers from '@/plugin/timepick'
 Vue.use(DatePickers)
 
+import exten from '@/pages/other/extend/index.js'
+Vue.prototype.isart = exten
 
 // import ff from '@/assets/vueplugin/src'
 // console.info(ff, '21312312213123');

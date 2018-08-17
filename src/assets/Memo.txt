@@ -1448,6 +1448,7 @@ css实现单行文本溢出显示 ...
                 flex: 1 => flex: 1 1 0%;//表示分配所有宽度(包括扩展或收缩)
                 flex: 0 auto => flex: 0 1 auto;(默认值)//表除了占据原先的宽度外，还要分配剩余宽度(只收缩，不扩展)
                 flex: 0 1 => flex: 0 1 0%;
+    https://www.cnblogs.com/TigerZhang-home/p/6908995.html  css常用多边行
 
 xhr  xmlhttprequest 使用
     1. var xhr = new XMLHttpRequest();
@@ -1636,6 +1637,41 @@ ES6:
             };
             最后return descriptor
 
+angular ag1.3 api入门
+    ng-app 指令定义一个 AngularJS 应用程序。
+    ng-controller 指明了控制器。
+    ng-model 指令把元素值（比如输入域的值）绑定到应用程序。
+    ng-bind 指令把应用程序数据绑定到 HTML 视图。
+    ng-init 指令初始化 AngularJS 应用程序变量。
+    ng-repeat="x in names"  会重复循环一个 HTML 元素：
+        <div ng-app="" ng-init="">
+            <p>名字 : <input type="text" ng-model="name"></p>
+            <h1>Hello {{name}}</h1>
+        </div>
+    AngularJS 模块定义应用:
+        var app = angular.module('myApp', []);  
+    AngularJS 控制器控制应用:
+        app.controller('myCtrl', function($scope) {
+            $scope.firstName= "John";
+            $scope.lastName= "Doe";
+        });
+    创建自定义的指令
+        <runoob-directive></runoob-directive>
+        var app = angular.module("myApp", []);
+        app.directive("runoobDirective", function() {
+            return {
+                restrict : "C",   //通过<div class="runoob-directive"></div> 样式类名来调用
+                restrict : "M",   //通过注释来调用
+                replace : true,
+                template : "<h1>自定义指令!</h1>"
+            };
+        });
+        E 作为元素名使用
+        A 作为属性使用
+        C 作为类名使用
+        M 作为注释使用
+
+
 VUE
     var app = new Vue({
         el: '#app',
@@ -1775,9 +1811,18 @@ VUE
     
     https://segmentfault.com/a/1190000011057149  EXCEL 导出
     http://element-cn.eleme.io/#/zh-CN/component/installation  element-ui 官网
+    https://github.com/PanJiaChen/vue-element-admin   vue最好的后台
 
 
 react 状态管理 实例化
+
+    setState 是不保证同步
+        在生命周期函数中使用是 异步的
+        在onClick, onChange 这种函数中使用是异步
+        在原生函数中  是同步的
+            componentDidMount() { documnet.body.addEventListener('click', this.changesxxxx, false)}
+        在setTimeout中是同步的
+
 首次实例化
     getDefaultProps
     getInitialState
@@ -1849,6 +1894,8 @@ https://juejin.im/post/59eb03b86fb9a0451049a0ae
 组件自身调用setState，导致的组件更新，其生命周期方法的调用情况如下：
 shouldComponentUpdate -> componentWillUpdate -> render -> componentDidUpdate
 
+https://segmentfault.com/a/1190000012575622   react context  一般处理比较深的兄弟组件数据的交互。
+
 react-router 4.x 权限控制地址  https://reacttraining.com/react-router/web/example/auth-workflow
 
 react 进阶之路                                 https://juejin.im/post/5ae2b5b851882567161a4af6
@@ -1873,6 +1920,15 @@ create-react-app my-app --scripts-version=react-scripts-ts
 
 https://github.com/jimwmg/JiM-Blog/tree/master/React/React%E5%9F%BA%E7%A1%80            很有用的源码分析资料   主要学习这一块
 https://elemefe.github.io/element-react/#/zh-CN/quick-start  element-ui-react 地址
+
+https://react.parts/   rc rn 组件搜索，非常全面
+
+要实现的轮子
+    https://github.com/react-component?page=1    antd底层的 rc系列组件，写得非常牛逼
+    antd  系列的框架
+    antd mobile  手机端的
+    antd pro  一套完整的后台管理系统
+    https://antv.alipay.com/zh-cn/g2/3.x/index.html   阿里可视化插件库
 
 base64解码
 atob(decodeURIComponent('MTMzMzI4MzA0MTM%3D'));
@@ -2034,6 +2090,8 @@ git clone xx.git    把远程仓库中的代码复制到本地仓库中
 git remote -v  查看连接了哪些远程分支， 以及名字
 git remote rm [name] 删除远程分支   
 
+git clone https://github.com/mioamioadaren/koaadmin.git   把远程的项目导到本地
+
 git it stash save "test-cmd-stash"   用于把本地的代码先暂存到,  在pull远程代码冲突时需要这样做
 git stash pop stash@{0}    还原暂存的东西  也可以使用 apply <-> pop  用来多次使用
 git stash list      查看暂存的列表
@@ -2081,22 +2139,13 @@ webpack
                 target:'<#if session_user?exists><input type="hidden" id="access_token" value="${session_user.oauth_token}"><#else><input type="hidden" id="access_token"></#if>'
             })
 
-DOM原生
-    1.tab切换  ----------------------  完成
-    2.数字滚动增加 -------------------  完成
-    3.图片轮播  ---------------------  
-    4.日历 --------------------------  
-    5.五星评分 ----------------------
-    6.左右可手动穿梭框  --------------
-    7.左右滑动手势 ------------------ 
-    8.model弹窗 -------------------- 
-
 
 https://segmentfault.com/a/1190000014683917         用 ES6 写全屏滚动插件
 
 npm 显示所有可以升级的包列表   安装 npm install npm-check -g  然后  npm-check -u -g
 npm 安装当前插件的最新版本  npm instll axios@latest --save
 npm 全局删除包   npm uninstall -g xxxx
+npm list -g --depth 0  查看全局安装的npm包
 
 
 网易云音乐歌词
@@ -2138,7 +2187,6 @@ pm2 restart all  重启所有的项目
 pm2 delete all  删除PM2列表中所有的进程
 pm2 start app.js --watch   #实时监控app.js的方式启动，当app.js文件有变动时，pm2会自动reloa
 
-
 Electron
     桌面应用开发
 
@@ -2177,4 +2225,17 @@ react native 入门教程
     AppID:   wxc17275a872d36e36
     AppSecret:   726b75ce07554990ec124f31b10e1e66
 
-
+DOM原生
+    1.tab切换  ----------------------  完成
+    2.数字滚动增加 -------------------  完成
+    3.图片轮播  ---------------------  
+    4.日历 --------------------------  
+    5.五星评分 ----------------------
+    6.左右可手动穿梭框  --------------
+    7.左右滑动手势 ------------------ 
+    8.model弹窗 -------------------- 
+    9.vue版弹窗 --------------------
+    10.react版窗 -------------------
+    11. vue-model --------------------
+    12. react-model ------------------
+    13. 三级联动 ---------------------

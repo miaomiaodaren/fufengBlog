@@ -88,6 +88,10 @@
             // GetAjax('/doImg').then(res => {
             //     this.imgs = res.data.url;
             // })
+            setTimeout(() => {
+                console.info(this, 9999);
+                this.isart()
+            }, 6000);
         },
         components: {
             headers,
